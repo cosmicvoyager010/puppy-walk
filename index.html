@@ -419,9 +419,6 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <div class="week-dots" id="week-dots"></div>
   </div>
 
-  <!-- Already walked quick-log -->
-  <button class="btn-already" id="btn-already">✅ Already walked today!</button>
-
   <!-- Main buttons -->
   <div class="btn-row">
     <button class="btn btn-start" id="btn-start">🐾 Start walk</button>
@@ -436,6 +433,9 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
   <!-- Walk later button -->
   <button class="btn-later" id="btn-later">🕐 I'll walk later...</button>
+
+  <!-- Already walked quick-log -->
+  <button class="btn-already" id="btn-already">✅ Already walked today!</button>
 
   <!-- Walk later intent banner -->
   <div class="later-banner" id="later-banner" style="display:none">
@@ -1078,11 +1078,17 @@ document.getElementById('still-no').addEventListener('click',function(){document
 document.getElementById('btn-start').addEventListener('click',function(){
   if(S.walking)return;
   if(S.currentMode)endCurrentMode();
+  // Reset all buttons cleanly before starting
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-end').disabled=false;
+  document.getElementById('btn-cant').disabled=false;
+  document.getElementById('btn-tell').disabled=false;
+  document.getElementById('btn-later').disabled=false;
   S.walking=true;S.walkStart=Date.now();S.lastMoveTime=Date.now();
   friendDismissOnWalk();
   document.getElementById('btn-start').disabled=true;document.getElementById('btn-end').disabled=true;
   document.getElementById('btn-cant').disabled=true;document.getElementById('btn-tell').disabled=true;document.getElementById('btn-later').disabled=true;
-  setTimeout(function(){document.getElementById('btn-end').disabled=false;},2000);
+  var _walkId=S.walkStart;setTimeout(function(){if(S.walking&&S.walkStart===_walkId){document.getElementById('btn-end').disabled=false;}},2000);
   clearTimers();sh('live-bar');
   var lw=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
   var last=lw.length?lw[lw.length-1].ts:null;
