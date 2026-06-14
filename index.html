@@ -106,6 +106,11 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .log-meta{font-size:11px;color:#c8a882;}
 .log-dur{font-size:13px;font-weight:800;color:#3d2b1a;}
 .empty-log{font-size:13px;color:#c8a882;text-align:center;padding:8px 0;}
+.log-section-label{font-size:11px;font-weight:700;color:#c8865a;letter-spacing:0.08em;text-transform:uppercase;padding:4px 2px 2px;margin-top:4px;}
+.log-older-toggle{background:none;border:1.5px dashed #e8c9a0;border-radius:10px;color:#c8865a;font-size:13px;font-weight:600;padding:7px 12px;width:100%;text-align:left;cursor:pointer;margin-top:4px;}
+.log-older-toggle:active{background:#fff8f0;}
+.log-toggle-icon{margin-right:6px;}
+.log-older-wrap{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
 
 /* Chart */
 .chart-wrap{background:#fff;border-radius:20px;padding:14px 16px;}
@@ -1754,10 +1759,15 @@ function renderBadges(){
 function renderLog(){
   try{
     var list=document.getElementById('log-list'),empty=document.getElementById('empty-log');
-    list.querySelectorAll('.log-item').forEach(function(e){e.remove();});
+    list.innerHTML='';
     if(!S.logs.length){empty.style.display='';return;}
     empty.style.display='none';
+    var cutoff=new Date();cutoff.setHours(0,0,0,0);cutoff.setDate(cutoff.getDate()-6);
+    var recent=[],older=[];
     S.logs.slice().reverse().forEach(function(w){
+      (new Date(w.ts)>=cutoff?recent:older).push(w);
+    });
+    function makeItem(w){
       var d=document.createElement('div');
       var cls='log-item';
       if(w.rest)cls+=' rest-item';
@@ -1768,8 +1778,33 @@ function renderLog(){
       var dist=w.distM>0?' · '+fmtDist(w.distM):'';
       var meta=w.rest?(w.restEmoji||'🛡️')+' Rest day':w.isSleep?'🌙 Sleep time':w.isFocus?'🎯 Focus time':w.isMetime?'🧘 Me-time':w.isTired?'😫 Rest — exhausted':dist;
       d.innerHTML='<div class="log-left"><span class="log-date">'+w.date+' · '+w.time+'</span><span class="log-meta">'+meta+'</span></div><span class="log-dur">'+w.dur+'</span>';
-      list.appendChild(d);
-    });
+      return d;
+    }
+    if(recent.length){
+      var recLabel=document.createElement('div');
+      recLabel.className='log-section-label';
+      recLabel.textContent='Last 7 days';
+      list.appendChild(recLabel);
+      recent.forEach(function(w){list.appendChild(makeItem(w));});
+    }
+    if(older.length){
+      var toggle=document.createElement('button');
+      toggle.className='log-older-toggle';
+      toggle.setAttribute('data-open','0');
+      toggle.innerHTML='<span class="log-toggle-icon">▸</span> Older entries ('+older.length+')';
+      list.appendChild(toggle);
+      var olderWrap=document.createElement('div');
+      olderWrap.className='log-older-wrap';
+      olderWrap.style.display='none';
+      older.forEach(function(w){olderWrap.appendChild(makeItem(w));});
+      list.appendChild(olderWrap);
+      toggle.addEventListener('click',function(){
+        var open=toggle.getAttribute('data-open')==='1';
+        olderWrap.style.display=open?'none':'flex';
+        toggle.setAttribute('data-open',open?'0':'1');
+        toggle.querySelector('.log-toggle-icon').textContent=open?'▸':'▾';
+      });
+    }
   }catch(e){}
 }
 
