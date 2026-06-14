@@ -1106,7 +1106,7 @@ document.getElementById('btn-end').addEventListener('click',function(){
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
   var totalWalks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
   checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-cant').disabled=false;document.getElementById('btn-tell').disabled=false;document.getElementById('btn-later').disabled=false;
+  document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-tell').disabled=false;document.getElementById('btn-later').disabled=false;
   showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');
   setTimeout(function(){if(!S.walking&&S.mood==='sleeping'){setMood('happy');scheduleMood();}},8000);
 });
@@ -1807,6 +1807,16 @@ function renderLog(){
     }
   }catch(e){}
 }
+
+// ── Button state recovery on app resume ──────────────────────────
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&!S.walking){
+    document.getElementById('btn-start').disabled=false;
+    document.getElementById('btn-cant').disabled=false;
+    document.getElementById('btn-tell').disabled=false;
+    document.getElementById('btn-later').disabled=false;
+  }
+});
 
 // (Service Worker registered at bottom via sw.js)
 
