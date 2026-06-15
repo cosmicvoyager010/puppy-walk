@@ -1205,7 +1205,18 @@ document.getElementById('cant-confirm').addEventListener('click',function(){
 });
 
 // ── Export / Import ────────────────────────────────────────────────
-document.getElementById('btn-export').addEventListener('click',function(){try{var data={logs:S.logs,restDays:S.restDays,exportedAt:new Date().toISOString()};var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='puppy-walks-backup.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);showBubble("Walks saved!! 📤✅",3000);}catch(e){alert('Export failed.');}});
+document.getElementById('btn-export').addEventListener('click',function(){
+  try{
+    var data={logs:S.logs,restDays:S.restDays,exportedAt:new Date().toISOString()};
+    var json=JSON.stringify(data,null,2);
+    var uri='data:application/json;charset=utf-8,'+encodeURIComponent(json);
+    var a=document.createElement('a');
+    var today=new Date();var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    a.href=uri;a.download='puppy-walks-'+ds+'.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    showBubble("Walks saved!! 📤✅",3000);
+  }catch(e){alert('Export failed.');}
+});
 document.getElementById('btn-import').addEventListener('click',function(){document.getElementById('import-file').click();});
 document.getElementById('import-file').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data.logs&&Array.isArray(data.logs)){S.logs=data.logs.map(function(l){return{ts:l.ts||Date.now(),date:l.date||'—',time:l.time||'—',dur:l.dur||'0s',durMs:l.durMs||0,distM:l.distM||0,rest:l.rest||false,restReason:l.restReason||'',restEmoji:l.restEmoji||'',isSleep:l.isSleep||false,isFocus:l.isFocus||false,isTired:l.isTired||false,isMetime:l.isMetime||false};});if(data.restDays)S.restDays=data.restDays;saveLogs();saveRestDays();renderLog();renderStreak();renderSummary();renderChart();renderBadges();showBubbleLocked("Walks restored!! 📥🎉 Welcome back!!",4000);}else{alert('Invalid backup file.');}}catch(err){alert('Could not read file.');}};reader.readAsText(file);e.target.value='';});
 
@@ -1448,11 +1459,12 @@ saveLogs=function(){
   if(walks.length>0&&walks.length%10===0){
     try{
       var data={logs:S.logs,restDays:S.restDays,exportedAt:new Date().toISOString()};
-      var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-      var url=URL.createObjectURL(blob);
+      var json=JSON.stringify(data,null,2);
+      var uri='data:application/json;charset=utf-8,'+encodeURIComponent(json);
       var a=document.createElement('a');
-      a.href=url;
-      a.download='puppy-walks-backup-'+walks.length+'.json';
+      a.href=uri;
+      var today2=new Date();var ds2=today2.getFullYear()+'-'+String(today2.getMonth()+1).padStart(2,'0')+'-'+String(today2.getDate()).padStart(2,'0');
+      a.download='puppy-walks-'+ds2+'.json';
       document.body.appendChild(a);a.click();document.body.removeChild(a);
       URL.revokeObjectURL(url);
       setTimeout(function(){showBubble('📥 Auto-backup saved!! ('+walks.length+' walks) ✅',4000);},500);
