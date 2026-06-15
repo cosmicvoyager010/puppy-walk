@@ -1,441 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Puppy Walk: Cosmic Horizon</title>
-
-  <!-- Apple Standalone App Configuration & Camouflage Manifest -->
-  <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Puppy%20Walk%22,%22short_name%22:%22Puppy%20Walk%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23ffffff%22}">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐶</text></svg>">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-  <style>
-    :root {
-      --bg: #ffffff;
-      --text: #111111;
-      --subtle: #86868b;
-      --border: #f2f2f7;
-      --cosmic-glow: #34c759;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      overscroll-behavior: none;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: calc(30px + env(safe-area-inset-top)) 24px calc(30px + env(safe-area-inset-bottom));
-    }
-
-    header {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-
-    .tracker-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--subtle);
-      font-weight: 600;
-    }
-
-    .clearance-badge {
-      font-size: 0.7rem;
-      background: var(--border);
-      color: var(--text);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      align-self: flex-start;
-      margin-top: 2px;
-    }
-
-    .status-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #ff9500;
-      border-radius: 50%;
-      transition: background-color 0.3s ease;
-    }
-
-    .status-dot.active { background-color: var(--cosmic-glow); }
-
-    main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 25px;
-    }
-
-    .metric-group { text-align: center; }
-    
-    .tracker-value {
-      font-size: 5.5rem;
-      font-weight: 200;
-      letter-spacing: -3px;
-      line-height: 1;
-    }
-
-    .puppy-stage {
-      height: 140px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .puppy-avatar {
-      font-size: 4.5rem;
-      transition: transform 0.2s ease;
-    }
-
-    .puppy-status-text {
-      font-size: 0.8rem;
-      font-family: Menlo, Monaco, Consolas, monospace;
-      color: var(--subtle);
-      text-align: center;
-      max-width: 90%;
-      line-height: 1.4;
-    }
-
-    .intel-panel {
-      width: 100%;
-      background: var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      font-family: Menlo, Monaco, Consolas, monospace;
-      font-size: 0.75rem;
-      line-height: 1.45;
-      color: var(--text);
-      border-left: 3px solid var(--cosmic-glow);
-    }
-
-    .intel-title {
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-      color: var(--subtle);
-      font-size: 0.65rem;
-    }
-
-    .storage-drawer {
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .db-msg {
-      font-size: 0.75rem;
-      color: var(--subtle);
-    }
-
-    .btn-action-row {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .drawer-btn {
-      flex: 1;
-      background: #f2f2f7;
-      border: none;
-      color: var(--text);
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .drawer-btn.primary {
-      background: var(--text);
-      color: var(--bg);
-    }
-
-    .pulse-slow { animation: spaceFloat 3s infinite ease-in-out alternate; }
-    .pulse-fast { animation: warpStride 0.4s infinite ease-in-out alternate; }
-
-    @keyframes spaceFloat {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(-8px) rotate(2deg); }
-    }
-    @keyframes warpStride {
-      0% { transform: scale(1) translate(1px, 1px); }
-      100% { transform: scale(1.03) translate(-1px, -1px); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>// SOVEREIGN.WALKER.v2026</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; }
+        .container { max-width: 600px; margin: auto; border: 1px solid #0f0; padding: 20px; }
+        .tab-btn { background: #000; color: #0f0; border: 1px solid #0f0; padding: 10px; cursor: pointer; margin: 5px; }
+        .tab-btn:hover, .active { background: #0f0; color: #000; }
+        .stats { margin: 20px 0; border-top: 1px solid #333; padding-top: 10px; }
+        .milestone { border-left: 2px solid #0f0; padding-left: 10px; margin: 10px 0; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>// OMNI-TIMELINE WALKER</h1>
+        <div id="tabs">
+            <button class="tab-btn active" onclick="setTimeline('ancient')">ANCIENT</button>
+            <button class="tab-btn" onclick="setTimeline('modern')">MODERN</button>
+            <button class="tab-btn" onclick="setTimeline('futuristic')">FUTURE</button>
+            <button class="tab-btn" onclick="setTimeline('cosmic')">COSMIC</button>
+        </div>
 
-  <header>
-    <div class="header-top">
-      <div class="tracker-label">Voyager III Telemetry</div>
-      <div class="status-container">
-        <span class="tracker-label" id="status-text">Standby</span>
-        <div class="status-dot" id="status-indicator"></div>
-      </div>
-    </div>
-    <div class="clearance-badge" id="clearance-display">SYSTEM LOCATION: INITIALIZING</div>
-  </header>
+        <div class="stats">
+            <div>[TOTAL STEPS]: <span id="total-steps">0</span></div>
+            <div id="puppy-status">🐾 Initializing companion...</div>
+        </div>
 
-  <main>
-    <div class="metric-group">
-      <div class="tracker-value" id="step-display">0000</div>
-      <div class="tracker-label" style="margin-top: 6px;">Kinetic Impulse Steps Registered</div>
-    </div>
-    
-    <div class="puppy-stage">
-      <div class="puppy-avatar pulse-slow" id="puppy-model">🚀</div>
-      <div class="puppy-status-text" id="puppy-behavior">Tap screen once to link iPhone motion hardware...</div>
+        <div id="display"></div>
+
+        <button style="margin-top:20px; background:#222; color:#0f0; border:1px solid #0f0;" onclick="addSteps()">+500 STEPS (SIMULATE)</button>
     </div>
 
-    <div class="intel-panel" id="intel-panel">
-      <div class="intel-title">[INCOMING CELESTIAL INTEL]</div>
-      <div id="intel-content">Awaiting sensor handshake to decrypt transmission stream...</div>
-    </div>
-  </main>
+    <script>
+        let totalSteps = 0;
+        let active = 'ancient';
 
-  <footer class="storage-drawer">
-    <div class="db-msg" id="vault-status">🔒 Local Vault Location: Device Partition Active</div>
-    
-    <div class="btn-action-row">
-      <button class="drawer-btn" onclick="triggerManualBackup()">Export Mission Data</button>
-      <button class="drawer-btn primary" onclick="simulateStepDebug()">Test Step Manually</button>
-    </div>
-  </footer>
+        const data = {
+            ancient: { title: "Monemvasia Fortress", total: 12000, desc: "Byzantine citadel.", puppy: "🐾 Puppy sniffing ancient stones.", milestones: [{s:2000, n:"Sea-Gate", f:"583 AD walls."}, {s:6000, n:"Cisterns", f:"Siege reservoirs."}] },
+            modern: { title: "Nairobi Tech Grid", total: 10000, desc: "Silicon Savannah hub.", puppy: "🐾 Puppy trots near electric lines.", milestones: [{s:3000, n:"Kilimani", f:"Fintech hub."}, {s:6000, n:"Expressway", f:"Smart transit."}] },
+            futuristic: { title: "Artemis Lunar Base", total: 15000, desc: "Lunar South Pole.", puppy: "🐾 Puppy in a tiny EVA suit.", milestones: [{s:3000, n:"Ice Rigs", f:"Water-to-Oxygen."}, {s:8000, n:"Solar Ridge", f:"Near-constant power."}] },
+            cosmic: { title: "Voyager 1 Path", total: 20000, desc: "Interstellar space.", puppy: "🐾 Puppy floating in zero-g.", milestones: [{s:5000, n:"Shock", f:"Solar wind slowdown."}, {s:12000, n:"Heliopause", f:"Magnetic exit."}] }
+        };
 
-  <script>
-    let totalSteps = 0;
-    let sessionSteps = 0; 
-    let walkSessionActive = false;
-    let walkTimeout;
-    let databaseInstance;
-
-    const stepDisplay = document.getElementById('step-display');
-    const puppyModel = document.getElementById('puppy-model');
-    const puppyBehavior = document.getElementById('puppy-behavior');
-    const statusIndicator = document.getElementById('status-indicator');
-    const statusText = document.getElementById('status-text');
-    const vaultStatus = document.getElementById('vault-status');
-    const clearanceDisplay = document.getElementById('clearance-display');
-    const intelContent = document.getElementById('intel-content');
-
-    // --- INDEXEDDB STORAGE PROTOCOL ---
-    const openRequest = indexedDB.open("SovereignPuppyVault", 1);
-
-    openRequest.onupgradeneeded = (event) => {
-      let db = event.target.result;
-      db.createObjectStore("session_logs", { keyPath: "metricId" });
-    };
-
-    openRequest.onsuccess = (event) => {
-      databaseInstance = event.target.result;
-      hydrateAppFromStorage();
-    };
-
-    openRequest.onerror = () => {
-      vaultStatus.innerText = "⚠️ Hardware Vault Locked. Using live session backup.";
-    };
-
-    function hydrateAppFromStorage() {
-      if (!databaseInstance) return;
-      const tx = databaseInstance.transaction(["session_logs"], "readonly");
-      const store = tx.objectStore("session_logs");
-      const query = store.get("cumulative_steps");
-
-      query.onsuccess = () => {
-        if (query.result) {
-          totalSteps = query.result.stepCount;
-          refreshDisplayMetrics();
-          evaluateCosmicMilestones();
-          puppyBehavior.innerText = "SYS STATUS: Connected to hardware array. Dynamic sensors online.";
-        } else {
-          commitToDeviceVault(0);
-          evaluateCosmicMilestones();
+        function setTimeline(t) { active = t; update(); }
+        function addSteps() { totalSteps += 500; update(); }
+        function update() {
+            document.getElementById('total-steps').innerText = totalSteps;
+            const d = data[active];
+            document.getElementById('puppy-status').innerText = d.puppy;
+            let html = `<h3>${d.title}</h3><p>${d.desc}</p>`;
+            d.milestones.forEach(m => {
+                if(totalSteps >= m.s) html += `<div class="milestone"><b>${m.n}</b>: ${m.f}</div>`;
+            });
+            document.getElementById('display').innerHTML = html;
         }
-      };
-    }
-
-    function commitToDeviceVault(value) {
-      if (!databaseInstance) return;
-      const tx = databaseInstance.transaction(["session_logs"], "readwrite");
-      const store = tx.objectStore("session_logs");
-      store.put({ metricId: "cumulative_steps", stepCount: value, lastUpdated: Date.now() });
-      
-      tx.oncomplete = () => {
-        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        vaultStatus.innerText = `🔒 Local Partition Encrypted (${timestamp})`;
-      };
-    }
-
-    // --- AUTOMATED ACCELEROMETER HARDWARE HANDSHAKE ---
-    function enableHardwareTracking() {
-      if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-        DeviceMotionEvent.requestPermission()
-          .then(permission => {
-            if (permission === 'granted') {
-              window.addEventListener('devicemotion', processKineticForces);
-              puppyBehavior.innerText = "TRAJECTORY LOCK: Accelerometer linked. Begin movement sequence.";
-            }
-          })
-          .catch(() => { puppyBehavior.innerText = "ERROR: Sensor link rejected."; });
-      } else {
-        window.addEventListener('devicemotion', processKineticForces);
-      }
-    }
-
-    let lastVectors = { x: 0, y: 0, z: 0 };
-    const motionSensitivityThreshold = 10.5; // High-sensitivity calibration active
-
-    function processKineticForces(event) {
-      let forces = event.accelerationIncludingGravity;
-      if (!forces) return;
-
-      let deltaForce = Math.abs(forces.x - lastVectors.x) + 
-                       Math.abs(forces.y - lastVectors.y) + 
-                       Math.abs(forces.z - lastVectors.z);
-
-      if (deltaForce > motionSensitivityThreshold) {
-        executeStepIncrement();
-      }
-
-      lastVectors = { x: forces.x, y: forces.y, z: forces.z };
-    }
-
-    function executeStepIncrement() {
-      totalSteps += 1;
-      sessionSteps += 1;
-      refreshDisplayMetrics();
-      manageMovementStates();
-      evaluateCosmicMilestones();
-      commitToDeviceVault(totalSteps);
-    }
-
-    function simulateStepDebug() {
-      executeStepIncrement();
-    }
-
-    function refreshDisplayMetrics() {
-      stepDisplay.innerText = String(totalSteps).padStart(4, '0');
-    }
-
-    // --- REALISTIC COSMIC HORIZON & DYNAMIC INTEL SCIENCE ENGINE ---
-    function evaluateCosmicMilestones() {
-      const calculatedDistance = totalSteps * 4828; // Each step simulates 4,828 km of space travel
-      let intelText = "";
-      
-      if (totalSteps < 20) {
-        clearanceDisplay.innerText = "🌍 ZONE: LOW EARTH ORBIT";
-        puppyModel.innerText = "🚀";
-        if (!walkSessionActive) puppyBehavior.innerText = `Coasting at ${calculatedDistance.toLocaleString()} km. Escape velocity pending.`;
-        intelText = "To stay in Low Earth Orbit and not get pulled back down by gravity, a spacecraft must travel at roughly 28,000 km/h. At that speed, astronauts on the ISS witness 16 sunrises and sunsets every single day.";
-      } else if (totalSteps >= 20 && totalSteps < 100) {
-        clearanceDisplay.innerText = "🌙 ZONE: TRANSLUNAR INJECTION";
-        puppyModel.innerText = "🛰️";
-        if (!walkSessionActive) puppyBehavior.innerText = `Distance: ${calculatedDistance.toLocaleString()} km. Transiting the Lunar far side cluster.`;
-        intelText = "The Moon isn't perfectly stable in its orbit; it is slowly drifting away from Earth at a rate of about 3.8 centimeters per year. Billions of years ago, it was much closer and appeared massive in our sky.";
-      } else if (totalSteps >= 100 && totalSteps < 300) {
-        clearanceDisplay.innerText = "📡 ZONE: DEEP SPACE VOID";
-        puppyModel.innerText = "📡";
-        if (!walkSessionActive) puppyBehavior.innerText = `Distance: ${calculatedDistance.toLocaleString()} km. High-gain tracking antenna locked to Earth terminal.`;
-        intelText = "Space is notoriously empty, but it is not a perfect vacuum. The interstellar medium (the space between star systems) contains an average of just 1 atom of hydrogen per cubic centimeter.";
-      } else if (totalSteps >= 300) {
-        clearanceDisplay.innerText = "🌌 ZONE: MARS INTERCEPT ROUTE";
-        puppyModel.innerText = "🛸";
-        if (!walkSessionActive) puppyBehavior.innerText = `Distance: ${calculatedDistance.toLocaleString()} km. Autonomous cruise mode operational in the deep expanse.`;
-        intelText = "Mars appears red because its surface material is covered heavily in iron oxide—commonly known as rust. The planet is essentially a giant, dry, oxidized metal desert undergoing global dust storms.";
-      }
-
-      if (intelContent) {
-        intelContent.innerText = intelText;
-      }
-    }
-
-    function manageMovementStates() {
-      if (!walkSessionActive) {
-        walkSessionActive = true;
-        statusIndicator.classList.add('active');
-        statusText.innerText = "BURNING";
-        puppyModel.className = "puppy-avatar pulse-fast";
-      }
-
-      clearTimeout(walkTimeout);
-      
-      // KINETIC AUTO-STOP: Auto-logs burn sequence after 30 seconds of stillness
-      walkTimeout = setTimeout(() => {
-        walkSessionActive = false;
-        statusIndicator.classList.remove('active');
-        statusText.innerText = "STANDBY";
-        puppyModel.className = "pulse-slow";
-        
-        puppyBehavior.innerHTML = `Impulse Burn Completed.<br><span style="color:var(--cosmic-glow); font-weight:600;">+${(sessionSteps * 4828).toLocaleString()} km added</span> to trajectory vector.`;
-        
-        sessionSteps = 0;
-        evaluateCosmicMilestones(); // Update textual logs immediately upon stabilization
-      }, 30000);
-    }
-
-    function triggerManualBackup() {
-      const dataPackage = {
-        application: "Voyager_III_Telemetry",
-        version: "2026.6",
-        metrics: { totalSteps, virtualDistanceKm: totalSteps * 4828 },
-        deviceBackupTimestamp: new Date().toISOString()
-      };
-
-      const convertedString = JSON.stringify(dataPackage, null, 2);
-      const textBlob = new Blob([convertedString], { type: "text/plain" });
-      const temporaryUrl = URL.createObjectURL(textBlob);
-
-      const downloadTrigger = document.createElement('a');
-      downloadTrigger.href = temporaryUrl;
-      downloadTrigger.download = `voyager_3_telemetry_log.txt`;
-      document.body.appendChild(downloadTrigger);
-      downloadTrigger.click();
-      document.body.removeChild(downloadTrigger);
-      URL.revokeObjectURL(temporaryUrl);
-    }
-
-    window.addEventListener('click', () => { enableHardwareTracking(); });
-  </script>
+        update();
+    </script>
 </body>
 </html>
