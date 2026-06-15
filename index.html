@@ -1120,6 +1120,28 @@ function checkMilestone(dist){var ms=[50,100,500,1000,2000,5000,10000];for(var i
 function startGPS(){if(!navigator.geolocation)return;S.lastPos=null;S.distMeters=0;S.lastMoveTime=Date.now();S.distMilestones={};try{S.watchId=navigator.geolocation.watchPosition(function(p){try{var la=p.coords.latitude,lo=p.coords.longitude,sp=p.coords.speed||0;S.currentSpeed=sp*3.6;if(S.lastPos){var d=haversine(S.lastPos.lat,S.lastPos.lon,la,lo);if(d>2&&d<500){S.distMeters+=d;S.lastMoveTime=Date.now();checkMilestone(S.distMeters);}}S.lastPos={lat:la,lon:lo};document.getElementById('live-speed').textContent=Math.round(S.currentSpeed);}catch(e){}},function(){},{enableHighAccuracy:true,maximumAge:3000,timeout:15000});}catch(e){}}
 function stopGPS(){try{if(S.watchId!==null){navigator.geolocation.clearWatch(S.watchId);S.watchId=null;}}catch(e){}}
 
+// ── Weather (Open-Meteo, no API key needed) ────────────────────────
+function fetchWeather(lat,lon,callback){
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current_weather=true&hourly=precipitation_probability&forecast_days=1';
+  fetch(url).then(function(r){return r.json();}).then(function(data){
+    var cw=data.current_weather;
+    if(!cw){callback(null);return;}
+    var code=cw.weathercode,temp=Math.round(cw.temperature);
+    var emoji='🌤️';
+    if(code===0)emoji='☀️';
+    else if(code<=2)emoji='⛅';
+    else if(code<=3)emoji='☁️';
+    else if(code<=49)emoji='🌫️';
+    else if(code<=59)emoji='🌦️';
+    else if(code<=69)emoji='🌧️';
+    else if(code<=79)emoji='🌨️';
+    else if(code<=82)emoji='🌧️';
+    else if(code<=86)emoji='❄️';
+    else if(code<=99)emoji='⛈️';
+    callback(emoji+' '+temp+'°');
+  }).catch(function(){callback(null);});
+}
+
 // ── Still walking ──────────────────────────────────────────────────
 function scheduleStillCheck(){clearTimeout(S.noMoveT);S.noMoveT=setTimeout(function(){if(!S.walking)return;var mins=Math.round((Date.now()-(S.lastMoveTime||S.walkStart))/60000);if(mins>=5){document.getElementById('still-msg').textContent='No movement for '+mins+' min... still walking?';document.getElementById('still-sheet').style.display='block';document.getElementById('sheet-overlay').style.display='block';}else{scheduleStillCheck();}},5*60*1000);}
 document.getElementById('still-yes').addEventListener('click',function(){document.getElementById('still-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';S.lastMoveTime=Date.now();showBubble("Let's keep going!! 🐾",2000);scheduleStillCheck();});
@@ -1159,7 +1181,14 @@ document.getElementById('btn-end').addEventListener('click',function(){
   stopGPS();hi('live-bar');
   document.getElementById('still-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';
   var dur=Date.now()-S.walkStart,d=new Date(S.walkStart);
-  S.logs.push({ts:S.walkStart,date:fmtDate(d),time:fmtTime(d),dur:fmtDur(dur),durMs:dur,distM:Math.round(S.distMeters),rest:false,isSleep:false,isFocus:false,isTired:false,isMetime:false});
+  var logEntry={ts:S.walkStart,date:fmtDate(d),time:fmtTime(d),dur:fmtDur(dur),durMs:dur,distM:Math.round(S.distMeters),rest:false,isSleep:false,isFocus:false,isTired:false,isMetime:false};
+  S.logs.push(logEntry);
+  // Silently fetch weather if we have GPS coords
+  if(S.lastPos){
+    (function(entry,lat,lon){
+      fetchWeather(lat,lon,function(w){if(w){entry.weather=w;saveLogs();renderLog();}});
+    })(logEntry,S.lastPos.lat,S.lastPos.lon);
+  }
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
   var totalWalks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
   checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
@@ -1825,7 +1854,8 @@ function renderLog(){
       else if(w.isTired)cls+=' rest-item';
       d.className=cls;
       var dist=w.distM>0?' · '+fmtDist(w.distM):'';
-      var meta=w.rest?(w.restEmoji||'🛡️')+' Rest day':w.isSleep?'🌙 Sleep time':w.isFocus?'🎯 Focus time':w.isMetime?'🧘 Me-time':w.isTired?'😫 Rest — exhausted':dist;
+      var weather=w.weather?' · '+w.weather:'';
+      var meta=w.rest?(w.restEmoji||'🛡️')+' Rest day':w.isSleep?'🌙 Sleep time':w.isFocus?'🎯 Focus time':w.isMetime?'🧘 Me-time':w.isTired?'😫 Rest — exhausted':dist+weather;
       d.innerHTML='<div class="log-left"><span class="log-date">'+w.date+' · '+w.time+'</span><span class="log-meta">'+meta+'</span></div><span class="log-dur">'+w.dur+'</span>';
       return d;
     }
