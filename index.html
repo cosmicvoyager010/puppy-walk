@@ -541,36 +541,6 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   </div>
   <input type="file" id="import-file" accept=".json" style="display:none">
 
-  <!-- Google Drive sync card -->
-  <div class="drive-card" id="drive-card">
-    <div class="drive-row">
-      <div class="drive-left">
-        <div class="drive-title">☁️ Google Drive backup</div>
-        <div class="drive-sub" id="drive-sub">Auto-saves every walk to Drive</div>
-      </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="drive-toggle">
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-    <div id="drive-status-row" style="display:none">
-      <div class="drive-account" id="drive-account"></div>
-      <div class="drive-sync-row">
-        <div class="drive-last-sync" id="drive-last-sync">Never synced</div>
-        <button class="drive-sync-btn" id="drive-sync-now">Sync now</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Drive first-time prompt (shown once) -->
-  
-    </div>
-    <div class="drive-prompt-btns">
-      <button class="drive-prompt-yes" id="drive-prompt-yes">Connect</button>
-      <button class="drive-prompt-no" id="drive-prompt-no">Not now</button>
-    </div>
-  </div>
-
   <div class="log-wrap">
     <div class="log-head">Puppy's walk history</div>
     <div class="log-list" id="log-list">
@@ -1356,20 +1326,7 @@ function saveDriveSettings(){
 
 S.drive = loadDriveSettings();
 
-function updateDriveUI(){
-  var tog=document.getElementById('drive-toggle');
-  var statusRow=document.getElementById('drive-status-row');
-  var sub=document.getElementById('drive-sub');
-  var on=S.drive.enabled&&!!driveAccessToken;
-  tog.checked=S.drive.enabled;
-  statusRow.style.display=S.drive.enabled?'':'none';
-  if(S.drive.email)document.getElementById('drive-account').textContent='Signed in as '+S.drive.email;
-  if(S.drive.lastSync){
-    var d=new Date(S.drive.lastSync);
-    document.getElementById('drive-last-sync').textContent='Last sync: '+fmtDate(d)+' '+fmtTime(d);
-  }
-  sub.textContent=on?'Auto-syncing every walk':'Connect to auto-backup every walk';
-}
+function updateDriveUI(){} // Drive UI removed
 
 function initGoogleClient(callback){
   if(DRIVE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID_HERE'){
@@ -1486,36 +1443,24 @@ saveLogs=function(){
     clearTimeout(driveSyncT);
     driveSyncT=setTimeout(driveSync,2000); // debounce 2s
   }
+  // Auto-backup every 10th walk
+  var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+  if(walks.length>0&&walks.length%10===0){
+    try{
+      var data={logs:S.logs,restDays:S.restDays,exportedAt:new Date().toISOString()};
+      var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url;
+      a.download='puppy-walks-backup-'+walks.length+'.json';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setTimeout(function(){showBubble('📥 Auto-backup saved!! ('+walks.length+' walks) ✅',4000);},500);
+    }catch(e){}
+  }
 };
 
 // Toggle handler
-document.getElementById('drive-toggle').addEventListener('change',function(){
-  if(this.checked){
-    initGoogleClient();
-  } else {
-    S.drive.enabled=false;
-    driveAccessToken=null;
-    saveDriveSettings();
-    updateDriveUI();
-    showBubble('Drive backup off',2000);
-  }
-});
-
-// Sync now button
-document.getElementById('drive-sync-now').addEventListener('click',function(){
-  if(!driveAccessToken){initGoogleClient(driveSync);return;}
-  driveSync();
-  showBubble('Syncing... ☁️',1500);
-});
-
-function checkDrivePrompt(){
-  if(!S.drive.promptShown&&!S.drive.enabled){
-    setTimeout(function(){
-      
-    },3000); // show 3s after open
-  }
-}
-
 // ── Already Walked Quick-Log ───────────────────────────────────────
 var selectedAlreadyMs = null;
 
