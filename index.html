@@ -2,27 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>// SOVEREIGN WALKER</title>
+    <title>// SOVEREIGN WALKER // FLUID GLASS</title>
     <style>
-        /* Brutalist Base */
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; transition: 0.5s; }
-        .container { max-width: 600px; margin: 40px auto; border: 1px solid #fff; padding: 20px; }
-        
-        /* Dynamic Theme Hooks */
-        .theme-ancient { border-color: #d4af37; color: #d4af37; }
-        .theme-modern { border-color: #00ff66; color: #00ff66; }
-        .theme-future { border-color: #00ccff; color: #00ccff; }
-        .theme-cosmic { border-color: #cc33ff; color: #cc33ff; }
-        
-        button { background: #000; border: 1px solid currentColor; color: currentColor; padding: 10px; cursor: pointer; margin: 5px; font-family: inherit; }
-        button:hover { background: currentColor; color: #000; }
-        h1, h2 { text-transform: uppercase; }
+        body { 
+            background: linear-gradient(135deg, #0f0f10 0%, #1a1a2e 100%); 
+            color: #fff; font-family: 'Segoe UI', sans-serif; 
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .container { 
+            max-width: 600px; width: 90%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        button { 
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff; padding: 10px 15px; border-radius: 10px;
+            cursor: pointer; margin: 5px; transition: 0.3s;
+        }
+        button:hover { background: rgba(255, 255, 255, 0.2); }
     </style>
 </head>
-<body class="theme-modern">
+<body>
 
-    <div id="container" class="container theme-modern">
+    <div id="container" class="container">
         <h1>// OMNI-WALKER</h1>
         <div id="controls">
             <button onclick="setTimeline('ancient')">ANCIENT</button>
@@ -30,12 +36,9 @@
             <button onclick="setTimeline('future')">FUTURE</button>
             <button onclick="setTimeline('cosmic')">COSMIC</button>
         </div>
-        <hr style="border: 0; border-top: 1px solid currentColor; margin: 20px 0;">
-        <div id="display"></div>
-        <div style="margin-top: 20px;">
-            <button onclick="addSteps()">+500 STEPS (SIMULATE)</button>
-            <p id="stats">TOTAL STEPS: 0</p>
-        </div>
+        <div id="display" style="margin-top:20px;"></div>
+        <button onclick="addSteps()" style="margin-top:20px;">+500 STEPS</button>
+        <p id="stats">TOTAL STEPS: 0</p>
     </div>
 
     <script>
@@ -45,14 +48,11 @@
             future: { title: "Future", desc: "Artemis Lunar Base", puppy: "🚀 Puppy in a tiny EVA suit." },
             cosmic: { title: "Cosmic", desc: "Voyager 1 Path", puppy: "🌌 Puppy floating in zero-g." }
         };
-        
         let active = 'modern';
         let totalSteps = 0;
 
         function setTimeline(t) {
             active = t;
-            document.body.className = 'theme-' + t;
-            document.getElementById('container').className = 'container theme-' + t;
             update();
         }
 
@@ -67,8 +67,6 @@
             const emoji = active === 'ancient' ? '🏛️' : active === 'modern' ? '🏙️' : active === 'future' ? '🚀' : '🌌';
             document.getElementById('display').innerHTML = `<h2>${emoji} ${d.title}</h2><p>${d.desc}</p><p>${d.puppy}</p>`;
         }
-        
-        // Initial Render
         update();
     </script>
 </body>
