@@ -117,6 +117,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .log-date{font-size:12px;color:#a07850;}
 .log-meta{font-size:11px;color:#c8a882;}
 .log-dur{font-size:13px;font-weight:800;color:#3d2b1a;}
+.log-memo{font-size:12px;color:#a07850;font-style:italic;margin-top:3px;}
 .empty-log{font-size:13px;color:#c8a882;text-align:center;padding:8px 0;}
 .log-section-label{font-size:11px;font-weight:700;color:#c8865a;letter-spacing:0.08em;text-transform:uppercase;padding:4px 2px 2px;margin-top:4px;}
 .log-older-toggle{background:none;border:1.5px dashed #e8c9a0;border-radius:10px;color:#c8865a;font-size:13px;font-weight:600;padding:7px 12px;width:100%;text-align:left;cursor:pointer;margin-top:4px;}
@@ -335,6 +336,23 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .celebrating{animation:celebrate 0.4s ease-in-out infinite;}
 .sleep-anim{animation:breathe 3s ease-in-out infinite;}
 .name-tag{font-size:7px;font-weight:800;fill:#3d2b1a;text-anchor:middle;letter-spacing:0.5px;}
+
+/* Mood popup */
+.mood-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:300;}
+.mood-popup{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff8f0;border-radius:24px 24px 0 0;padding:22px 18px 36px;z-index:301;box-shadow:0 -4px 28px rgba(0,0,0,0.13);}
+.mood-popup-title{font-size:16px;font-weight:800;color:#3d2b1a;text-align:center;margin-bottom:16px;}
+.mood-emojis{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.mood-emoji-btn{font-size:28px;background:#fff;border:2.5px solid #f0e0cc;border-radius:14px;width:50px;height:50px;cursor:pointer;transition:transform 0.12s,border-color 0.12s;}
+.mood-emoji-btn:active,.mood-emoji-btn.selected{transform:scale(1.18);border-color:#f5a623;}
+.mood-emoji-btn.selected{background:#fff8f0;}
+.mood-memo{width:100%;border-radius:14px;border:2px solid #e8d0b0;padding:10px 12px;font-size:14px;font-family:'Nunito',sans-serif;color:#3d2b1a;background:#fffaf5;resize:none;margin-bottom:12px;box-sizing:border-box;}
+.mood-memo:focus{outline:none;border-color:#f5a623;}
+.mood-save-btn{width:100%;padding:13px;border-radius:16px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:linear-gradient(135deg,#f5a623,#e8922a);color:#fff;margin-bottom:8px;}
+.mood-skip-btn{width:100%;padding:10px;border-radius:16px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:#f0ebe4;color:#a09080;}
+
+.mood-seasonal-label{font-size:11px;font-weight:700;color:#c8865a;letter-spacing:0.08em;text-transform:uppercase;text-align:center;margin-bottom:8px;margin-top:4px;}
+.mood-seasonal-btn{font-size:26px;background:#fff;border:2.5px solid #f0e0cc;border-radius:14px;width:46px;height:46px;cursor:pointer;transition:transform 0.12s,border-color 0.12s;}
+.mood-seasonal-btn.selected{transform:scale(1.18);border-color:#f5a623;background:#fff8f0;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -438,6 +456,26 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <button class="btn btn-start" id="btn-start">🐾 Start walk</button>
     <button class="btn btn-end" id="btn-end" disabled>🏠 End walk</button>
   </div>
+
+  
+<!-- Post-walk mood & memo popup -->
+<div class="mood-overlay" id="mood-overlay" style="display:none"></div>
+<div class="mood-popup" id="mood-popup" style="display:none">
+  <div class="mood-popup-title">How was the walk? 🐾</div>
+  <div class="mood-emojis" id="mood-emojis">
+    <button class="mood-emoji-btn" data-mood="😊" title="Great">😊</button>
+    <button class="mood-emoji-btn" data-mood="🌸" title="Lovely">🌸</button>
+    <button class="mood-emoji-btn" data-mood="😴" title="Tired">😴</button>
+    <button class="mood-emoji-btn" data-mood="🌧️" title="Rainy">🌧️</button>
+    <button class="mood-emoji-btn" data-mood="🔥" title="Energetic">🔥</button>
+    <button class="mood-emoji-btn" data-mood="😌" title="Peaceful">😌</button>
+  </div>
+  <div class="mood-seasonal-label" id="mood-seasonal-label"></div>
+  <div class="mood-emojis" id="mood-seasonal"></div>
+  <textarea class="mood-memo" id="mood-memo" placeholder="Add a note... (optional)" rows="2" maxlength="120"></textarea>
+  <button class="mood-save-btn" id="mood-save-btn">Save & Done ✅</button>
+  <button class="mood-skip-btn" id="mood-skip-btn">Skip</button>
+</div>
 
   <!-- Talk to Puppy merged button -->
   <button class="btn-tell" id="btn-talk-menu">💬 Talk to Puppy...</button>
@@ -1179,7 +1217,7 @@ document.getElementById('btn-end').addEventListener('click',function(){
   var totalWalks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
   checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
   document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-tell').disabled=false;document.getElementById('btn-later').disabled=false;
-  showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');
+  showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');setTimeout(function(){openMoodPopup(S.logs[S.logs.length-1]);},600);
   setTimeout(function(){if(!S.walking&&S.mood==='sleeping'){setMood('happy');scheduleMood();}},8000);
 });
 
@@ -1829,7 +1867,9 @@ function renderLog(){
       var dist=w.distM>0?' · '+fmtDist(w.distM):'';
       var weather=w.weather?' · '+w.weather:'';
       var meta=w.rest?(w.restEmoji||'🛡️')+' Rest day':w.isSleep?'🌙 Sleep time':w.isFocus?'🎯 Focus time':w.isMetime?'🧘 Me-time':w.isTired?'😫 Rest — exhausted':dist+weather;
-      d.innerHTML='<div class="log-left"><span class="log-date">'+w.date+' · '+w.time+'</span><span class="log-meta">'+meta+'</span></div><span class="log-dur">'+w.dur+'</span>';
+      var moodTag=(w.mood||w.seasonal)?' <span style="font-size:15px;">'+(w.mood||'')+(w.seasonal?' '+w.seasonal:'')+'</span>':'';
+      var memoTag=w.memo?'<div class="log-memo">'+w.memo+'</div>':'';
+      d.innerHTML='<div class="log-left"><span class="log-date">'+w.date+' · '+w.time+'</span><span class="log-meta">'+meta+moodTag+'</span>'+memoTag+'</div><span class="log-dur">'+w.dur+'</span>';
       return d;
     }
     if(recent.length){
@@ -1859,6 +1899,86 @@ function renderLog(){
     }
   }catch(e){}
 }
+
+
+
+// ── Seasonal emoji picks ──────────────────────────────────────────
+var SEASONS = {
+  spring: { label: '🌸 Spring harvest', emojis: ['🌸','🍓','🌱','🥝','🌼','💐'] },
+  summer: { label: '☀️ Summer harvest', emojis: ['🍅','🌻','🍇','🌽','🍉','🥭'] },
+  autumn: { label: '🍂 Autumn harvest', emojis: ['🍄','🌰','🍠','🍁','🍎','🥦'] },
+  winter: { label: '❄️ Winter treats',  emojis: ['🍊','🍵','🍫','☃️','🍙','🦤'] }
+};
+
+function getCurrentSeason(){
+  var m = new Date().getMonth();
+  if(m>=2&&m<=4) return 'spring';
+  if(m>=5&&m<=7) return 'summer';
+  if(m>=8&&m<=10) return 'autumn';
+  return 'winter';
+}
+
+var _selectedSeasonal = '';
+
+function buildSeasonalRow(){
+  var s = SEASONS[getCurrentSeason()];
+  document.getElementById('mood-seasonal-label').textContent = s.label;
+  var wrap = document.getElementById('mood-seasonal');
+  wrap.innerHTML = '';
+  s.emojis.forEach(function(em){
+    var btn = document.createElement('button');
+    btn.className = 'mood-seasonal-btn';
+    btn.textContent = em;
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.mood-seasonal-btn').forEach(function(b){b.classList.remove('selected');});
+      btn.classList.add('selected');
+      _selectedSeasonal = em;
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Post-walk mood & memo ─────────────────────────────────────────
+var _pendingMoodEntry = null;
+var _selectedMood = '';
+
+function openMoodPopup(entry){
+  _pendingMoodEntry = entry;
+  _selectedMood = '';
+  _selectedSeasonal = '';
+  document.getElementById('mood-memo').value = '';
+  document.querySelectorAll('.mood-emoji-btn').forEach(function(b){b.classList.remove('selected');});
+  buildSeasonalRow();
+  document.getElementById('mood-overlay').style.display = 'block';
+  document.getElementById('mood-popup').style.display = 'block';
+}
+
+function closeMoodPopup(){
+  document.getElementById('mood-overlay').style.display = 'none';
+  document.getElementById('mood-popup').style.display = 'none';
+  _pendingMoodEntry = null;
+}
+
+document.querySelectorAll('.mood-emoji-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.mood-emoji-btn').forEach(function(b){b.classList.remove('selected');});
+    btn.classList.add('selected');
+    _selectedMood = btn.getAttribute('data-mood');
+  });
+});
+
+document.getElementById('mood-save-btn').addEventListener('click', function(){
+  if(_pendingMoodEntry){
+    if(_selectedMood) _pendingMoodEntry.mood = _selectedMood;
+    if(_selectedSeasonal) _pendingMoodEntry.seasonal = _selectedSeasonal;
+    var memo = document.getElementById('mood-memo').value.trim();
+    if(memo) _pendingMoodEntry.memo = memo;
+    saveLogs(); renderLog();
+  }
+  closeMoodPopup();
+});
+
+document.getElementById('mood-skip-btn').addEventListener('click', closeMoodPopup);
 
 // ── Button state recovery on app resume ──────────────────────────
 document.addEventListener('visibilitychange',function(){
