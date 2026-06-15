@@ -27,6 +27,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .app-title{font-size:13px;font-weight:700;color:#c8865a;letter-spacing:0.12em;text-transform:uppercase;}
 .mood-label{font-size:22px;font-weight:800;color:#3d2b1a;min-height:32px;margin-top:2px;}
 .status-sub{font-size:13px;color:#a07850;margin-top:1px;min-height:18px;}
+.live-weather{font-size:13px;color:#7a9860;font-weight:700;margin-top:3px;}
 
 /* Stage */
 .stage{display:flex;justify-content:center;align-items:center;position:relative;padding:8px 0;}
@@ -345,6 +346,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <div class="app-title">🐾 Puppy's Walk Companion</div>
     <div class="mood-label" id="mood-label">Hi, Puppy! 🐶</div>
     <div class="status-sub" id="status-sub">ready for a walk</div>
+    <div class="live-weather" id="live-weather" style="display:none"></div>
   </div>
 
   <div class="stage">
@@ -1141,6 +1143,20 @@ function fetchWeather(lat,lon,callback){
     callback(emoji+' '+temp+'°');
   }).catch(function(){callback(null);});
 }
+
+// ── Live weather on main screen ────────────────────────────────────
+var liveWeatherT=null;
+function updateLiveWeather(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(function(p){
+    fetchWeather(p.coords.latitude,p.coords.longitude,function(w){
+      var el=document.getElementById('live-weather');
+      if(w){el.textContent=w;el.style.display='';}
+    });
+  },function(){},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
+}
+updateLiveWeather();
+liveWeatherT=setInterval(updateLiveWeather,10*60*1000); // refresh every 10 min
 
 // ── Still walking ──────────────────────────────────────────────────
 function scheduleStillCheck(){clearTimeout(S.noMoveT);S.noMoveT=setTimeout(function(){if(!S.walking)return;var mins=Math.round((Date.now()-(S.lastMoveTime||S.walkStart))/60000);if(mins>=5){document.getElementById('still-msg').textContent='No movement for '+mins+' min... still walking?';document.getElementById('still-sheet').style.display='block';document.getElementById('sheet-overlay').style.display='block';}else{scheduleStillCheck();}},5*60*1000);}
