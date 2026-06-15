@@ -81,6 +81,14 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .btn-tell{width:100%;padding:13px;border-radius:18px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:2px solid #e8d0f0;background:#fdf0ff;color:#9060c0;transition:transform 0.12s;}
 .btn-tell:active{transform:scale(0.97);}
 .btn-tell:disabled{opacity:0.35;pointer-events:none;}
+.talk-menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;}
+.talk-menu-popup{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff8f0;border-radius:24px 24px 0 0;padding:20px 16px 32px;z-index:201;box-shadow:0 -4px 24px rgba(0,0,0,0.12);}
+.talk-menu-title{font-size:13px;font-weight:800;color:#c8865a;text-align:center;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;}
+.talk-menu-item{width:100%;padding:14px;border-radius:16px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:#fdf0ff;color:#9060c0;margin-bottom:8px;text-align:left;transition:transform 0.12s;}
+.talk-menu-cant{background:#fff0f0;color:#e07070;}
+.talk-menu-later{background:#f0f8ff;color:#4a90d4;}
+.talk-menu-item:active{transform:scale(0.98);}
+.talk-menu-cancel{width:100%;padding:12px;border-radius:16px;font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:#f0ebe4;color:#a09080;margin-top:4px;}
 .btn-cant-full{width:100%;padding:11px;border-radius:18px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:2px solid #f5d0d0;background:#fff0f0;color:#e07070;transition:transform 0.12s;}
 .btn-cant-full:active{transform:scale(0.97);}
 .btn-cant-full:disabled{opacity:0.35;pointer-events:none;}
@@ -136,7 +144,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .chart-leg-dot{width:8px;height:8px;border-radius:50%;background:#f5a623;}
 
 /* Friend banner */
-.friend-banner{border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff8f0,#fdf0e8);border:2px solid #f5e6d0;animation:friendSlideIn 0.5s cubic-bezier(.34,1.56,.64,1);}
+.friend-banner{border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff8f0,#fdf0e8);border:2px solid #f5e6d0;animation:friendSlideIn 0.5s cubic-bezier(.34,1.56,.64,1);cursor:pointer;}
 @keyframes friendSlideIn{0%{opacity:0;transform:translateY(-10px) scale(0.95)}100%{opacity:1;transform:translateY(0) scale(1)}}
 .friend-banner-icon{font-size:28px;flex-shrink:0;}
 .friend-banner-text{flex:1;display:flex;flex-direction:column;gap:2px;}
@@ -385,13 +393,13 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   </div>
 
   <!-- Friend visit banner -->
-  <div class="friend-banner" id="friend-banner" style="display:none">
+  <div class="friend-banner" id="friend-banner" style="display:none" onclick="toggleFriendLore()">
     <span class="friend-banner-icon" id="friend-banner-icon">🐶</span>
     <div class="friend-banner-text">
       <div class="friend-banner-name" id="friend-banner-name">Mochi is visiting!</div>
-      <div class="friend-banner-lore" id="friend-banner-lore"></div>
+      <div class="friend-banner-lore" id="friend-banner-lore" style="display:none"></div>
     </div>
-    <button class="friend-banner-close" onclick="hideFriendBanner()">✕</button>
+    <button class="friend-banner-close" onclick="event.stopPropagation();hideFriendBanner()">✕</button>
   </div>
 
   <!-- Status banner -->
@@ -429,14 +437,18 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <button class="btn btn-end" id="btn-end" disabled>🏠 End walk</button>
   </div>
 
-  <!-- Tell Puppy button -->
-  <button class="btn-tell" id="btn-tell">💬 Tell Puppy...</button>
+  <!-- Talk to Puppy merged button -->
+  <button class="btn-tell" id="btn-talk-menu">💬 Talk to Puppy...</button>
 
-  <!-- Can't walk button -->
-  <button class="btn-cant-full" id="btn-cant">🥺 Can't walk right now...</button>
-
-  <!-- Walk later button -->
-  <button class="btn-later" id="btn-later">🕐 I'll walk later...</button>
+  <!-- Talk menu popup -->
+  <div class="talk-menu-overlay" id="talk-menu-overlay" style="display:none"></div>
+  <div class="talk-menu-popup" id="talk-menu-popup" style="display:none">
+    <div class="talk-menu-title">What's up? 🐾</div>
+    <button class="talk-menu-item" id="btn-tell">💬 Tell Puppy something</button>
+    <button class="talk-menu-item talk-menu-cant" id="btn-cant">🥺 Can't walk right now</button>
+    <button class="talk-menu-item talk-menu-later" id="btn-later">🕐 I'll walk later</button>
+    <button class="talk-menu-cancel" id="talk-menu-close">Cancel</button>
+  </div>
 
   <!-- Already walked quick-log -->
   <button class="btn-already" id="btn-already">✅ Already walked today!</button>
@@ -549,11 +561,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   </div>
 
   <!-- Drive first-time prompt (shown once) -->
-  <div class="drive-prompt" id="drive-prompt" style="display:none">
-    <div class="drive-prompt-icon">☁️</div>
-    <div class="drive-prompt-text">
-      <div class="drive-prompt-title">Back up to Google Drive?</div>
-      <div class="drive-prompt-sub">Auto-saves every walk. Works across devices.</div>
+  
     </div>
     <div class="drive-prompt-btns">
       <button class="drive-prompt-yes" id="drive-prompt-yes">Connect</button>
@@ -999,7 +1007,13 @@ function selectFocus(btn){
   S.selectedFocusMins=parseInt(btn.dataset.mins)||0;
 }
 
-document.getElementById('btn-tell').addEventListener('click',function(){if(!S.walking)openTalkSheet();});
+// ── Talk to Puppy merged menu ────────────────────────────────────
+function openTalkMenu(){document.getElementById('talk-menu-popup').style.display='block';document.getElementById('talk-menu-overlay').style.display='block';}
+function closeTalkMenu(){document.getElementById('talk-menu-popup').style.display='none';document.getElementById('talk-menu-overlay').style.display='none';}
+document.getElementById('btn-talk-menu').addEventListener('click',function(){if(!S.walking)openTalkMenu();});
+document.getElementById('talk-menu-close').addEventListener('click',closeTalkMenu);
+document.getElementById('talk-menu-overlay').addEventListener('click',closeTalkMenu);
+document.getElementById('btn-tell').addEventListener('click',function(){closeTalkMenu();if(!S.walking)openTalkSheet();});
 
 document.getElementById('talk-confirm').addEventListener('click',function(){
   var type=S.selectedTell;if(!type)return;
@@ -1159,7 +1173,7 @@ var reasonBtns=document.querySelectorAll('.reason-btn');
 var remindChips=document.querySelectorAll('.remind-chip');
 reasonBtns.forEach(function(b){b.addEventListener('click',function(){reasonBtns.forEach(function(x){x.classList.remove('selected');});b.classList.add('selected');S.selectedReason=b.dataset;});});
 remindChips.forEach(function(c){c.addEventListener('click',function(){remindChips.forEach(function(x){x.classList.remove('selected');});c.classList.add('selected');S.selectedRemindMins=parseInt(c.dataset.mins)||0;});});
-document.getElementById('btn-cant').addEventListener('click',function(){if(S.walking)return;document.getElementById('cant-sheet').style.display='block';document.getElementById('sheet-overlay').style.display='block';reasonBtns.forEach(function(b){b.classList.remove('selected');});S.selectedReason=null;S.selectedRemindMins=0;remindChips.forEach(function(c){c.classList.remove('selected');});document.querySelectorAll('.remind-chip[data-mins="0"]')[0].classList.add('selected');});
+document.getElementById('btn-cant').addEventListener('click',function(){if(S.walking)return;closeTalkMenu();document.getElementById('cant-sheet').style.display='block';document.getElementById('sheet-overlay').style.display='block';reasonBtns.forEach(function(b){b.classList.remove('selected');});S.selectedReason=null;S.selectedRemindMins=0;remindChips.forEach(function(c){c.classList.remove('selected');});document.querySelectorAll('.remind-chip[data-mins="0"]')[0].classList.add('selected');});
 document.getElementById('cant-cancel').addEventListener('click',function(){document.getElementById('cant-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
 document.getElementById('sheet-overlay').addEventListener('click',function(){document.getElementById('cant-sheet').style.display='none';document.getElementById('talk-sheet').style.display='none';document.getElementById('still-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
 document.getElementById('cant-confirm').addEventListener('click',function(){
@@ -1449,23 +1463,10 @@ document.getElementById('drive-sync-now').addEventListener('click',function(){
   showBubble('Syncing... ☁️',1500);
 });
 
-// First-time prompt
-document.getElementById('drive-prompt-yes').addEventListener('click',function(){
-  document.getElementById('drive-prompt').style.display='none';
-  S.drive.promptShown=true;saveDriveSettings();
-  document.getElementById('drive-toggle').checked=true;
-  initGoogleClient();
-});
-document.getElementById('drive-prompt-no').addEventListener('click',function(){
-  document.getElementById('drive-prompt').style.display='none';
-  S.drive.promptShown=true;saveDriveSettings();
-  showBubble('You can connect anytime from the backup section 🐾',3000);
-});
-
 function checkDrivePrompt(){
   if(!S.drive.promptShown&&!S.drive.enabled){
     setTimeout(function(){
-      document.getElementById('drive-prompt').style.display='flex';
+      
     },3000); // show 3s after open
   }
 }
@@ -1614,7 +1615,7 @@ function cancelLaterIntent(){
   showBubble('Okay! Just say when 🐾',2500);
 }
 
-document.getElementById('btn-later').addEventListener('click',openLaterSheet);
+document.getElementById('btn-later').addEventListener('click',function(){closeTalkMenu();openLaterSheet();});
 document.getElementById('later-cancel').addEventListener('click',closeLaterSheet);
 
 document.getElementById('later-time-input').addEventListener('change',function(){
@@ -1702,6 +1703,11 @@ function showFriendBanner(friend){
   if(friendHideT)clearTimeout(friendHideT);
   // Auto-hide when walk starts or after 2 hours
   friendHideT=setTimeout(hideFriendBanner, 2*60*60*1000);
+}
+
+function toggleFriendLore(){
+  var lore=document.getElementById('friend-banner-lore');
+  lore.style.display=lore.style.display==='none'?'block':'none';
 }
 
 function hideFriendBanner(){
