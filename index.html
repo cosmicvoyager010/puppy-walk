@@ -1,35 +1,75 @@
-<style>
-    /* Brutalist Base */
-    body { background: #000; color: #fff; font-family: 'Courier New', monospace; transition: 0.5s; }
-    .container { max-width: 600px; margin: auto; border: 1px solid #fff; padding: 20px; }
-    
-    /* Dynamic Theme Hooks */
-    .theme-ancient { border-color: #d4af37; color: #d4af37; }
-    .theme-modern { border-color: #00ff66; color: #00ff66; }
-    .theme-future { border-color: #00ccff; color: #00ccff; }
-    .theme-cosmic { border-color: #cc33ff; color: #cc33ff; }
-    
-    button { background: #000; border: 1px solid currentColor; color: currentColor; padding: 10px; cursor: pointer; }
-    .active { background: currentColor; color: #000; }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>// SOVEREIGN WALKER</title>
+    <style>
+        /* Brutalist Base */
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; transition: 0.5s; }
+        .container { max-width: 600px; margin: 40px auto; border: 1px solid #fff; padding: 20px; }
+        
+        /* Dynamic Theme Hooks */
+        .theme-ancient { border-color: #d4af37; color: #d4af37; }
+        .theme-modern { border-color: #00ff66; color: #00ff66; }
+        .theme-future { border-color: #00ccff; color: #00ccff; }
+        .theme-cosmic { border-color: #cc33ff; color: #cc33ff; }
+        
+        button { background: #000; border: 1px solid currentColor; color: currentColor; padding: 10px; cursor: pointer; margin: 5px; font-family: inherit; }
+        button:hover { background: currentColor; color: #000; }
+        h1, h2 { text-transform: uppercase; }
+    </style>
+</head>
+<body class="theme-modern">
 
-<script>
-    function setTimeline(t) {
-        active = t;
-        // Reset and Apply Theme
-        document.body.className = 'theme-' + t;
-        document.getElementById('container').className = 'container theme-' + t;
+    <div id="container" class="container theme-modern">
+        <h1>// OMNI-WALKER</h1>
+        <div id="controls">
+            <button onclick="setTimeline('ancient')">ANCIENT</button>
+            <button onclick="setTimeline('modern')">MODERN</button>
+            <button onclick="setTimeline('future')">FUTURE</button>
+            <button onclick="setTimeline('cosmic')">COSMIC</button>
+        </div>
+        <hr style="border: 0; border-top: 1px solid currentColor; margin: 20px 0;">
+        <div id="display"></div>
+        <div style="margin-top: 20px;">
+            <button onclick="addSteps()">+500 STEPS (SIMULATE)</button>
+            <p id="stats">TOTAL STEPS: 0</p>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            ancient: { title: "Ancient", desc: "Monemvasia Fortress", puppy: "🏛️ Puppy sniffing ancient stones." },
+            modern: { title: "Modern", desc: "Nairobi Tech Grid", puppy: "🏙️ Puppy trots near electric lines." },
+            future: { title: "Future", desc: "Artemis Lunar Base", puppy: "🚀 Puppy in a tiny EVA suit." },
+            cosmic: { title: "Cosmic", desc: "Voyager 1 Path", puppy: "🌌 Puppy floating in zero-g." }
+        };
+        
+        let active = 'modern';
+        let totalSteps = 0;
+
+        function setTimeline(t) {
+            active = t;
+            document.body.className = 'theme-' + t;
+            document.getElementById('container').className = 'container theme-' + t;
+            update();
+        }
+
+        function addSteps() {
+            totalSteps += 500;
+            document.getElementById('stats').innerText = `TOTAL STEPS: ${totalSteps}`;
+            update();
+        }
+
+        function update() {
+            const d = data[active];
+            const emoji = active === 'ancient' ? '🏛️' : active === 'modern' ? '🏙️' : active === 'future' ? '🚀' : '🌌';
+            document.getElementById('display').innerHTML = `<h2>${emoji} ${d.title}</h2><p>${d.desc}</p><p>${d.puppy}</p>`;
+        }
+        
+        // Initial Render
         update();
-    }
-    
-    // Update the display function to show the Emoji Anchor
-    function update() {
-        const d = data[active];
-        const emoji = active === 'ancient' ? '🏛️' : active === 'modern' ? '🏙️' : active === 'future' ? '🚀' : '🌌';
-        document.getElementById('display').innerHTML = `
-            <h2>${emoji} ${d.title}</h2>
-            <p>${d.desc}</p>
-            <p>${d.puppy}</p>
-        `;
-    }
-</script>
+    </script>
+</body>
+</html>
