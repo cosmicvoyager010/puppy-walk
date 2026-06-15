@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Puppy Walk</title>
+  <title>Puppy Walk: Cosmic Horizon</title>
 
   <!-- Apple Standalone App Configuration & Camouflage Manifest -->
   <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Puppy%20Walk%22,%22short_name%22:%22Puppy%20Walk%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23ffffff%22}">
@@ -17,6 +17,7 @@
       --text: #111111;
       --subtle: #86868b;
       --border: #f2f2f7;
+      --cosmic-glow: #34c759;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,8 +43,15 @@
 
     header {
       display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header-top {
+      display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
     }
 
     .tracker-label {
@@ -52,6 +60,19 @@
       letter-spacing: 2px;
       color: var(--subtle);
       font-weight: 600;
+    }
+
+    .clearance-badge {
+      font-size: 0.7rem;
+      background: var(--border);
+      color: var(--text);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      align-self: flex-start;
+      margin-top: 2px;
     }
 
     .status-container {
@@ -68,7 +89,7 @@
       transition: background-color 0.3s ease;
     }
 
-    .status-dot.active { background-color: #34c759; }
+    .status-dot.active { background-color: var(--cosmic-glow); }
 
     main {
       flex-grow: 1;
@@ -76,39 +97,60 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 35px;
+      gap: 25px;
     }
 
     .metric-group { text-align: center; }
     
     .tracker-value {
-      font-size: 6rem;
+      font-size: 5.5rem;
       font-weight: 200;
       letter-spacing: -3px;
       line-height: 1;
     }
 
     .puppy-stage {
-      height: 180px;
+      height: 140px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
     }
 
     .puppy-avatar {
-      font-size: 5.5rem;
+      font-size: 4.5rem;
       transition: transform 0.2s ease;
     }
 
     .puppy-status-text {
-      font-size: 0.85rem;
-      font-style: italic;
+      font-size: 0.8rem;
+      font-family: Menlo, Monaco, Consolas, monospace;
       color: var(--subtle);
       text-align: center;
-      max-width: 80%;
+      max-width: 90%;
       line-height: 1.4;
+    }
+
+    .intel-panel {
+      width: 100%;
+      background: var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: Menlo, Monaco, Consolas, monospace;
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: var(--text);
+      border-left: 3px solid var(--cosmic-glow);
+    }
+
+    .intel-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      color: var(--subtle);
+      font-size: 0.65rem;
     }
 
     .storage-drawer {
@@ -149,38 +191,46 @@
       color: var(--bg);
     }
 
-    .pulse-slow { animation: idleBounce 1.6s infinite ease-in-out alternate; }
-    .pulse-fast { animation: activeStride 0.5s infinite ease-in-out alternate; }
+    .pulse-slow { animation: spaceFloat 3s infinite ease-in-out alternate; }
+    .pulse-fast { animation: warpStride 0.4s infinite ease-in-out alternate; }
 
-    @keyframes idleBounce {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-8px); }
+    @keyframes spaceFloat {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-8px) rotate(2deg); }
     }
-    @keyframes activeStride {
-      0% { transform: scale(1) rotate(-3deg); }
-      100% { transform: scale(1.05) rotate(3deg); }
+    @keyframes warpStride {
+      0% { transform: scale(1) translate(1px, 1px); }
+      100% { transform: scale(1.03) translate(-1px, -1px); }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="tracker-label">Puppy Walk</div>
-    <div class="status-container">
-      <span class="tracker-label" id="status-text">Standby</span>
-      <div class="status-dot" id="status-indicator"></div>
+    <div class="header-top">
+      <div class="tracker-label">Voyager III Telemetry</div>
+      <div class="status-container">
+        <span class="tracker-label" id="status-text">Standby</span>
+        <div class="status-dot" id="status-indicator"></div>
+      </div>
     </div>
+    <div class="clearance-badge" id="clearance-display">SYSTEM LOCATION: INITIALIZING</div>
   </header>
 
   <main>
     <div class="metric-group">
       <div class="tracker-value" id="step-display">0000</div>
-      <div class="tracker-label" style="margin-top: 8px;">Total Steps Ever Taken</div>
+      <div class="tracker-label" style="margin-top: 6px;">Kinetic Impulse Steps Registered</div>
     </div>
     
     <div class="puppy-stage">
-      <div class="puppy-avatar pulse-slow" id="puppy-model">🐶</div>
+      <div class="puppy-avatar pulse-slow" id="puppy-model">🚀</div>
       <div class="puppy-status-text" id="puppy-behavior">Tap screen once to link iPhone motion hardware...</div>
+    </div>
+
+    <div class="intel-panel" id="intel-panel">
+      <div class="intel-title">[INCOMING CELESTIAL INTEL]</div>
+      <div id="intel-content">Awaiting sensor handshake to decrypt transmission stream...</div>
     </div>
   </main>
 
@@ -188,7 +238,7 @@
     <div class="db-msg" id="vault-status">🔒 Local Vault Location: Device Partition Active</div>
     
     <div class="btn-action-row">
-      <button class="drawer-btn" onclick="triggerManualBackup()">Export Data Log</button>
+      <button class="drawer-btn" onclick="triggerManualBackup()">Export Mission Data</button>
       <button class="drawer-btn primary" onclick="simulateStepDebug()">Test Step Manually</button>
     </div>
   </footer>
@@ -206,6 +256,8 @@
     const statusIndicator = document.getElementById('status-indicator');
     const statusText = document.getElementById('status-text');
     const vaultStatus = document.getElementById('vault-status');
+    const clearanceDisplay = document.getElementById('clearance-display');
+    const intelContent = document.getElementById('intel-content');
 
     // --- INDEXEDDB STORAGE PROTOCOL ---
     const openRequest = indexedDB.open("SovereignPuppyVault", 1);
@@ -234,9 +286,11 @@
         if (query.result) {
           totalSteps = query.result.stepCount;
           refreshDisplayMetrics();
-          puppyBehavior.innerText = "Data verified. Ready to walk when you are!";
+          evaluateCosmicMilestones();
+          puppyBehavior.innerText = "SYS STATUS: Connected to hardware array. Dynamic sensors online.";
         } else {
           commitToDeviceVault(0);
+          evaluateCosmicMilestones();
         }
       };
     }
@@ -249,7 +303,7 @@
       
       tx.oncomplete = () => {
         const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        vaultStatus.innerText = `🔒 Hard-Saved to iPhone Storage (${timestamp})`;
+        vaultStatus.innerText = `🔒 Local Partition Encrypted (${timestamp})`;
       };
     }
 
@@ -260,17 +314,17 @@
           .then(permission => {
             if (permission === 'granted') {
               window.addEventListener('devicemotion', processKineticForces);
-              puppyBehavior.innerText = "iPhone sensors linked! Start walking.";
+              puppyBehavior.innerText = "TRAJECTORY LOCK: Accelerometer linked. Begin movement sequence.";
             }
           })
-          .catch(() => { puppyBehavior.innerText = "Sensor handshake rejected."; });
+          .catch(() => { puppyBehavior.innerText = "ERROR: Sensor link rejected."; });
       } else {
         window.addEventListener('devicemotion', processKineticForces);
       }
     }
 
     let lastVectors = { x: 0, y: 0, z: 0 };
-    const motionSensitivityThreshold = 12.0; 
+    const motionSensitivityThreshold = 10.5; // High-sensitivity calibration active
 
     function processKineticForces(event) {
       let forces = event.accelerationIncludingGravity;
@@ -292,7 +346,7 @@
       sessionSteps += 1;
       refreshDisplayMetrics();
       manageMovementStates();
-      evaluatePuppyEmotions();
+      evaluateCosmicMilestones();
       commitToDeviceVault(totalSteps);
     }
 
@@ -304,50 +358,67 @@
       stepDisplay.innerText = String(totalSteps).padStart(4, '0');
     }
 
+    // --- REALISTIC COSMIC HORIZON & DYNAMIC INTEL SCIENCE ENGINE ---
+    function evaluateCosmicMilestones() {
+      const calculatedDistance = totalSteps * 4828; // Each step simulates 4,828 km of space travel
+      let intelText = "";
+      
+      if (totalSteps < 20) {
+        clearanceDisplay.innerText = "🌍 ZONE: LOW EARTH ORBIT";
+        puppyModel.innerText = "🚀";
+        if (!walkSessionActive) puppyBehavior.innerText = `Coasting at ${calculatedDistance.toLocaleString()} km. Escape velocity pending.`;
+        intelText = "To stay in Low Earth Orbit and not get pulled back down by gravity, a spacecraft must travel at roughly 28,000 km/h. At that speed, astronauts on the ISS witness 16 sunrises and sunsets every single day.";
+      } else if (totalSteps >= 20 && totalSteps < 100) {
+        clearanceDisplay.innerText = "🌙 ZONE: TRANSLUNAR INJECTION";
+        puppyModel.innerText = "🛰️";
+        if (!walkSessionActive) puppyBehavior.innerText = `Distance: ${calculatedDistance.toLocaleString()} km. Transiting the Lunar far side cluster.`;
+        intelText = "The Moon isn't perfectly stable in its orbit; it is slowly drifting away from Earth at a rate of about 3.8 centimeters per year. Billions of years ago, it was much closer and appeared massive in our sky.";
+      } else if (totalSteps >= 100 && totalSteps < 300) {
+        clearanceDisplay.innerText = "📡 ZONE: DEEP SPACE VOID";
+        puppyModel.innerText = "📡";
+        if (!walkSessionActive) puppyBehavior.innerText = `Distance: ${calculatedDistance.toLocaleString()} km. High-gain tracking antenna locked to Earth terminal.`;
+        intelText = "Space is notoriously empty, but it is not a perfect vacuum. The interstellar medium (the space between star systems) contains an average of just 1 atom of hydrogen per cubic centimeter.";
+      } else if (totalSteps >= 300) {
+        clearanceDisplay.innerText = "🌌 ZONE: MARS INTERCEPT ROUTE";
+        puppyModel.innerText = "🛸";
+        if (!walkSessionActive) puppyBehavior.innerText = `Distance: ${calculatedDistance.toLocaleString()} km. Autonomous cruise mode operational in the deep expanse.`;
+        intelText = "Mars appears red because its surface material is covered heavily in iron oxide—commonly known as rust. The planet is essentially a giant, dry, oxidized metal desert undergoing global dust storms.";
+      }
+
+      if (intelContent) {
+        intelContent.innerText = intelText;
+      }
+    }
+
     function manageMovementStates() {
       if (!walkSessionActive) {
         walkSessionActive = true;
         statusIndicator.classList.add('active');
-        statusText.innerText = "Walking";
+        statusText.innerText = "BURNING";
+        puppyModel.className = "puppy-avatar pulse-fast";
       }
 
       clearTimeout(walkTimeout);
       
-      // KINETIC AUTO-STOP: Auto-logs walk after 30 seconds of stillness
+      // KINETIC AUTO-STOP: Auto-logs burn sequence after 30 seconds of stillness
       walkTimeout = setTimeout(() => {
         walkSessionActive = false;
         statusIndicator.classList.remove('active');
-        statusText.innerText = "Standby";
-        puppyModel.className = "puppy-avatar pulse-slow";
-        puppyModel.innerText = "🐶";
+        statusText.innerText = "STANDBY";
+        puppyModel.className = "pulse-slow";
         
-        puppyBehavior.innerHTML = `Walk completed automatically!<br><span style="color:var(--text); font-weight:600;">+${sessionSteps} steps logged</span> during this stretch.`;
+        puppyBehavior.innerHTML = `Impulse Burn Completed.<br><span style="color:var(--cosmic-glow); font-weight:600;">+${(sessionSteps * 4828).toLocaleString()} km added</span> to trajectory vector.`;
         
         sessionSteps = 0;
+        evaluateCosmicMilestones(); // Update textual logs immediately upon stabilization
       }, 30000);
-    }
-
-    function evaluatePuppyEmotions() {
-      if (sessionSteps > 0 && sessionSteps < 20) {
-        puppyModel.innerText = "🐕";
-        puppyModel.className = "puppy-avatar pulse-slow";
-        puppyBehavior.innerText = "Sniffing the grass, tail wagging!";
-      } else if (sessionSteps >= 20 && sessionSteps < 100) {
-        puppyModel.innerText = "🦮";
-        puppyModel.className = "puppy-avatar pulse-fast";
-        puppyBehavior.innerText = "Pure puppy bliss! Trotting perfectly by your side.";
-      } else if (sessionSteps >= 100) {
-        puppyModel.innerText = "🐕‍🦺";
-        puppyModel.className = "puppy-avatar pulse-fast";
-        puppyBehavior.innerText = "Unstoppable joy! Absolute peak energy achieved! 🌟";
-      }
     }
 
     function triggerManualBackup() {
       const dataPackage = {
-        application: "PuppyWalk",
-        version: "2026.2",
-        metrics: { totalCalculatedSteps: totalSteps },
+        application: "Voyager_III_Telemetry",
+        version: "2026.6",
+        metrics: { totalSteps, virtualDistanceKm: totalSteps * 4828 },
         deviceBackupTimestamp: new Date().toISOString()
       };
 
@@ -357,7 +428,7 @@
 
       const downloadTrigger = document.createElement('a');
       downloadTrigger.href = temporaryUrl;
-      downloadTrigger.download = `puppy_walk_log.txt`;
+      downloadTrigger.download = `voyager_3_telemetry_log.txt`;
       document.body.appendChild(downloadTrigger);
       downloadTrigger.click();
       document.body.removeChild(downloadTrigger);
