@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Sovereign Walk Core</title>
+  <title>Puppy Walk</title>
 
-  <!-- Apple Standalone App Configuration -->
+  <!-- Apple Standalone App Configuration & Camouflage Manifest -->
+  <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Puppy%20Walk%22,%22short_name%22:%22Puppy%20Walk%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23ffffff%22}">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐶</text></svg>">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -64,6 +65,7 @@
       height: 8px;
       background-color: #ff9500;
       border-radius: 50%;
+      transition: background-color 0.3s ease;
     }
 
     .status-dot.active { background-color: #34c759; }
@@ -106,6 +108,7 @@
       color: var(--subtle);
       text-align: center;
       max-width: 80%;
+      line-height: 1.4;
     }
 
     .storage-drawer {
@@ -162,7 +165,7 @@
 <body>
 
   <header>
-    <div class="tracker-label">Companion Core</div>
+    <div class="tracker-label">Puppy Walk</div>
     <div class="status-container">
       <span class="tracker-label" id="status-text">Standby</span>
       <div class="status-dot" id="status-indicator"></div>
@@ -172,7 +175,7 @@
   <main>
     <div class="metric-group">
       <div class="tracker-value" id="step-display">0000</div>
-      <div class="tracker-label" style="margin-top: 8px;">Automated Steps Stored</div>
+      <div class="tracker-label" style="margin-top: 8px;">Total Steps Ever Taken</div>
     </div>
     
     <div class="puppy-stage">
@@ -192,6 +195,7 @@
 
   <script>
     let totalSteps = 0;
+    let sessionSteps = 0; 
     let walkSessionActive = false;
     let walkTimeout;
     let databaseInstance;
@@ -203,7 +207,7 @@
     const statusText = document.getElementById('status-text');
     const vaultStatus = document.getElementById('vault-status');
 
-    // --- ACCESSIBILITY HARDENED INDEXEDDB STORAGE ---
+    // --- INDEXEDDB STORAGE PROTOCOL ---
     const openRequest = indexedDB.open("SovereignPuppyVault", 1);
 
     openRequest.onupgradeneeded = (event) => {
@@ -230,7 +234,7 @@
         if (query.result) {
           totalSteps = query.result.stepCount;
           refreshDisplayMetrics();
-          puppyBehavior.innerText = "Data successfully verified. Ready to walk when you are!";
+          puppyBehavior.innerText = "Data verified. Ready to walk when you are!";
         } else {
           commitToDeviceVault(0);
         }
@@ -249,7 +253,7 @@
       };
     }
 
-    // --- HARDWARE SENSOR INITIALIZATION ---
+    // --- AUTOMATED ACCELEROMETER HARDWARE HANDSHAKE ---
     function enableHardwareTracking() {
       if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
         DeviceMotionEvent.requestPermission()
@@ -285,6 +289,7 @@
 
     function executeStepIncrement() {
       totalSteps += 1;
+      sessionSteps += 1;
       refreshDisplayMetrics();
       manageMovementStates();
       evaluatePuppyEmotions();
@@ -307,36 +312,41 @@
       }
 
       clearTimeout(walkTimeout);
+      
+      // KINETIC AUTO-STOP: Auto-logs walk after 30 seconds of stillness
       walkTimeout = setTimeout(() => {
         walkSessionActive = false;
         statusIndicator.classList.remove('active');
         statusText.innerText = "Standby";
         puppyModel.className = "puppy-avatar pulse-slow";
         puppyModel.innerText = "🐶";
-        puppyBehavior.innerText = "Taking a peaceful rest right now.";
-      }, 45000);
+        
+        puppyBehavior.innerHTML = `Walk completed automatically!<br><span style="color:var(--text); font-weight:600;">+${sessionSteps} steps logged</span> during this stretch.`;
+        
+        sessionSteps = 0;
+      }, 30000);
     }
 
     function evaluatePuppyEmotions() {
-      if (totalSteps > 0 && totalSteps < 40) {
+      if (sessionSteps > 0 && sessionSteps < 20) {
         puppyModel.innerText = "🐕";
         puppyModel.className = "puppy-avatar pulse-slow";
-        puppyBehavior.innerText = "Looking around, tails wagging!";
-      } else if (totalSteps >= 40 && totalSteps < 150) {
+        puppyBehavior.innerText = "Sniffing the grass, tail wagging!";
+      } else if (sessionSteps >= 20 && sessionSteps < 100) {
         puppyModel.innerText = "🦮";
         puppyModel.className = "puppy-avatar pulse-fast";
-        puppyBehavior.innerText = "Pure puppy bliss! Trotting along perfectly.";
-      } else if (totalSteps >= 150) {
+        puppyBehavior.innerText = "Pure puppy bliss! Trotting perfectly by your side.";
+      } else if (sessionSteps >= 100) {
         puppyModel.innerText = "🐕‍🦺";
         puppyModel.className = "puppy-avatar pulse-fast";
-        puppyBehavior.innerText = "Unstoppable joy! High energy stride unlocked! 🌟";
+        puppyBehavior.innerText = "Unstoppable joy! Absolute peak energy achieved! 🌟";
       }
     }
 
     function triggerManualBackup() {
       const dataPackage = {
-        application: "SovereignWalk",
-        version: "2026.1",
+        application: "PuppyWalk",
+        version: "2026.2",
         metrics: { totalCalculatedSteps: totalSteps },
         deviceBackupTimestamp: new Date().toISOString()
       };
