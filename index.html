@@ -1,61 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>// SOVEREIGN.WALKER.v2026</title>
-    <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; }
-        .container { max-width: 600px; margin: auto; border: 1px solid #0f0; padding: 20px; }
-        .tab-btn { background: #000; color: #0f0; border: 1px solid #0f0; padding: 10px; cursor: pointer; margin: 5px; }
-        .tab-btn:hover, .active { background: #0f0; color: #000; }
-        .stats { margin: 20px 0; border-top: 1px solid #333; padding-top: 10px; }
-        .milestone { border-left: 2px solid #0f0; padding-left: 10px; margin: 10px 0; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>// OMNI-TIMELINE WALKER</h1>
-        <div id="tabs">
-            <button class="tab-btn active" onclick="setTimeline('ancient')">ANCIENT</button>
-            <button class="tab-btn" onclick="setTimeline('modern')">MODERN</button>
-            <button class="tab-btn" onclick="setTimeline('futuristic')">FUTURE</button>
-            <button class="tab-btn" onclick="setTimeline('cosmic')">COSMIC</button>
-        </div>
+<style>
+    /* Brutalist Base */
+    body { background: #000; color: #fff; font-family: 'Courier New', monospace; transition: 0.5s; }
+    .container { max-width: 600px; margin: auto; border: 1px solid #fff; padding: 20px; }
+    
+    /* Dynamic Theme Hooks */
+    .theme-ancient { border-color: #d4af37; color: #d4af37; }
+    .theme-modern { border-color: #00ff66; color: #00ff66; }
+    .theme-future { border-color: #00ccff; color: #00ccff; }
+    .theme-cosmic { border-color: #cc33ff; color: #cc33ff; }
+    
+    button { background: #000; border: 1px solid currentColor; color: currentColor; padding: 10px; cursor: pointer; }
+    .active { background: currentColor; color: #000; }
+</style>
 
-        <div class="stats">
-            <div>[TOTAL STEPS]: <span id="total-steps">0</span></div>
-            <div id="puppy-status">🐾 Initializing companion...</div>
-        </div>
-
-        <div id="display"></div>
-
-        <button style="margin-top:20px; background:#222; color:#0f0; border:1px solid #0f0;" onclick="addSteps()">+500 STEPS (SIMULATE)</button>
-    </div>
-
-    <script>
-        let totalSteps = 0;
-        let active = 'ancient';
-
-        const data = {
-            ancient: { title: "Monemvasia Fortress", total: 12000, desc: "Byzantine citadel.", puppy: "🐾 Puppy sniffing ancient stones.", milestones: [{s:2000, n:"Sea-Gate", f:"583 AD walls."}, {s:6000, n:"Cisterns", f:"Siege reservoirs."}] },
-            modern: { title: "Nairobi Tech Grid", total: 10000, desc: "Silicon Savannah hub.", puppy: "🐾 Puppy trots near electric lines.", milestones: [{s:3000, n:"Kilimani", f:"Fintech hub."}, {s:6000, n:"Expressway", f:"Smart transit."}] },
-            futuristic: { title: "Artemis Lunar Base", total: 15000, desc: "Lunar South Pole.", puppy: "🐾 Puppy in a tiny EVA suit.", milestones: [{s:3000, n:"Ice Rigs", f:"Water-to-Oxygen."}, {s:8000, n:"Solar Ridge", f:"Near-constant power."}] },
-            cosmic: { title: "Voyager 1 Path", total: 20000, desc: "Interstellar space.", puppy: "🐾 Puppy floating in zero-g.", milestones: [{s:5000, n:"Shock", f:"Solar wind slowdown."}, {s:12000, n:"Heliopause", f:"Magnetic exit."}] }
-        };
-
-        function setTimeline(t) { active = t; update(); }
-        function addSteps() { totalSteps += 500; update(); }
-        function update() {
-            document.getElementById('total-steps').innerText = totalSteps;
-            const d = data[active];
-            document.getElementById('puppy-status').innerText = d.puppy;
-            let html = `<h3>${d.title}</h3><p>${d.desc}</p>`;
-            d.milestones.forEach(m => {
-                if(totalSteps >= m.s) html += `<div class="milestone"><b>${m.n}</b>: ${m.f}</div>`;
-            });
-            document.getElementById('display').innerHTML = html;
-        }
+<script>
+    function setTimeline(t) {
+        active = t;
+        // Reset and Apply Theme
+        document.body.className = 'theme-' + t;
+        document.getElementById('container').className = 'container theme-' + t;
         update();
-    </script>
-</body>
-</html>
+    }
+    
+    // Update the display function to show the Emoji Anchor
+    function update() {
+        const d = data[active];
+        const emoji = active === 'ancient' ? '🏛️' : active === 'modern' ? '🏙️' : active === 'future' ? '🚀' : '🌌';
+        document.getElementById('display').innerHTML = `
+            <h2>${emoji} ${d.title}</h2>
+            <p>${d.desc}</p>
+            <p>${d.puppy}</p>
+        `;
+    }
+</script>
