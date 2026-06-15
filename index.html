@@ -324,6 +324,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .sleep-anim{animation:breathe 3s ease-in-out infinite;}
 .name-tag{font-size:7px;font-weight:800;fill:#3d2b1a;text-anchor:middle;letter-spacing:0.5px;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 <div class="sheet-overlay" id="sheet-overlay"></div>
@@ -708,6 +709,39 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 </div>
 
 <script>
+// ── Supabase cloud sync ───────────────────────────────────────────
+var SUPA_URL='https://tmndwcfqezysjzprsnis.supabase.co';
+var SUPA_KEY='sb_publishable_u3mKj7e_xfQJXNZTo7mTsA_bgtzAKBs';
+var SUPA_USER='cosmicvoyager010';
+var supaClient=null;
+try{supaClient=supabase.createClient(SUPA_URL,SUPA_KEY);}catch(e){console.warn('Supabase init failed',e);}
+
+function cloudSave(){
+  if(!supaClient)return;
+  try{
+    var data={logs:S.logs,restDays:S.restDays};
+    supaClient.from('walks').upsert({user_id:SUPA_USER,data:data,updated_at:new Date().toISOString()},{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Cloud save error',r.error);});
+  }catch(e){}
+}
+
+function cloudLoad(){
+  if(!supaClient)return;
+  try{
+    supaClient.from('walks').select('data').eq('user_id',SUPA_USER).single().then(function(r){
+      if(r.error||!r.data)return;
+      var d=r.data.data;
+      if(d&&d.logs&&d.logs.length>S.logs.length){
+        S.logs=d.logs;
+        if(d.restDays)S.restDays=d.restDays;
+        localStorage.setItem('puppy_logs',JSON.stringify(S.logs));
+        localStorage.setItem('puppy_rest',JSON.stringify(S.restDays));
+        renderLog();renderStreak();renderSummary();renderChart();renderBadges();
+        console.log('Cloud data loaded: '+S.logs.length+' walks');
+      }
+    });
+  }catch(e){}
+}
+
 // ── Messages ──────────────────────────────────────────────────────
 var MSG={
   happy:["Woof! 🐾","Ready to go! 🌳","Walk time?? 🥺","I love you! ❤️","Let's adventure! 🗺️","Is that the leash?? 🦮"],
@@ -747,7 +781,7 @@ var S={
   selectedReason:null,selectedRemindMins:0
 };
 
-function saveLogs(){try{localStorage.setItem('puppy_logs',JSON.stringify(S.logs));}catch(e){}}
+function saveLogs(){try{localStorage.setItem('puppy_logs',JSON.stringify(S.logs));cloudSave();}catch(e){}}
 function saveRestDays(){try{localStorage.setItem('puppy_rest',JSON.stringify(S.restDays));}catch(e){}}
 function saveSettings(){try{localStorage.setItem('puppy_settings',JSON.stringify(S.settings));}catch(e){}}
 function fmtDur(ms){var s=Math.round(ms/1000);if(s<60)return s+'s';var m=Math.floor(s/60),r=s%60;return r?m+'m '+r+'s':m+'m';}
@@ -1915,6 +1949,7 @@ function checkOnOpen(){
 
 // ── Init ───────────────────────────────────────────────────────────
 renderLog();renderStreak();renderSummary();renderChart();renderBadges();
+cloudLoad();
 updateReminderUI();updateAlreadyBtn();updateDriveUI();checkDrivePrompt();
 // Run on-open alarm check
 checkOnOpen();
