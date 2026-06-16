@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Puppy Walk</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+/* iPhone 14: 390×844 logical px, safe areas via env() */
+:root{
+  --sat:env(safe-area-inset-top,44px);
+  --sab:env(safe-area-inset-bottom,34px);
+  --sal:env(safe-area-inset-left,0px);
+  --sar:env(safe-area-inset-right,0px);
+  --sky:#e8f4fd;
+  --ground:#7ec850;--ground-dk:#2a4a2a;
+  --path:#d4b896;--night:#0d1b2a;
+  --txt:#2d1a0e;--txt-m:#6a5040;
+  --card:rgba(255,255,255,0.90);
+  --accent:#ff6b35;--gold:#f5c518;--sleepy:#9b7dbf;
+  --space:#060d1f;--space-mid:#0d1f3c;
+  --earth:#1a3a1a;--earth-mid:#2a5a2a;
+  --badge:#ff3b30;
+  /* iPhone 14 base font scale */
+  --fs-xs:11px;--fs-sm:13px;--fs-base:15px;--fs-lg:18px;--fs-xl:22px;--fs-2xl:28px;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;}
+body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;background:var(--sky);transition:background 1.2s;user-select:none;-webkit-user-select:none;}
+body.night-mode{background:var(--night);}
+
+/* ── SCENE ── */
+#scene{position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
+#celestial{position:absolute;top:calc(var(--sat) + 54px);right:20px;width:46px;height:46px;border-radius:50%;background:#ffe066;box-shadow:0 0 0 10px rgba(255,224,102,0.18);transition:all 1.2s;}
+body.night-mode #celestial{background:#e8e8d0;box-shadow:0 0 0 10px rgba(232,232,208,0.12);width:36px;height:36px;}
+#stars{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.5s;}
+body.night-mode #stars{opacity:1;}
+.star{position:absolute;background:#f0e68c;border-radius:50%;animation:twinkle 2s infinite alternate;}
+.cloud{position:absolute;background:#fff;border-radius:50px;opacity:0.85;animation:drift linear infinite;}
+body.night-mode .cloud{opacity:0.07;}
+
+#ground{position:relative;width:100%;height:110px;flex-shrink:0;}
+#grass{position:absolute;bottom:0;left:0;right:0;height:85px;background:var(--ground);border-radius:40% 40% 0 0/18px 18px 0 0;transition:background 1.2s;}
+body.night-mode #grass{background:var(--ground-dk);}
+#path-strip{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:56px;height:85px;background:var(--path);opacity:0.45;}
+
+/* ── PUPPY ── */
+#puppy-wrap{position:absolute;bottom:84px;left:50%;transform:translateX(-50%);z-index:10;}
+#puppy{width:88px;height:88px;position:relative;}
+#p-body{position:absolute;bottom:16px;left:16px;width:54px;height:38px;background:#c8854a;border-radius:40% 40% 35% 35%;}
+#p-head{position:absolute;bottom:46px;left:26px;width:36px;height:32px;background:#c8854a;border-radius:50% 50% 40% 40%;}
+#p-ear-l,#p-ear-r{position:absolute;width:14px;height:18px;background:#a0622a;border-radius:50% 50% 40% 40%;top:-10px;}
+#p-ear-l{left:2px;transform-origin:bottom left;}
+#p-ear-r{right:2px;transform-origin:bottom right;}
+#p-eye-l,#p-eye-r{position:absolute;width:7px;height:7px;background:#1a0a00;border-radius:50%;top:8px;transition:all 0.3s;}
+#p-eye-l{left:6px;}#p-eye-r{right:6px;}
+#p-eye-l::after,#p-eye-r::after{content:'';position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;top:1px;left:1px;}
+#p-nose{position:absolute;width:9px;height:6px;background:#2d1a0e;border-radius:50%;bottom:6px;left:50%;transform:translateX(-50%);}
+#p-mouth{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:14px;height:6px;}
+#p-mouth::before{content:'';position:absolute;width:14px;height:8px;border-bottom:3px solid #a0622a;border-radius:0 0 50% 50%;top:0;left:0;}
+#p-tongue{position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:10px;height:10px;background:#ff6b8a;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;opacity:0;transition:opacity 0.3s;}
+#p-tail{position:absolute;bottom:28px;right:6px;width:22px;height:14px;background:#c8854a;border-radius:50% 80% 20% 50%;transform-origin:left center;}
+#p-leg-fl,#p-leg-fr,#p-leg-bl,#p-leg-br{position:absolute;width:10px;height:20px;background:#c8854a;border-radius:4px 4px 6px 6px;bottom:0;transform-origin:top center;}
+#p-leg-fl{left:22px;}#p-leg-fr{left:34px;}#p-leg-bl{right:20px;}#p-leg-br{right:10px;}
+#p-leg-fl::after,#p-leg-fr::after,#p-leg-bl::after,#p-leg-br::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:10px;height:6px;background:#a0622a;border-radius:50%;}
+#p-blush-l,#p-blush-r{position:absolute;width:10px;height:6px;background:rgba(255,120,120,0.4);border-radius:50%;top:16px;opacity:0;transition:opacity 0.5s;}
+#p-blush-l{left:1px;}#p-blush-r{right:1px;}
+#p-zzz{position:absolute;top:-22px;right:-12px;font-size:17px;font-weight:700;color:var(--sleepy);opacity:0;transition:opacity 0.8s;animation:floatZzz 2s ease-in-out infinite;}
+.heart-pop{position:absolute;font-size:20px;animation:heartFly 1.2s ease-out forwards;pointer-events:none;z-index:20;}
+
+/* puppy animations */
+.state-walking #p-leg-fl{animation:pawL .35s ease infinite;}
+.state-walking #p-leg-fr{animation:pawR .35s ease infinite;}
+.state-walking #p-leg-bl{animation:pawR .35s ease infinite;}
+.state-walking #p-leg-br{animation:pawL .35s ease infinite;}
+.state-walking #p-tail{animation:tailWag .4s ease infinite;}
+.state-walking #p-body{animation:bodyBob .35s ease infinite;}
+.state-walking #p-head{animation:headBob .35s ease infinite;}
+.state-walking #p-ear-l{animation:earFlap .6s ease infinite;}
+.state-walking #p-ear-r{animation:earFlap .6s ease infinite reverse;}
+.state-walking #puppy{animation:puppyRun .35s ease infinite;}
+.state-happy #p-leg-fl{animation:pawL .22s ease infinite;}
+.state-happy #p-leg-fr{animation:pawR .22s ease infinite;}
+.state-happy #p-leg-bl{animation:pawR .22s ease infinite;}
+.state-happy #p-leg-br{animation:pawL .22s ease infinite;}
+.state-happy #p-tail{animation:tailWagFast .2s ease infinite;}
+.state-happy #p-body{animation:bodyBob .22s ease infinite;}
+.state-happy #p-head{animation:headBob .22s ease infinite;}
+.state-happy #puppy{animation:celebration .3s ease infinite;}
+.state-idle #p-tail{animation:tailWag 1.2s ease infinite;}
+.state-idle #p-body{animation:bodyBob 1.5s ease infinite;}
+
+/* ── HUD TOP ── */
+#hud{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:calc(var(--sat) + 8px) 14px 10px;
+  display:flex;align-items:flex-start;gap:8px;
+  background:linear-gradient(to bottom,rgba(232,244,253,0.97) 72%,transparent);
+  transition:background 1.2s;
+}
+body.night-mode #hud{background:linear-gradient(to bottom,rgba(13,27,42,0.97) 72%,transparent);}
+.stat-card{background:var(--card);border-radius:13px;padding:7px 8px;text-align:center;flex:1;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.65);}
+.stat-val{font-size:var(--fs-xl);font-weight:800;color:var(--txt);line-height:1.1;letter-spacing:-0.5px;}
+.stat-label{font-size:var(--fs-xs);font-weight:600;color:var(--txt-m);text-transform:uppercase;letter-spacing:0.7px;margin-top:1px;}
+
+/* ── SHARED STEPS RIBBON ── */
+/* Shows just below HUD — always visible, tells user all three layers use same steps */
+#shared-ribbon{
+  position:fixed;top:calc(var(--sat) + 76px);left:0;right:0;z-index:49;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:5px 14px;
+}
+#shared-pill{
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.65);
+  border-radius:20px;
+  padding:4px 12px;
+  display:flex;align-items:center;gap:6px;
+  font-size:var(--fs-xs);font-weight:600;color:var(--txt-m);
+  white-space:nowrap;
+}
+#shared-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse-dot 2s ease-in-out infinite;}
+#shared-pill .layers{display:flex;gap:3px;align-items:center;}
+#shared-pill .layer-icon{font-size:13px;}
+body.night-mode #shared-pill{background:rgba(13,27,42,0.82);color:rgba(255,255,255,0.6);}
+
+/* ── MOOD BANNER ── */
+#mood-banner{
+  position:fixed;bottom:calc(var(--sab) + 108px);left:50%;transform:translateX(-50%);
+  background:var(--card);border-radius:28px;padding:8px 18px;
+  font-size:var(--fs-sm);font-weight:600;color:var(--txt);
+  backdrop-filter:blur(8px);opacity:0;transition:opacity 0.5s;
+  pointer-events:none;white-space:nowrap;z-index:40;
+  border:1px solid rgba(255,255,255,0.65);
+}
+#mood-banner.visible{opacity:1;}
+
+/* ── MILESTONE BAR ── */
+#milestone-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  padding:9px 14px calc(var(--sab) + 10px);
+  background:linear-gradient(to top,rgba(232,244,253,0.98) 65%,transparent);
+  transition:background 1.2s;
+}
+body.night-mode #milestone-bar{background:linear-gradient(to top,rgba(13,27,42,0.98) 65%,transparent);}
+#next-label{font-size:var(--fs-xs);font-weight:700;color:var(--txt-m);text-transform:uppercase;letter-spacing:0.9px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+#next-label span{font-size:var(--fs-sm);color:var(--accent);font-weight:700;}
+#progress-track{background:rgba(0,0,0,0.08);border-radius:10px;height:8px;overflow:hidden;}
+#progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:10px;transition:width 0.4s cubic-bezier(0.4,0,0.2,1);width:0%;}
+#milestone-hint{font-size:var(--fs-xs);color:var(--txt-m);margin-top:4px;text-align:center;}
+#milestone-hint .locked{opacity:0.4;}
+
+/* ── SIDE TAB BUTTONS ── */
+#panel-btn{
+  position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:60;
+  display:flex;flex-direction:column;gap:5px;
+  padding:10px 5px;
+  background:var(--card);
+  border-radius:14px 0 0 14px;
+  border:1px solid rgba(255,255,255,0.7);
+  border-right:none;
+  backdrop-filter:blur(10px);
+}
+.pnl-tab{
+  position:relative;
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;cursor:pointer;
+  transition:background 0.2s;border:none;background:transparent;
+}
+.pnl-tab.active{background:rgba(255,107,53,0.14);}
+
+/* badge */
+.tab-badge{
+  position:absolute;top:2px;right:2px;
+  min-width:16px;height:16px;border-radius:8px;
+  background:var(--badge);color:#fff;
+  font-size:9px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 3px;
+  border:2px solid #fff;
+  opacity:0;transform:scale(0);
+  transition:opacity 0.3s,transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;
+}
+.tab-badge.visible{opacity:1;transform:scale(1);}
+body.night-mode .tab-badge{border-color:var(--night);}
+
+/* ── SIDE PANEL ── */
+#side-panel{
+  position:fixed;top:0;right:-105%;width:100%;height:100%;
+  z-index:70;transition:right 0.36s cubic-bezier(0.4,0,0.2,1);
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:-4px 0 32px rgba(0,0,0,0.18);
+}
+#side-panel.open{right:0;}
+
+/* ── SPACE PANEL ── */
+#panel-space{display:none;flex-direction:column;height:100%;background:var(--space);color:#fff;}
+#panel-space.active{display:flex;}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(var(--sat) + 10px) 16px 10px;
+  flex-shrink:0;
+}
+.panel-header h2{font-size:var(--fs-lg);font-weight:800;letter-spacing:-0.3px;}
+
+/* shared steps indicator inside panel */
+.panel-step-pill{
+  margin:0 16px 10px;flex-shrink:0;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;padding:9px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.panel-step-pill .psp-icon{font-size:20px;}
+.panel-step-pill .psp-text{flex:1;}
+.panel-step-pill .psp-label{font-size:var(--fs-xs);color:rgba(255,255,255,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.7px;}
+.panel-step-pill .psp-val{font-size:var(--fs-xl);font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1.1;}
+.panel-step-pill .psp-note{font-size:var(--fs-xs);color:rgba(255,255,255,0.4);margin-top:1px;}
+
+.close-btn{
+  background:rgba(255,255,255,0.12);border:none;border-radius:50%;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;color:#fff;flex-shrink:0;
+}
+
+#space-scene{position:relative;flex:1;overflow:hidden;min-height:0;}
+#space-canvas{position:absolute;inset:0;width:100%;height:100%;}
+#spacecraft{position:absolute;left:50%;bottom:15%;transform:translateX(-50%);font-size:36px;transition:bottom 1s ease;animation:engineGlow 1.5s ease-in-out infinite;}
+#space-body{position:absolute;right:24px;border-radius:50%;transition:all 0.8s;}
+#space-body-ring{position:absolute;right:0;transition:all 0.8s;pointer-events:none;}
+#space-label{position:absolute;right:8px;font-size:10px;color:rgba(255,255,255,0.55);font-weight:600;text-align:center;transition:all 0.8s;}
+
+#space-info{padding:12px 16px calc(var(--sab) + 12px);background:var(--space-mid);border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0;}
+.s-name{font-size:var(--fs-lg);font-weight:800;color:#fff;margin-bottom:3px;}
+.s-fact{font-size:var(--fs-sm);color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:8px;}
+.s-dist{font-size:var(--fs-xs);font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.8px;}
+#sp-progress-track{background:rgba(255,255,255,0.1);border-radius:10px;height:5px;margin-top:5px;overflow:hidden;}
+#sp-progress-fill{height:100%;background:linear-gradient(90deg,#4466ff,var(--gold));border-radius:10px;transition:width 0.4s;width:0%;}
+.s-next{font-size:var(--fs-xs);color:rgba(255,255,255,0.35);margin-top:3px;}
+
+/* ── EARTH PANEL ── */
+#panel-earth{display:none;flex-direction:column;height:100%;background:var(--earth);color:#fff;}
+#panel-earth.active{display:flex;}
+#earth-map{flex:1;position:relative;overflow:hidden;min-height:0;}
+#earth-map svg{width:100%;height:100%;}
+.route-dot{transition:opacity 0.3s;}
+.route-dot.unlocked{fill:#7ec850;}
+.route-dot.locked{fill:rgba(255,255,255,0.18);}
+.route-dot.current{fill:var(--gold);animation:routePulse 1.5s ease-in-out infinite;}
+#earth-info{padding:12px 16px calc(var(--sab) + 12px);background:var(--earth-mid);border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0;}
+.e-name{font-size:var(--fs-lg);font-weight:800;color:#fff;margin-bottom:3px;}
+.e-fact{font-size:var(--fs-sm);color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:8px;}
+.e-steps{font-size:var(--fs-xs);font-weight:700;color:#7ec850;text-transform:uppercase;letter-spacing:0.8px;}
+#earth-progress-track{background:rgba(255,255,255,0.1);border-radius:10px;height:5px;margin-top:5px;overflow:hidden;}
+#earth-progress-fill{height:100%;background:linear-gradient(90deg,#7ec850,var(--gold));border-radius:10px;transition:width 0.4s;width:0%;}
+.e-next{font-size:var(--fs-xs);color:rgba(255,255,255,0.35);margin-top:3px;}
+
+/* ── TREASURE POPUP ── */
+#treasure-pop{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  background:var(--card);border-radius:22px;padding:24px 24px;
+  text-align:center;z-index:100;max-width:310px;width:calc(100% - 40px);
+  backdrop-filter:blur(14px);
+  box-shadow:0 8px 40px rgba(0,0,0,0.18);
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+#treasure-pop.show{transform:translate(-50%,-50%) scale(1);}
+.t-emoji{font-size:52px;display:block;margin-bottom:10px;}
+.t-title{font-size:var(--fs-xl);font-weight:700;color:var(--txt);margin-bottom:5px;}
+.t-desc{font-size:var(--fs-sm);color:var(--txt-m);line-height:1.55;margin-bottom:16px;}
+.t-close{background:var(--accent);color:#fff;border:none;border-radius:28px;padding:11px 28px;font-size:var(--fs-base);font-weight:700;cursor:pointer;letter-spacing:0.1px;}
+
+/* ── PERMISSION ── */
+#permission-screen{
+  position:fixed;inset:0;background:var(--sky);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:calc(var(--sat) + 24px) 32px calc(var(--sab) + 24px);
+  text-align:center;gap:16px;
+}
+#permission-screen.hidden{display:none;}
+.perm-pup{font-size:76px;animation:bounce 1s ease infinite alternate;}
+.perm-title{font-size:var(--fs-2xl);font-weight:800;color:var(--txt);line-height:1.2;}
+.perm-sub{font-size:var(--fs-base);color:var(--txt-m);line-height:1.6;max-width:300px;}
+#btn-allow{
+  background:var(--accent);color:#fff;border:none;border-radius:28px;
+  padding:15px 40px;font-size:var(--fs-lg);font-weight:700;cursor:pointer;
+  box-shadow:0 4px 20px rgba(255,107,53,0.35);
+  transition:transform 0.1s;margin-top:4px;width:100%;max-width:280px;
+}
+#btn-allow:active{transform:scale(0.96);}
+#btn-manual{font-size:var(--fs-sm);color:var(--txt-m);background:none;border:none;cursor:pointer;text-decoration:underline;}
+
+/* ── KEYFRAMES ── */
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+@keyframes twinkle{from{opacity:0.3;transform:scale(0.8)}to{opacity:1;transform:scale(1.2)}}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(calc(100vw + 160px))}}
+@keyframes floatZzz{0%,100%{transform:translateY(0) scale(1);opacity:0.8}50%{transform:translateY(-10px) scale(1.1);opacity:1}}
+@keyframes heartFly{0%{transform:translateY(0) scale(0.5);opacity:1}100%{transform:translateY(-80px) scale(1.3);opacity:0}}
+@keyframes celebration{0%{transform:rotate(-6deg) scale(1.05)}50%{transform:rotate(6deg) scale(1.05)}100%{transform:rotate(-6deg) scale(1.05)}}
+@keyframes pawL{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+@keyframes pawR{0%,100%{transform:rotate(15deg)}50%{transform:rotate(-15deg)}}
+@keyframes tailWag{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(30deg)}}
+@keyframes tailWagFast{0%,100%{transform:rotate(-35deg)}50%{transform:rotate(45deg)}}
+@keyframes bodyBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes headBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+@keyframes puppyRun{0%,100%{transform:translateX(-1px)}50%{transform:translateX(1px)}}
+@keyframes earFlap{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(10deg)}}
+@keyframes routePulse{0%,100%{r:7}50%{r:10}}
+@keyframes engineGlow{0%,100%{filter:drop-shadow(0 0 4px #4488ff)}50%{filter:drop-shadow(0 0 12px #88aaff)}}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+@keyframes badgePop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<!-- Permission screen -->
+<div id="permission-screen">
+  <div class="perm-pup">🐶</div>
+  <div class="perm-title">Your puppy is ready!</div>
+  <div class="perm-sub">Puppy Walk uses your iPhone's motion sensor to count steps automatically — no tapping needed. Just walk!</div>
+  <button id="btn-allow">Let's go! Allow motion</button>
+  <button id="btn-manual">Use tap mode instead</button>
+</div>
+
+<!-- Scene -->
+<div id="scene">
+  <div id="celestial"></div>
+  <div id="stars"></div>
+  <div id="ground">
+    <div id="grass"></div>
+    <div id="path-strip"></div>
+  </div>
+  <div id="puppy-wrap">
+    <div id="p-zzz">Zzz</div>
+    <div id="puppy" class="state-idle">
+      <div id="p-body"></div>
+      <div id="p-tail"></div>
+      <div id="p-leg-bl"></div><div id="p-leg-br"></div>
+      <div id="p-head">
+        <div id="p-ear-l"></div><div id="p-ear-r"></div>
+        <div id="p-eye-l"></div><div id="p-eye-r"></div>
+        <div id="p-nose"></div>
+        <div id="p-mouth"><div id="p-tongue"></div></div>
+        <div id="p-blush-l"></div><div id="p-blush-r"></div>
+      </div>
+      <div id="p-leg-fl"></div><div id="p-leg-fr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="stat-card">
+    <div class="stat-val" id="step-count">0</div>
+    <div class="stat-label">Steps</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" id="mood-emoji">😴</div>
+    <div class="stat-label">Mood</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" id="streak-count">0</div>
+    <div class="stat-label">Streak</div>
+  </div>
+</div>
+
+<!-- Shared steps ribbon -->
+<div id="shared-ribbon">
+  <div id="shared-pill">
+    <span class="dot"></span>
+    <span class="layers">
+      <span class="layer-icon">🐾</span>
+      <span class="layer-icon">🚀</span>
+      <span class="layer-icon">🗺️</span>
+    </span>
+    <span id="ribbon-text">All 3 layers share your steps</span>
+  </div>
+</div>
+
+<!-- Mood banner -->
+<div id="mood-banner"></div>
+
+<!-- Milestone bar -->
+<div id="milestone-bar">
+  <div id="next-label">Next discovery <span id="steps-to-next">?</span></div>
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <div id="milestone-hint"><span class="locked">🔒 Keep walking to unlock...</span></div>
+</div>
+
+<!-- Side tab buttons -->
+<div id="panel-btn">
+  <button class="pnl-tab" id="tab-space" title="Cosmic Travel">
+    🚀
+    <span class="tab-badge" id="badge-space">!</span>
+  </button>
+  <button class="pnl-tab" id="tab-earth" title="Ancient Routes">
+    🗺️
+    <span class="tab-badge" id="badge-earth">!</span>
+  </button>
+</div>
+
+<!-- Side panel -->
+<div id="side-panel">
+
+  <!-- Space -->
+  <div id="panel-space">
+    <div class="panel-header">
+      <h2>🚀 Cosmic Travel</h2>
+      <button class="close-btn" id="close-panel-space">✕</button>
+    </div>
+
+    <!-- Shared step indicator -->
+    <div class="panel-step-pill">
+      <span class="psp-icon">🐾</span>
+      <div class="psp-text">
+        <div class="psp-label">Your walk powers this</div>
+        <div class="psp-val" id="sp-step-mirror">0 steps</div>
+        <div class="psp-note">Same steps as your puppy walk</div>
+      </div>
+    </div>
+
+    <div id="space-scene">
+      <canvas id="space-canvas"></canvas>
+      <div id="spacecraft">🛸</div>
+      <div id="space-body"></div>
+      <div id="space-label"></div>
+    </div>
+    <div id="space-info">
+      <div class="s-name" id="sp-name">On the launchpad</div>
+      <div class="s-fact" id="sp-fact">Walk 500 steps to break Earth's orbit and begin your solar system journey.</div>
+      <div class="s-dist" id="sp-dist">0 km traveled</div>
+      <div id="sp-progress-track"><div id="sp-progress-fill"></div></div>
+      <div class="s-next" id="sp-next"></div>
+    </div>
+  </div>
+
+  <!-- Earth -->
+  <div id="panel-earth">
+    <div class="panel-header">
+      <h2>🗺️ Ancient Routes</h2>
+      <button class="close-btn" id="close-panel-earth">✕</button>
+    </div>
+
+    <!-- Shared step indicator -->
+    <div class="panel-step-pill" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.1);">
+      <span class="psp-icon">🐾</span>
+      <div class="psp-text">
+        <div class="psp-label">Your walk powers this</div>
+        <div class="psp-val" id="e-step-mirror">0 steps</div>
+        <div class="psp-note">Same steps as your puppy walk</div>
+      </div>
+    </div>
+
+    <div id="earth-map">
+      <svg id="route-svg" viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect width="300" height="260" fill="#1a3a1a"/>
+        <!-- sea -->
+        <ellipse cx="148" cy="112" rx="58" ry="20" fill="#0d2a4a" opacity="0.7"/>
+        <!-- Nile -->
+        <path d="M150 112 Q153 132 151 162" stroke="#0d2a4a" stroke-width="4" fill="none" opacity="0.5"/>
+        <!-- Caspian -->
+        <ellipse cx="170" cy="88" rx="10" ry="18" fill="#0d2a4a" opacity="0.5"/>
+        <polyline id="route-line" points="" stroke="#7ec850" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.55"/>
+      </svg>
+    </div>
+    <div id="earth-info">
+      <div class="e-name" id="e-name">Starting in Xi'an, China</div>
+      <div class="e-fact" id="e-fact">The Silk Road begins here — the greatest trade route in history.</div>
+      <div class="e-steps" id="e-steps">0 steps walked</div>
+      <div id="earth-progress-track"><div id="earth-progress-fill"></div></div>
+      <div class="e-next" id="e-next"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Treasure popup -->
+<div id="treasure-pop">
+  <span class="t-emoji" id="t-emoji"></span>
+  <div class="t-title" id="t-title"></div>
+  <div class="t-desc"  id="t-desc"></div>
+  <button class="t-close" id="t-close">Woof! Keep going 🐾</button>
+</div>
+
+<script>
+// ═══════════════════ DATA ═══════════════════
+
+const PUPPY_MILESTONES=[
+  {steps:100,  emoji:'🦴', title:'First Bone!',      desc:'Your puppy found a hidden bone buried under the old oak tree. What a nose!'},
+  {steps:250,  emoji:'🐿️', title:'Squirrel Chase!',  desc:'A cheeky squirrel dashed across the path! Your puppy gave it a good run.'},
+  {steps:500,  emoji:'🌸', title:'Flower Field',      desc:'You discovered a secret meadow of cherry blossoms. The puppy rolled around in pure joy.'},
+  {steps:750,  emoji:'🐦', title:'Bird Serenade',     desc:'A robin landed nearby and sang three songs. Your puppy sat perfectly still, enchanted.'},
+  {steps:1000, emoji:'🏆', title:'1,000 Steps!',      desc:'One thousand steps together! Your puppy is absolutely glowing. You\'re a great team.'},
+  {steps:1500, emoji:'🌊', title:'Secret Creek',      desc:'Hidden behind tall grass: a babbling creek. Your puppy splashed in with zero hesitation.'},
+  {steps:2000, emoji:'🦊', title:'Fox Sighting!',     desc:'A red fox peeked from the bushes, studied you both, then vanished like smoke.'},
+  {steps:3000, emoji:'🌙', title:'Moonlit Trail',     desc:'3,000 steps under the stars. The path glows silver. Your puppy howls softly at the moon.'},
+  {steps:5000, emoji:'🌟', title:'5K Legend!',        desc:'Five thousand steps! You and your puppy are legendary walkers now.'},
+  {steps:10000,emoji:'🎉', title:'10,000 Steps!',     desc:'TEN THOUSAND STEPS! Your puppy is the happiest dog in the universe.'},
+];
+
+const SPACE_WAYPOINTS=[
+  {steps:0,    name:'On the launchpad',        color:'#4488aa',size:42,y:75,fact:'Walk 500 steps to break Earth\'s orbit. Engines warming up...'},
+  {steps:500,  name:'Earth orbit',             color:'#4488cc',size:42,y:70,fact:'You\'ve broken free of gravity! You\'re 400 km above Earth, traveling at 28,000 km/h.'},
+  {steps:1000, name:'Past the Moon',           color:'#aaaaaa',size:22,y:65,fact:'384,400 km from home. The Moon\'s craters come into full view as you sail past.'},
+  {steps:2000, name:'Approaching Mars',        color:'#cc6644',size:30,y:56,fact:'The Red Planet glows ahead. Olympus Mons — Mars\'s volcano — is 3× the height of Everest.'},
+  {steps:3500, name:'The Asteroid Belt',       color:'#888866',size:0, y:47,fact:'Millions of rocky fragments orbit the Sun here. Navigate carefully through the debris field!'},
+  {steps:5000, name:'Jupiter',                 color:'#cc9966',size:58,y:38,fact:'Jupiter\'s Great Red Spot is a storm larger than Earth — and it\'s been raging for 400 years.'},
+  {steps:7000, name:'Saturn\'s rings',         color:'#ddcc88',size:48,y:28,fact:'Saturn\'s rings stretch 282,000 km wide but are only 1 km thick. Like a giant vinyl record.'},
+  {steps:9000, name:'Uranus',                  color:'#88ccdd',size:36,y:20,fact:'Uranus rotates on its side — its axial tilt is 98°. It effectively rolls around the Sun.'},
+  {steps:12000,name:'Neptune',                 color:'#4466cc',size:34,y:13,fact:'Neptune\'s winds hit 2,100 km/h — fastest in the solar system. Voyager 2 visited in 1989.'},
+  {steps:15000,name:'Edge of the solar system',color:'#ffffff',size:6, y:6, fact:'You\'ve reached the heliopause — where solar wind meets interstellar space. True explorer.'},
+];
+
+const EARTH_WAYPOINTS=[
+  {steps:0,    name:"Xi'an, China",         x:252,y:88,  fact:"The Silk Road begins here — linking East to West for 1,500 years of trade and culture."},
+  {steps:400,  name:"Dunhuang Caves",        x:215,y:83,  fact:"The Mogao Caves hold 492 temples of Buddhist murals. Hidden manuscripts were sealed here for 900 years."},
+  {steps:900,  name:"Samarkand",             x:164,y:78,  fact:"The jewel of Central Asia. Its Registan Square is one of the world's most magnificent architectural ensembles."},
+  {steps:1500, name:"Merv, Turkmenistan",    x:142,y:86,  fact:"Once the largest city in the world. A flourishing oasis where caravans rested for weeks at a time."},
+  {steps:2200, name:"Ctesiphon, Persia",     x:122,y:98,  fact:"Capital of the Persian empire. The Arch of Ctesiphon is the largest unreinforced brick vault ever built."},
+  {steps:3000, name:"Antioch",               x:104,y:97,  fact:"Gateway to the Mediterranean — a melting pot where Greek, Roman, and Eastern cultures blended for centuries."},
+  {steps:4000, name:"Constantinople",        x:86, y:88,  fact:"Where East meets West. The Hagia Sophia stood as the world's largest cathedral for nearly 1,000 years."},
+  {steps:5500, name:"Alexandria, Egypt",     x:114,y:116, fact:"Home to the greatest library of the ancient world — at its peak holding 700,000 scrolls of human knowledge."},
+  {steps:7000, name:"Rome",                  x:78, y:93,  fact:"At its peak Rome housed over 1 million people — a number not matched again until 19th-century London."},
+  {steps:9000, name:"Venice",                x:79, y:81,  fact:"Marco Polo sailed from here to reach China, directly inspiring the Age of Exploration."},
+  {steps:12000,name:"End of the Silk Road",  x:60, y:77,  fact:"You've walked the length of the ancient world. Merchants who completed this journey changed history forever."},
+];
+
+// ═══════════════════ STATE ═══════════════════
+let steps=parseInt(localStorage.getItem('pw_steps')||'0');
+let streak=parseInt(localStorage.getItem('pw_streak')||'0');
+let unlockedPuppy=JSON.parse(localStorage.getItem('pw_unlocked')||'[]');
+let lastSpaceWpIdx=parseInt(localStorage.getItem('pw_sp_wp')||'0');
+let lastEarthWpIdx=parseInt(localStorage.getItem('pw_e_wp')||'0');
+let stepsInSession=0;
+let currentPuppyState='idle';
+let lastPeak=0;
+let accelHistory=[];
+let idleTimer=null;
+let motionMode=false;
+let manualMode=false;
+let heartCooldown=false;
+let activePanel=null;
+
+// badge tracking — unseen progress since panel last opened
+let spBadgeSteps=parseInt(localStorage.getItem('pw_sp_badge')||'0');
+let eBadgeSteps=parseInt(localStorage.getItem('pw_e_badge')||'0');
+
+// ═══════════════════ DOM ═══════════════════
+const puppy=document.getElementById('puppy');
+const pZzz=document.getElementById('p-zzz');
+const pTongue=document.getElementById('p-tongue');
+const pBlushL=document.getElementById('p-blush-l');
+const pBlushR=document.getElementById('p-blush-r');
+const pEyeL=document.getElementById('p-eye-l');
+const pEyeR=document.getElementById('p-eye-r');
+const stepCountEl=document.getElementById('step-count');
+const streakEl=document.getElementById('streak-count');
+const moodEl=document.getElementById('mood-emoji');
+const moodBanner=document.getElementById('mood-banner');
+const progressFill=document.getElementById('progress-fill');
+const stepsToNext=document.getElementById('steps-to-next');
+const milestoneHint=document.getElementById('milestone-hint');
+const treasurePop=document.getElementById('treasure-pop');
+const sidePanel=document.getElementById('side-panel');
+const panelSpace=document.getElementById('panel-space');
+const panelEarth=document.getElementById('panel-earth');
+const badgeSpace=document.getElementById('badge-space');
+const badgeEarth=document.getElementById('badge-earth');
+
+// ═══════════════════ SCENE ═══════════════════
+function buildStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*70}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s;`;
+    c.appendChild(s);
+  }
+}
+function buildClouds(){
+  const sc=document.getElementById('scene');
+  [[90,30,80,35],[130,40,130,55],[70,24,55,28]].forEach(([w,h,top,dur],i)=>{
+    const cl=document.createElement('div');cl.className='cloud';
+    cl.style.cssText=`width:${w}px;height:${h}px;top:${top}px;left:-${w+20}px;animation:drift ${dur}s linear infinite;animation-delay:${i*10}s;`;
+    cl.innerHTML=`<div style="position:absolute;width:${w*.6}px;height:${h*1.4}px;background:#fff;border-radius:50%;top:-${h*.5}px;left:${w*.2}px;"></div>`;
+    sc.appendChild(cl);
+  });
+}
+function updateTimeOfDay(){
+  const h=new Date().getHours();
+  document.body.classList.toggle('night-mode',h>=20||h<6);
+}
+buildStars();buildClouds();updateTimeOfDay();
+setInterval(updateTimeOfDay,60000);
+
+// ═══════════════════ SPACE CANVAS ═══════════════════
+function buildSpaceCanvas(){
+  const canvas=document.getElementById('space-canvas');
+  const ctx=canvas.getContext('2d');
+  function resize(){
+    canvas.width=canvas.offsetWidth||280;
+    canvas.height=canvas.offsetHeight||240;
+    draw();
+  }
+  function draw(){
+    const w=canvas.width,h=canvas.height;
+    ctx.fillStyle='#060d1f';ctx.fillRect(0,0,w,h);
+    for(let i=0;i<140;i++){
+      const x=(Math.sin(i*137.5+13)*0.5+0.5)*w;
+      const y=(Math.sin(i*97.1+7)*0.5+0.5)*h;
+      const r=i%10===0?1.4:0.7;
+      ctx.fillStyle=`rgba(255,255,255,${0.25+Math.sin(i*0.5)*0.25})`;
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+    }
+  }
+  new ResizeObserver(resize).observe(canvas.parentElement);
+  setTimeout(resize,80);
+}
+buildSpaceCanvas();
+
+// ═══════════════════ EARTH SVG ═══════════════════
+function buildEarthRoute(){
+  const svg=document.getElementById('route-svg');
+  const rl=document.getElementById('route-line');
+  rl.setAttribute('points',EARTH_WAYPOINTS.map(w=>`${w.x},${w.y}`).join(' '));
+  EARTH_WAYPOINTS.forEach((wp,i)=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',wp.x);c.setAttribute('cy',wp.y);c.setAttribute('r','5');
+    c.id=`rdot-${i}`;c.setAttribute('class','route-dot locked');
+    svg.appendChild(c);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',wp.x+8);t.setAttribute('y',wp.y+4);
+    t.setAttribute('font-size','7.5');t.setAttribute('fill','rgba(255,255,255,0.45)');
+    t.textContent=wp.name.split(',')[0];
+    svg.appendChild(t);
+  });
+}
+buildEarthRoute();
+
+// ═══════════════════ PUPPY ═══════════════════
+function setPuppyState(state){
+  if(currentPuppyState===state)return;
+  currentPuppyState=state;
+  puppy.className='state-'+state;
+  const sl=state==='sleepy';
+  pEyeL.style.height=sl?'3px':'7px';pEyeR.style.height=sl?'3px':'7px';
+  pEyeL.style.borderRadius=sl?'2px':'50%';pEyeR.style.borderRadius=sl?'2px':'50%';
+  pTongue.style.opacity=state==='happy'?'1':'0';
+  pBlushL.style.opacity=state==='happy'?'1':'0';
+  pBlushR.style.opacity=state==='happy'?'1':'0';
+  pZzz.style.opacity=state==='sleepy'?'1':'0';
+  const moods=[{min:0,e:'😴'},{min:1,e:'🐾'},{min:30,e:'😊'},{min:80,e:'🥳'}];
+  moodEl.textContent=(moods.slice().reverse().find(m=>m.min<=stepsInSession)||moods[0]).e;
+}
+function updateMoodFromSession(){
+  const cfg=[{min:0,state:'sleepy'},{min:1,state:'idle'},{min:30,state:'walking'},{min:80,state:'happy'}];
+  const m=(cfg.slice().reverse().find(c=>c.min<=stepsInSession)||cfg[0]);
+  if(m.state!==currentPuppyState){
+    setPuppyState(m.state);
+    const msgs={sleepy:'Zzz...',idle:'Ready to walk! 🐾',walking:'Yes! Walking time! 😊',happy:'Woof woof! I love this! 🥳'};
+    showBanner(msgs[m.state]);
+  }
+}
+
+// ═══════════════════ STEP COUNTING ═══════════════════
+function registerStep(){
+  steps++;stepsInSession++;
+  lastPeak=Date.now();
+  clearTimeout(idleTimer);
+  if(currentPuppyState==='sleepy')setPuppyState('idle');
+  idleTimer=setTimeout(()=>{
+    stepsInSession=Math.max(0,stepsInSession-10);
+    updateMoodFromSession();
+    if(stepsInSession<30)showBanner('Hey, let\'s keep going! 🐾');
+  },12000);
+  updateMoodFromSession();
+  updateHUD();
+  updateBadges();
+  if(activePanel==='space')updateSpacePanel();
+  if(activePanel==='earth')updateEarthPanel();
+  checkPuppyMilestones();
+  saveState();
+  spawnHeart();
+}
+
+function handleMotion(e){
+  const acc=e.accelerationIncludingGravity;if(!acc)return;
+  const mag=Math.sqrt(acc.x*acc.x+acc.y*acc.y+acc.z*acc.z);
+  accelHistory.push(mag);if(accelHistory.length>5)accelHistory.shift();
+  const avg=accelHistory.reduce((a,b)=>a+b,0)/accelHistory.length;
+  const dev=Math.abs(mag-avg);
+  const now=Date.now();
+  if(dev>1.8&&(now-lastPeak)>350){lastPeak=now;registerStep();}
+}
+
+// ═══════════════════ HEARTS ═══════════════════
+function spawnHeart(){
+  if(heartCooldown)return;
+  heartCooldown=true;setTimeout(()=>heartCooldown=false,400);
+  const h=document.createElement('div');h.className='heart-pop';
+  h.textContent=['❤️','🧡','💛','💚','💙'][Math.floor(Math.random()*5)];
+  h.style.left=(35+Math.random()*30)+'px';h.style.top='10px';
+  document.getElementById('puppy-wrap').appendChild(h);
+  setTimeout(()=>h.remove(),1200);
+}
+
+// ═══════════════════ MILESTONES ═══════════════════
+function checkPuppyMilestones(){
+  for(const m of PUPPY_MILESTONES){
+    if(steps>=m.steps&&!unlockedPuppy.includes(m.steps)){
+      unlockedPuppy.push(m.steps);saveState();
+      showTreasure(m);return;
+    }
+  }
+}
+function showTreasure(m){
+  document.getElementById('t-emoji').textContent=m.emoji;
+  document.getElementById('t-title').textContent=m.title;
+  document.getElementById('t-desc').textContent=m.desc;
+  treasurePop.classList.add('show');setPuppyState('happy');
+}
+document.getElementById('t-close').addEventListener('click',()=>{
+  treasurePop.classList.remove('show');setTimeout(updateMoodFromSession,500);
+});
+
+// ═══════════════════ HUD ═══════════════════
+function updateHUD(){
+  stepCountEl.textContent=steps.toLocaleString();
+  streakEl.textContent=streak;
+  const next=PUPPY_MILESTONES.find(m=>!unlockedPuppy.includes(m.steps));
+  const prev=[...PUPPY_MILESTONES].reverse().find(m=>unlockedPuppy.includes(m.steps));
+  if(next){
+    const from=prev?prev.steps:0;
+    const pct=Math.min(100,((steps-from)/(next.steps-from))*100);
+    progressFill.style.width=pct+'%';
+    stepsToNext.textContent=Math.max(0,next.steps-steps)+' steps';
+    milestoneHint.innerHTML=steps>=next.steps-30?`<strong>${next.emoji} Almost there!</strong>`:`<span class="locked">🔒 ${next.steps} steps unlocks something...</span>`;
+  } else {
+    progressFill.style.width='100%';
+    stepsToNext.textContent='All found!';
+    milestoneHint.innerHTML='🏆 Every treasure discovered!';
+  }
+  // update ribbon
+  document.getElementById('ribbon-text').textContent=`${steps.toLocaleString()} steps → 🚀 + 🗺️`;
+}
+
+// ═══════════════════ BADGES ═══════════════════
+function getCurrentSpaceWpIdx(){
+  let idx=0;
+  for(let i=0;i<SPACE_WAYPOINTS.length;i++){if(steps>=SPACE_WAYPOINTS[i].steps)idx=i;}
+  return idx;
+}
+function getCurrentEarthWpIdx(){
+  let idx=0;
+  for(let i=0;i<EARTH_WAYPOINTS.length;i++){if(steps>=EARTH_WAYPOINTS[i].steps)idx=i;}
+  return idx;
+}
+
+function updateBadges(){
+  const spIdx=getCurrentSpaceWpIdx();
+  const eIdx=getCurrentEarthWpIdx();
+
+  // Space badge: new waypoint reached since last panel open
+  if(spIdx>lastSpaceWpIdx&&activePanel!=='space'){
+    const diff=spIdx-lastSpaceWpIdx;
+    badgeSpace.textContent=diff>1?diff:'!';
+    badgeSpace.classList.add('visible');
+    localStorage.setItem('pw_sp_badge',spIdx);
+  }
+  // Earth badge
+  if(eIdx>lastEarthWpIdx&&activePanel!=='earth'){
+    const diff=eIdx-lastEarthWpIdx;
+    badgeEarth.textContent=diff>1?diff:'!';
+    badgeEarth.classList.add('visible');
+    localStorage.setItem('pw_e_badge',eIdx);
+  }
+}
+
+// ═══════════════════ SPACE PANEL ═══════════════════
+function updateSpacePanel(){
+  const idx=getCurrentSpaceWpIdx();
+  const wp=SPACE_WAYPOINTS[idx];
+  const nextWp=SPACE_WAYPOINTS[idx+1];
+
+  document.getElementById('sp-name').textContent=wp.name;
+  document.getElementById('sp-fact').textContent=wp.fact;
+  document.getElementById('sp-dist').textContent=(steps*1000000).toLocaleString()+' km traveled';
+  document.getElementById('sp-step-mirror').textContent=steps.toLocaleString()+' steps';
+
+  const body=document.getElementById('space-body');
+  const label=document.getElementById('space-label');
+  if(wp.size>0){
+    body.style.cssText=`position:absolute;right:24px;width:${wp.size}px;height:${wp.size}px;border-radius:50%;background:${wp.color};top:${wp.y}%;transform:translateY(-50%);box-shadow:0 0 18px ${wp.color}55;transition:all 0.8s;`;
+    label.style.cssText=`position:absolute;right:6px;font-size:10px;color:rgba(255,255,255,0.55);font-weight:600;text-align:center;top:calc(${wp.y}% + ${wp.size/2+5}px);transition:all 0.8s;`;
+    label.textContent=wp.name.split(' ')[0];
+  } else {
+    body.style.display='none';label.textContent='';
+  }
+
+  const pct=idx/(SPACE_WAYPOINTS.length-1);
+  document.getElementById('spacecraft').style.bottom=(12+pct*70)+'%';
+
+  if(nextWp){
+    const from=wp.steps,pct2=Math.min(100,((steps-from)/(nextWp.steps-from))*100);
+    document.getElementById('sp-progress-fill').style.width=pct2+'%';
+    document.getElementById('sp-next').textContent=`Next: ${nextWp.name} at ${nextWp.steps.toLocaleString()} steps`;
+  } else {
+    document.getElementById('sp-progress-fill').style.width='100%';
+    document.getElementById('sp-next').textContent='Solar system complete!';
+  }
+}
+
+// ═══════════════════ EARTH PANEL ═══════════════════
+function updateEarthPanel(){
+  const idx=getCurrentEarthWpIdx();
+  const wp=EARTH_WAYPOINTS[idx];
+  const nextWp=EARTH_WAYPOINTS[idx+1];
+
+  document.getElementById('e-name').textContent=wp.name;
+  document.getElementById('e-fact').textContent=wp.fact;
+  document.getElementById('e-steps').textContent=steps.toLocaleString()+' steps walked';
+  document.getElementById('e-step-mirror').textContent=steps.toLocaleString()+' steps';
+
+  EARTH_WAYPOINTS.forEach((_,i)=>{
+    const dot=document.getElementById(`rdot-${i}`);if(!dot)return;
+    dot.setAttribute('class',`route-dot ${i<idx?'unlocked':i===idx?'current':'locked'}`);
+  });
+
+  if(nextWp){
+    const from=wp.steps,pct=Math.min(100,((steps-from)/(nextWp.steps-from))*100);
+    document.getElementById('earth-progress-fill').style.width=pct+'%';
+    document.getElementById('e-next').textContent=`Next: ${nextWp.name} at ${nextWp.steps.toLocaleString()} steps`;
+  } else {
+    document.getElementById('earth-progress-fill').style.width='100%';
+    document.getElementById('e-next').textContent='Silk Road complete!';
+  }
+}
+
+// ═══════════════════ PANEL TOGGLE ═══════════════════
+function openPanel(which){
+  panelSpace.classList.remove('active');
+  panelEarth.classList.remove('active');
+  if(which==='space'){
+    panelSpace.classList.add('active');
+    updateSpacePanel();
+    // clear badge and update last known wp
+    badgeSpace.classList.remove('visible');
+    lastSpaceWpIdx=getCurrentSpaceWpIdx();
+    localStorage.setItem('pw_sp_wp',lastSpaceWpIdx);
+  } else {
+    panelEarth.classList.add('active');
+    updateEarthPanel();
+    badgeEarth.classList.remove('visible');
+    lastEarthWpIdx=getCurrentEarthWpIdx();
+    localStorage.setItem('pw_e_wp',lastEarthWpIdx);
+  }
+  sidePanel.classList.add('open');
+  activePanel=which;
+  document.getElementById('tab-space').classList.toggle('active',which==='space');
+  document.getElementById('tab-earth').classList.toggle('active',which==='earth');
+}
+function closePanel(){
+  sidePanel.classList.remove('open');
+  activePanel=null;
+  document.getElementById('tab-space').classList.remove('active');
+  document.getElementById('tab-earth').classList.remove('active');
+}
+document.getElementById('tab-space').addEventListener('click',()=>activePanel==='space'?closePanel():openPanel('space'));
+document.getElementById('tab-earth').addEventListener('click',()=>activePanel==='earth'?closePanel():openPanel('earth'));
+document.getElementById('close-panel-space').addEventListener('click',closePanel);
+document.getElementById('close-panel-earth').addEventListener('click',closePanel);
+
+// ═══════════════════ BANNER ═══════════════════
+let bannerTimer=null;
+function showBanner(msg){
+  moodBanner.textContent=msg;
+  moodBanner.classList.add('visible');
+  clearTimeout(bannerTimer);
+  bannerTimer=setTimeout(()=>moodBanner.classList.remove('visible'),2800);
+}
+
+// ═══════════════════ SAVE ═══════════════════
+function saveState(){
+  try{
+    localStorage.setItem('pw_steps',steps);
+    localStorage.setItem('pw_streak',streak);
+    localStorage.setItem('pw_unlocked',JSON.stringify(unlockedPuppy));
+  }catch(e){}
+}
+
+// ═══════════════════ PERMISSION ═══════════════════
+const permScreen=document.getElementById('permission-screen');
+document.getElementById('btn-allow').addEventListener('click',()=>{
+  if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function'){
+    DeviceMotionEvent.requestPermission().then(r=>{
+      if(r==='granted'){window.addEventListener('devicemotion',handleMotion);motionMode=true;}
+      else activateManualMode();
+      permScreen.classList.add('hidden');
+      setPuppyState('idle');showBanner('Start walking — puppy is ready! 🐾');
+    }).catch(activateManualMode);
+  } else if(typeof DeviceMotionEvent!=='undefined'){
+    window.addEventListener('devicemotion',handleMotion);motionMode=true;
+    permScreen.classList.add('hidden');
+    setPuppyState('idle');showBanner('Motion ready — let\'s go! 🐾');
+  } else { activateManualMode(); }
+});
+document.getElementById('btn-manual').addEventListener('click',activateManualMode);
+function activateManualMode(){
+  manualMode=true;permScreen.classList.add('hidden');
+  setPuppyState('idle');showBanner('Tap the puppy for each step! 🐾');
+}
+document.getElementById('puppy-wrap').addEventListener('click',()=>{
+  if(manualMode)registerStep();
+  else if(currentPuppyState==='sleepy'){setPuppyState('idle');showBanner('Wake up! Time to walk! 🌅');}
+});
+
+// ═══════════════════ STREAK ═══════════════════
+const today=new Date().toDateString();
+const lastDay=localStorage.getItem('pw_last_day');
+if(lastDay&&lastDay!==today){
+  const yest=new Date(Date.now()-86400000).toDateString();
+  if(lastDay===yest&&steps>=1000)streak++;
+  else if(lastDay!==yest)streak=0;
+  localStorage.setItem('pw_streak',streak);
+}
+localStorage.setItem('pw_last_day',today);
+
+// ═══════════════════ INIT ═══════════════════
+// restore last known waypoints for badge tracking
+lastSpaceWpIdx=parseInt(localStorage.getItem('pw_sp_wp')||'0');
+lastEarthWpIdx=parseInt(localStorage.getItem('pw_e_wp')||'0');
+
+// on load, show badges if progress happened since last open
+const curSpIdx=getCurrentSpaceWpIdx();
+const curEIdx=getCurrentEarthWpIdx();
+if(curSpIdx>lastSpaceWpIdx){badgeSpace.textContent=curSpIdx-lastSpaceWpIdx;badgeSpace.classList.add('visible');}
+if(curEIdx>lastEarthWpIdx){badgeEarth.textContent=curEIdx-lastEarthWpIdx;badgeEarth.classList.add('visible');}
+
+setPuppyState('sleepy');
+updateHUD();
+</script>
+</body>
+</html>
