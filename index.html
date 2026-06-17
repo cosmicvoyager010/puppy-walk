@@ -353,6 +353,36 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .mood-seasonal-label{font-size:11px;font-weight:700;color:#c8865a;letter-spacing:0.08em;text-transform:uppercase;text-align:center;margin-bottom:8px;margin-top:4px;}
 .mood-seasonal-btn{font-size:26px;background:#fff;border:2.5px solid #f0e0cc;border-radius:14px;width:46px;height:46px;cursor:pointer;transition:transform 0.12s,border-color 0.12s;}
 .mood-seasonal-btn.selected{transform:scale(1.18);border-color:#f5a623;background:#fff8f0;}
+
+/* Adventure */
+.adventure-wrap{background:#fff;border-radius:20px;overflow:hidden;margin-bottom:12px;}
+.adventure-tabs{display:flex;border-bottom:1px solid #f0e8dc;}
+.adv-tab{flex:1;padding:11px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;border:none;background:none;color:#c8a882;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;}
+.adv-tab.active{color:#f5a623;border-bottom-color:#f5a623;}
+.adv-panel{}
+.adv-scene{height:110px;background:linear-gradient(135deg,#060d1f,#0d1f3c);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.adv-scene-silk{background:linear-gradient(135deg,#1a3a1a,#2a5a2a);}
+.adv-destination{font-size:48px;z-index:2;animation:adv-float 3s ease-in-out infinite;}
+.adv-stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:20px 20px;opacity:0.3;}
+.adv-route-dots{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(126,200,80,0.3) 0,rgba(126,200,80,0.3) 4px,transparent 4px,transparent 20px);opacity:0.4;}
+.adv-info{padding:12px 14px 14px;}
+.adv-location{font-size:15px;font-weight:800;color:#3d2b1a;margin-bottom:4px;}
+.adv-fact{font-size:12px;color:#a07850;line-height:1.5;margin-bottom:10px;}
+.adv-progress-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.adv-progress-track{flex:1;height:7px;background:#f0e8dc;border-radius:10px;overflow:hidden;}
+.adv-progress-fill{height:100%;background:linear-gradient(90deg,#4466ff,#f5a623);border-radius:10px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);width:0%;}
+.adv-progress-silk{background:linear-gradient(90deg,#7ec850,#f5a623);}
+.adv-next-label{font-size:11px;color:#c8a882;font-weight:700;white-space:nowrap;}
+.adv-km{font-size:11px;color:#c8a882;font-weight:600;}
+@keyframes adv-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.08)}}
+
+
+/* Test mode */
+.adv-tab-test{flex:0;padding:11px 14px;font-size:13px;}
+.adv-test-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#fffbe6;border-bottom:1px solid #f5e6a0;flex-wrap:wrap;}
+.adv-test-label{font-size:11px;color:#a07820;font-weight:700;flex:1;}
+.adv-test-btn{padding:5px 10px;border-radius:10px;border:none;background:#f5a623;color:#fff;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;}
+.adv-test-reset{padding:5px 10px;border-radius:10px;border:none;background:#f0ebe4;color:#a09080;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -580,6 +610,57 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   </div>
   <input type="file" id="import-file" accept=".json" style="display:none">
 
+
+<!-- Adventure Tabs -->
+<div class="adventure-wrap" id="adventure-wrap">
+  <div class="adventure-tabs">
+    <button class="adv-tab active" id="adv-tab-space" onclick="showAdventureTab('space')">🚀 Space</button>
+    <button class="adv-tab" id="adv-tab-silk" onclick="showAdventureTab('silk')">🗺️ Silk Road</button>
+    <button class="adv-tab adv-tab-test" id="adv-tab-test" onclick="toggleTestMode()">🧪</button>
+  </div>
+  <div class="adv-test-bar" id="adv-test-bar" style="display:none">
+    <span class="adv-test-label">Test mode — add fake km:</span>
+    <button class="adv-test-btn" onclick="addTestKm(1)">+1km</button>
+    <button class="adv-test-btn" onclick="addTestKm(10)">+10km</button>
+    <button class="adv-test-btn" onclick="addTestKm(100)">+100km</button>
+    <button class="adv-test-reset" onclick="resetTestKm()">Reset</button>
+  </div>
+
+  <!-- Space Panel -->
+  <div class="adv-panel" id="adv-panel-space">
+    <div class="adv-scene" id="adv-space-scene">
+      <div class="adv-stars"></div>
+      <div class="adv-destination" id="adv-space-dest">🌍</div>
+    </div>
+    <div class="adv-info">
+      <div class="adv-location" id="adv-space-name">Earth 🌍</div>
+      <div class="adv-fact" id="adv-space-fact">Start walking to launch into space!</div>
+      <div class="adv-progress-row">
+        <div class="adv-progress-track"><div class="adv-progress-fill" id="adv-space-fill"></div></div>
+        <span class="adv-next-label" id="adv-space-next"></span>
+      </div>
+      <div class="adv-km" id="adv-space-km">0 km walked</div>
+    </div>
+  </div>
+
+  <!-- Silk Road Panel -->
+  <div class="adv-panel" id="adv-panel-silk" style="display:none">
+    <div class="adv-scene adv-scene-silk" id="adv-silk-scene">
+      <div class="adv-route-dots" id="adv-route-dots"></div>
+      <div class="adv-destination" id="adv-silk-dest">🏯</div>
+    </div>
+    <div class="adv-info">
+      <div class="adv-location" id="adv-silk-name">Xi'an, China 🏯</div>
+      <div class="adv-fact" id="adv-silk-fact">Start walking to begin the Silk Road journey!</div>
+      <div class="adv-progress-row">
+        <div class="adv-progress-track"><div class="adv-progress-fill adv-progress-silk" id="adv-silk-fill"></div></div>
+        <span class="adv-next-label" id="adv-silk-next"></span>
+      </div>
+      <div class="adv-km" id="adv-silk-km">0 km walked</div>
+    </div>
+  </div>
+</div>
+
   <div class="log-wrap">
     <div class="log-head">Puppy's walk history</div>
     <div class="log-list" id="log-list">
@@ -735,6 +816,53 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 </div>
 
 <script>
+
+// ── Adventure Data ────────────────────────────────────────────────
+var SPACE_WAYPOINTS=[
+  {km:0,    name:'Earth 🌍',      emoji:'🌍', fact:'Your journey begins! Every walk launches you further into the cosmos.'},
+  {km:1,    name:'Cloud Layer ☁️', emoji:'☁️', fact:'10km above Earth — you\'ve cleared the clouds. The sky turns darker.'},
+  {km:5,    name:'Stratosphere',   emoji:'🌤️', fact:'50km up — weather balloons float here. The air is razor thin.'},
+  {km:20,   name:'Earth Orbit 🛸', emoji:'🛸', fact:'400km up — the International Space Station orbits right here!'},
+  {km:50,   name:'The Moon 🌕',    emoji:'🌕', fact:'384,400 km away. Only 12 humans have ever stood on its surface.'},
+  {km:100,  name:'Mars 🔴',        emoji:'🔴', fact:'Olympus Mons on Mars is 3× taller than Everest. A volcano the size of France.'},
+  {km:200,  name:'Asteroid Belt ☄️',emoji:'☄️',fact:'Millions of rocky fragments between Mars and Jupiter. Navigate carefully!'},
+  {km:400,  name:'Jupiter 🪐',     emoji:'🪐', fact:'Jupiter\'s Great Red Spot is a storm bigger than Earth — raging for 400 years.'},
+  {km:700,  name:'Saturn\'s Rings 💫',emoji:'💫',fact:'Saturn\'s rings stretch 282,000 km wide but are only 1 km thick.'},
+  {km:1000, name:'Uranus 🔵',      emoji:'🔵', fact:'Uranus rotates on its side — it literally rolls around the Sun.'},
+  {km:1500, name:'Neptune 🌀',     emoji:'🌀', fact:'Neptune\'s winds hit 2,100 km/h — fastest in the solar system.'},
+  {km:2000, name:'Edge of Solar System ✨', emoji:'✨', fact:'You\'ve reached the heliopause — where solar wind meets interstellar space. Legendary!'},
+];
+
+var SILK_WAYPOINTS=[
+  {km:0,   name:"Xi'an, China 🏯",    emoji:'🏯', fact:"The Silk Road begins here — linking East to West for 1,500 years of trade and culture."},
+  {km:30,  name:'Dunhuang Caves 🕌',  emoji:'🕌', fact:'492 temples of Buddhist murals. Hidden manuscripts sealed here for 900 years.'},
+  {km:80,  name:'Samarkand 🌙',       emoji:'🌙', fact:'The jewel of Central Asia. Its Registan Square is one of the world\'s most magnificent plazas.'},
+  {km:150, name:'Merv, Persia 🏺',    emoji:'🏺', fact:'Once the largest city in the world. A flourishing oasis where caravans rested for weeks.'},
+  {km:250, name:'Ctesiphon 🦁',       emoji:'🦁', fact:'Capital of the Persian empire. Its great arch is the largest unreinforced brick vault ever built.'},
+  {km:380, name:'Antioch 🌿',         emoji:'🌿', fact:'Gateway to the Mediterranean — where Greek, Roman and Eastern cultures blended for centuries.'},
+  {km:500, name:'Constantinople 🕍',  emoji:'🕍', fact:'Where East meets West. The Hagia Sophia stood as the world\'s largest cathedral for 1,000 years.'},
+  {km:650, name:'Alexandria, Egypt 📜',emoji:'📜', fact:'Home to the greatest library of the ancient world — at its peak holding 700,000 scrolls.'},
+  {km:800, name:'Rome 🏛️',            emoji:'🏛️', fact:'At its peak Rome housed 1 million people — not matched again until 19th-century London.'},
+  {km:950, name:'Venice 🚤',          emoji:'🚤', fact:'Marco Polo sailed from here to reach China, directly inspiring the Age of Exploration.'},
+  {km:1200,name:'End of Silk Road 🎉',emoji:'🎉', fact:'You\'ve walked the length of the ancient world. Merchants who completed this changed history forever!'},
+];
+
+var _testKm=0;
+var _testModeOn=false;
+
+var getTotalDistKm=function(){
+  var total=0;
+  S.logs.forEach(function(l){if(!l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime){total+=l.distM||0;}});
+  return (total/1000)+(_testKm||0);
+};
+
+function getAdventureProgress(waypoints){
+  var km=getTotalDistKm();
+  var idx=0;
+  waypoints.forEach(function(wp,i){if(km>=wp.km)idx=i;});
+  return {km:km, idx:idx, current:waypoints[idx], next:waypoints[idx+1]||null};
+}
+
 // ── Supabase cloud sync ───────────────────────────────────────────
 var SUPA_URL='https://tmndwcfqezysjzprsnis.supabase.co';
 var SUPA_KEY='sb_publishable_u3mKj7e_xfQJXNZTo7mTsA_bgtzAKBs';
@@ -746,7 +874,16 @@ function cloudSave(){
   if(!supaClient)return;
   try{
     var data={logs:S.logs,restDays:S.restDays};
-    supaClient.from('walks').upsert({user_id:SUPA_USER,data:data,updated_at:new Date().toISOString()},{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Cloud save error',r.error);});
+    var payload={user_id:SUPA_USER,data:data,updated_at:new Date().toISOString()};
+    // Try update first, then insert if no row exists
+    supaClient.from('walks').update({data:data,updated_at:payload.updated_at}).eq('user_id',SUPA_USER).then(function(r){
+      if(r.error||(r.data&&r.data.length===0)||r.count===0){
+        // No row found — insert
+        supaClient.from('walks').insert(payload).then(function(r2){
+          if(r2.error)console.warn('Cloud save insert error',r2.error.message);
+        });
+      }
+    });
   }catch(e){}
 }
 
@@ -761,7 +898,7 @@ function cloudLoad(){
         if(d.restDays)S.restDays=d.restDays;
         localStorage.setItem('puppy_logs',JSON.stringify(S.logs));
         localStorage.setItem('puppy_rest',JSON.stringify(S.restDays));
-        renderLog();renderStreak();renderSummary();renderChart();renderBadges();
+        renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();
         console.log('Cloud data loaded: '+S.logs.length+' walks');
       }
     });
@@ -807,7 +944,7 @@ var S={
   selectedReason:null,selectedRemindMins:0
 };
 
-function saveLogs(){try{localStorage.setItem('puppy_logs',JSON.stringify(S.logs));cloudSave();}catch(e){}}
+function saveLogs(){try{localStorage.setItem('puppy_logs',JSON.stringify(S.logs));cloudSave();renderAdventure();}catch(e){}}
 function saveRestDays(){try{localStorage.setItem('puppy_rest',JSON.stringify(S.restDays));}catch(e){}}
 function saveSettings(){try{localStorage.setItem('puppy_settings',JSON.stringify(S.settings));}catch(e){}}
 function fmtDur(ms){var s=Math.round(ms/1000);if(s<60)return s+'s';var m=Math.floor(s/60),r=s%60;return r?m+'m '+r+'s':m+'m';}
@@ -1184,12 +1321,12 @@ document.getElementById('btn-start').addEventListener('click',function(){
   document.getElementById('btn-start').disabled=false;
   document.getElementById('btn-end').disabled=false;
   document.getElementById('btn-cant').disabled=false;
-  document.getElementById('btn-tell').disabled=false;
+  document.getElementById('btn-talk-menu').disabled=false;
   document.getElementById('btn-later').disabled=false;
   S.walking=true;S.walkStart=Date.now();S.lastMoveTime=Date.now();
   friendDismissOnWalk();
   document.getElementById('btn-start').disabled=true;document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-cant').disabled=true;document.getElementById('btn-tell').disabled=true;document.getElementById('btn-later').disabled=true;
+  document.getElementById('btn-cant').disabled=true;document.getElementById('btn-talk-menu').disabled=true;document.getElementById('btn-later').disabled=true;
   var _walkId=S.walkStart;setTimeout(function(){if(S.walking&&S.walkStart===_walkId){document.getElementById('btn-end').disabled=false;}},2000);
   clearTimers();sh('live-bar');
   var lw=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
@@ -1221,7 +1358,7 @@ document.getElementById('btn-end').addEventListener('click',function(){
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
   var totalWalks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
   checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-tell').disabled=false;document.getElementById('btn-later').disabled=false;
+  document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-talk-menu').disabled=false;document.getElementById('btn-later').disabled=false;
   showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');setTimeout(function(){openMoodPopup(S.logs[S.logs.length-1]);},600);
   setTimeout(function(){if(!S.walking&&S.mood==='sleeping'){setMood('happy');scheduleMood();}},8000);
 });
@@ -1261,7 +1398,7 @@ document.getElementById('btn-export').addEventListener('click',function(){
   }catch(e){alert('Export failed.');}
 });
 document.getElementById('btn-import').addEventListener('click',function(){document.getElementById('import-file').click();});
-document.getElementById('import-file').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data.logs&&Array.isArray(data.logs)){S.logs=data.logs.map(function(l){return{ts:l.ts||Date.now(),date:l.date||'—',time:l.time||'—',dur:l.dur||'0s',durMs:l.durMs||0,distM:l.distM||0,rest:l.rest||false,restReason:l.restReason||'',restEmoji:l.restEmoji||'',isSleep:l.isSleep||false,isFocus:l.isFocus||false,isTired:l.isTired||false,isMetime:l.isMetime||false};});if(data.restDays)S.restDays=data.restDays;saveLogs();saveRestDays();renderLog();renderStreak();renderSummary();renderChart();renderBadges();showBubbleLocked("Walks restored!! 📥🎉 Welcome back!!",4000);}else{alert('Invalid backup file.');}}catch(err){alert('Could not read file.');}};reader.readAsText(file);e.target.value='';});
+document.getElementById('import-file').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data.logs&&Array.isArray(data.logs)){S.logs=data.logs.map(function(l){return{ts:l.ts||Date.now(),date:l.date||'—',time:l.time||'—',dur:l.dur||'0s',durMs:l.durMs||0,distM:l.distM||0,rest:l.rest||false,restReason:l.restReason||'',restEmoji:l.restEmoji||'',isSleep:l.isSleep||false,isFocus:l.isFocus||false,isTired:l.isTired||false,isMetime:l.isMetime||false};});if(data.restDays)S.restDays=data.restDays;saveLogs();saveRestDays();renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();showBubbleLocked("Walks restored!! 📥🎉 Welcome back!!",4000);}else{alert('Invalid backup file.');}}catch(err){alert('Could not read file.');}};reader.readAsText(file);e.target.value='';});
 
 // ── Streak & Summary ───────────────────────────────────────────────
 function renderStreak(){
@@ -1483,7 +1620,7 @@ function driveRestore(){
       S.logs=data.logs;
       if(data.restDays)S.restDays=data.restDays;
       saveLogs();saveRestDays();
-      renderLog();renderStreak();renderSummary();renderChart();renderBadges();
+      renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();
       showBubbleLocked('☁️ Walks restored from Drive!! 🎉',4000);
     }
   }).catch(function(){});
@@ -1990,12 +2127,76 @@ document.getElementById('mood-save-btn').addEventListener('click', function(){
 
 document.getElementById('mood-skip-btn').addEventListener('click', closeMoodPopup);
 
+
+
+
+
+function toggleTestMode(){
+  _testModeOn = !_testModeOn;
+  document.getElementById('adv-test-bar').style.display = _testModeOn ? 'flex' : 'none';
+  document.getElementById('adv-tab-test').style.color = _testModeOn ? '#f5a623' : '';
+}
+
+function addTestKm(km){
+  _testKm += km;
+  renderAdventure();
+}
+
+function resetTestKm(){
+  _testKm = 0;
+  renderAdventure();
+}
+
+// _testKm is included directly in getTotalDistKm
+
+// ── Adventure Render ──────────────────────────────────────────────
+function renderAdventure(){
+  try{
+    // Space
+    var sp=getAdventureProgress(SPACE_WAYPOINTS);
+    document.getElementById('adv-space-dest').textContent=sp.current.emoji;
+    document.getElementById('adv-space-name').textContent=sp.current.name;
+    document.getElementById('adv-space-fact').textContent=sp.current.fact;
+    document.getElementById('adv-space-km').textContent=sp.km.toFixed(1)+' km walked total';
+    if(sp.next){
+      var pct=Math.min(100,((sp.km-sp.current.km)/(sp.next.km-sp.current.km))*100);
+      document.getElementById('adv-space-fill').style.width=pct+'%';
+      document.getElementById('adv-space-next').textContent='→ '+sp.next.name+' ('+sp.next.km+'km)';
+    } else {
+      document.getElementById('adv-space-fill').style.width='100%';
+      document.getElementById('adv-space-next').textContent='🎉 Complete!';
+    }
+
+    // Silk Road
+    var sl=getAdventureProgress(SILK_WAYPOINTS);
+    document.getElementById('adv-silk-dest').textContent=sl.current.emoji;
+    document.getElementById('adv-silk-name').textContent=sl.current.name;
+    document.getElementById('adv-silk-fact').textContent=sl.current.fact;
+    document.getElementById('adv-silk-km').textContent=sl.km.toFixed(1)+' km walked total';
+    if(sl.next){
+      var pct2=Math.min(100,((sl.km-sl.current.km)/(sl.next.km-sl.current.km))*100);
+      document.getElementById('adv-silk-fill').style.width=pct2+'%';
+      document.getElementById('adv-silk-next').textContent='→ '+sl.next.name+' ('+sl.next.km+'km)';
+    } else {
+      document.getElementById('adv-silk-fill').style.width='100%';
+      document.getElementById('adv-silk-next').textContent='🎉 Complete!';
+    }
+  }catch(e){console.warn('Adventure render error',e);}
+}
+
+function showAdventureTab(which){
+  document.getElementById('adv-tab-space').classList.toggle('active',which==='space');
+  document.getElementById('adv-tab-silk').classList.toggle('active',which==='silk');
+  document.getElementById('adv-panel-space').style.display=which==='space'?'block':'none';
+  document.getElementById('adv-panel-silk').style.display=which==='silk'?'block':'none';
+}
+
 // ── Button state recovery on app resume ──────────────────────────
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible'&&!S.walking){
     document.getElementById('btn-start').disabled=false;
     document.getElementById('btn-cant').disabled=false;
-    document.getElementById('btn-tell').disabled=false;
+    document.getElementById('btn-talk-menu').disabled=false;
     document.getElementById('btn-later').disabled=false;
   }
 });
@@ -2006,6 +2207,16 @@ document.addEventListener('visibilitychange',function(){
 function checkOnOpen(){
   try{
     if(S.currentMode||S.walking)return;
+    // In-app reminder fallback (works even if notification was missed)
+    if(S.settings.notifEnabled&&S.settings.reminderTime&&!walkedToday()){
+      var parts=S.settings.reminderTime.split(':');
+      var rh=parseInt(parts[0]),rm=parseInt(parts[1]||0);
+      var now=new Date();
+      var reminderPassed=now.getHours()>rh||(now.getHours()===rh&&now.getMinutes()>=rm);
+      if(reminderPassed){
+        showBubble('Hey! It\'s past walk time 🐾 Ready to go?',4000);
+      }
+    }
     var now=new Date(),h=now.getHours();
     var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
     var lastWalk=walks.length?walks[walks.length-1]:null;
@@ -2090,10 +2301,9 @@ function checkOnOpen(){
 }
 
 // ── Init ───────────────────────────────────────────────────────────
-renderLog();renderStreak();renderSummary();renderChart();renderBadges();
+renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();
 cloudLoad();
-updateReminderUI();updateAlreadyBtn();updateDriveUI();checkDrivePrompt();
-// Run on-open alarm check
+updateReminderUI();updateAlreadyBtn();updateDriveUI();// Run on-open alarm check
 checkOnOpen();
 // Also check when user comes back to the app (visibility change)
 document.addEventListener('visibilitychange',function(){
