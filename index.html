@@ -383,6 +383,52 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .adv-test-label{font-size:11px;color:#a07820;font-weight:700;flex:1;}
 .adv-test-btn{padding:5px 10px;border-radius:10px;border:none;background:#f5a623;color:#fff;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;}
 .adv-test-reset{padding:5px 10px;border-radius:10px;border:none;background:#f0ebe4;color:#a09080;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;}
+
+/* ── RPG Quest Panel ─────────────────────────────── */
+.rpg-wrap{padding:0;}
+.rpg-world-select{padding:12px 14px 10px;}
+.rpg-world-label{font-size:11px;color:#a07850;font-weight:700;margin-bottom:7px;}
+.rpg-worlds{display:flex;gap:6px;flex-wrap:wrap;}
+.rpg-world-btn{padding:5px 10px;border-radius:20px;border:2px solid #f0e8dc;background:#fff8f2;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;color:#7a5c3a;cursor:pointer;transition:all 0.18s;}
+.rpg-world-btn.active{border-color:#f5a623;background:#fff3e0;color:#c87010;}
+.rpg-ap-bar{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#f9f4ee;border-top:1px solid #f0e8dc;border-bottom:1px solid #f0e8dc;}
+.rpg-ap-label{font-size:12px;font-weight:800;color:#7a5c3a;}
+.rpg-ap-val{font-size:18px;font-weight:900;color:#f5a623;font-family:'Nunito',sans-serif;}
+.rpg-ap-sub{font-size:10px;color:#c8a882;margin-left:auto;}
+.rpg-scene-wrap{position:relative;height:120px;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:20px;}
+.rpg-puppy-sprite{font-size:38px;z-index:2;animation:adv-float 2.5s ease-in-out infinite;}
+.rpg-vs{font-size:16px;font-weight:900;color:rgba(255,255,255,0.7);z-index:2;}
+.rpg-enemy-sprite{font-size:42px;z-index:2;transition:transform 0.15s;}
+.rpg-enemy-sprite.hit{animation:rpg-hit 0.3s ease;}
+.rpg-hp-row{display:flex;gap:8px;padding:8px 14px 4px;align-items:center;}
+.rpg-hp-block{flex:1;}
+.rpg-hp-name{font-size:10px;font-weight:800;color:#a07850;margin-bottom:3px;}
+.rpg-hp-track{height:8px;background:#f0e8dc;border-radius:8px;overflow:hidden;}
+.rpg-hp-fill{height:100%;border-radius:8px;transition:width 0.4s;}
+.rpg-hp-fill.player{background:linear-gradient(90deg,#4caf50,#8bc34a);}
+.rpg-hp-fill.enemy{background:linear-gradient(90deg,#ef5350,#ff7043);}
+.rpg-hp-text{font-size:10px;color:#a07850;margin-top:2px;}
+.rpg-log{min-height:36px;padding:6px 14px;font-size:12px;color:#7a5c3a;line-height:1.5;font-weight:600;}
+.rpg-actions{display:flex;gap:8px;padding:8px 14px 14px;flex-wrap:wrap;}
+.rpg-btn{flex:1;min-width:70px;padding:10px 6px;border-radius:14px;border:none;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.rpg-btn span.cost{font-size:10px;font-weight:700;opacity:0.75;}
+.rpg-btn:active{transform:scale(0.94);}
+.rpg-btn.attack{background:#ef5350;color:#fff;}
+.rpg-btn.magic{background:#7c4dff;color:#fff;}
+.rpg-btn.heal{background:#43a047;color:#fff;}
+.rpg-btn.flee{background:#f0ebe4;color:#a09080;}
+.rpg-btn:disabled{opacity:0.4;pointer-events:none;}
+.rpg-result{text-align:center;padding:18px 14px 16px;}
+.rpg-result-emoji{font-size:48px;margin-bottom:8px;}
+.rpg-result-title{font-size:18px;font-weight:900;color:#3d2b1a;margin-bottom:6px;}
+.rpg-result-sub{font-size:12px;color:#a07850;margin-bottom:14px;line-height:1.5;}
+.rpg-result-btn{padding:10px 28px;border-radius:20px;border:none;background:#f5a623;color:#fff;font-size:14px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;}
+.rpg-stats-row{display:flex;gap:8px;padding:8px 14px;border-top:1px solid #f0e8dc;flex-wrap:wrap;}
+.rpg-stat{flex:1;min-width:60px;text-align:center;padding:7px 4px;background:#fff8f2;border-radius:12px;}
+.rpg-stat-val{font-size:17px;font-weight:900;color:#f5a623;}
+.rpg-stat-lbl{font-size:10px;color:#a07850;font-weight:700;}
+@keyframes rpg-hit{0%{transform:translateX(0)}20%{transform:translateX(-12px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}100%{transform:translateX(0)}}
+@keyframes rpg-shake{0%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}100%{transform:rotate(0)}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -616,7 +662,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <div class="adventure-tabs">
     <button class="adv-tab active" id="adv-tab-space" onclick="showAdventureTab('space')">🚀 Space</button>
     <button class="adv-tab" id="adv-tab-silk" onclick="showAdventureTab('silk')">🗺️ Silk Road</button>
-    <button class="adv-tab adv-tab-test" id="adv-tab-test" onclick="toggleTestMode()">🧪</button>
+
   </div>
   <div class="adv-test-bar" id="adv-test-bar" style="display:none">
     <span class="adv-test-label">Test mode — add fake km:</span>
@@ -624,6 +670,12 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <button class="adv-test-btn" onclick="addTestKm(10)">+10km</button>
     <button class="adv-test-btn" onclick="addTestKm(100)">+100km</button>
     <button class="adv-test-reset" onclick="resetTestKm()">Reset</button>
+  </div>
+  <div class="adv-test-bar" id="adv-test-walk-bar" style="display:none; background:#fff3e0; border-top:1px solid #f5c08a;">
+    <span class="adv-test-label" style="color:#a06010;">🚶 Simulate walk:</span>
+    <button class="adv-test-btn" style="background:#4caf50;" onclick="runTestWalk(10, 500)">10min 500m</button>
+    <button class="adv-test-btn" style="background:#2196f3;" onclick="runTestWalk(30, 2000)">30min 2km</button>
+    <button class="adv-test-btn" style="background:#9c27b0;" onclick="runTestWalk(60, 5000)">1hr 5km</button>
   </div>
 
   <!-- Space Panel -->
@@ -852,7 +904,16 @@ var _testModeOn=false;
 
 var getTotalDistKm=function(){
   var total=0;
-  S.logs.forEach(function(l){if(!l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime){total+=l.distM||0;}});
+  S.logs.forEach(function(l){
+    if(!l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime&&!l.testWalk){
+      if(l.distM>0){
+        total+=l.distM;
+      } else if(l.durMs>0){
+        // Estimate: average walking speed 4.5 km/h = 1.25 m/s
+        total += (l.durMs/1000) * 1.25;
+      }
+    }
+  });
   return (total/1000)+(_testKm||0);
 };
 
@@ -950,6 +1011,8 @@ function saveSettings(){try{localStorage.setItem('puppy_settings',JSON.stringify
 function fmtDur(ms){var s=Math.round(ms/1000);if(s<60)return s+'s';var m=Math.floor(s/60),r=s%60;return r?m+'m '+r+'s':m+'m';}
 function fmtDist(m){m=Math.round(m);return m<1000?m+'m':(m/1000).toFixed(2)+'km';}
 function fmtTime(d){return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+// Real walk = not a rest/sleep/focus/tired/metime entry AND not a test walk
+function isRealWalk(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime&&!l.testWalk;}
 function fmtDate(d){return d.toLocaleDateString([],{month:'short',day:'numeric'});}
 function sh(id){var e=document.getElementById(id);if(e)e.style.display='';}
 function hi(id){var e=document.getElementById(id);if(e)e.style.display='none';}
@@ -1256,7 +1319,7 @@ function scheduleMood(){
   S.bubbleT=setInterval(function(){if(!S.walking&&S.mood==='happy'&&!isSilent())showBubble(rand(MSG.happy),2500);},15000);
   function checkBored(){
     if(S.walking||isSilent())return;
-    var lw=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+    var lw=S.logs.filter(function(l){return isRealWalk(l);});
     var last=lw.length?lw[lw.length-1].ts:null;
     var mins=last?Math.round((Date.now()-last)/60000):9999;
     if(mins>=480)setMood('sad');
@@ -1268,7 +1331,7 @@ function scheduleMood(){
 
 // ── GPS ───────────────────────────────────────────────────────────
 function haversine(a,b,c,d){var R=6371000,dL=(c-a)*Math.PI/180,dO=(d-b)*Math.PI/180,x=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dO/2)*Math.sin(dO/2);return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
-function checkMilestone(dist){var ms=[50,100,500,1000,2000,5000,10000];for(var i=0;i<ms.length;i++){var m=ms[i];if(dist>=m&&!S.distMilestones[m]){S.distMilestones[m]=true;var k='dist_'+m;if(MSG[k]){showBubbleLocked(rand(MSG[k]),4000);var w=document.getElementById('puppy-wrap');w.classList.add('celebrating');setTimeout(function(){document.getElementById('puppy-wrap').classList.remove('celebrating');},2000);}}}var best=0;S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).forEach(function(l){if(l.distM>best)best=l.distM;});if(dist>best+50&&dist>100&&!S.distMilestones['rec'+Math.floor(dist/100)]){S.distMilestones['rec'+Math.floor(dist/100)]=true;showBubbleLocked(rand(MSG.newrecord),4000);}}
+function checkMilestone(dist){var ms=[50,100,500,1000,2000,5000,10000];for(var i=0;i<ms.length;i++){var m=ms[i];if(dist>=m&&!S.distMilestones[m]){S.distMilestones[m]=true;var k='dist_'+m;if(MSG[k]){showBubbleLocked(rand(MSG[k]),4000);var w=document.getElementById('puppy-wrap');w.classList.add('celebrating');setTimeout(function(){document.getElementById('puppy-wrap').classList.remove('celebrating');},2000);}}}var best=0;S.logs.filter(function(l){return isRealWalk(l);}).forEach(function(l){if(l.distM>best)best=l.distM;});if(dist>best+50&&dist>100&&!S.distMilestones['rec'+Math.floor(dist/100)]){S.distMilestones['rec'+Math.floor(dist/100)]=true;showBubbleLocked(rand(MSG.newrecord),4000);}}
 function startGPS(){if(!navigator.geolocation)return;S.lastPos=null;S.distMeters=0;S.lastMoveTime=Date.now();S.distMilestones={};try{S.watchId=navigator.geolocation.watchPosition(function(p){try{var la=p.coords.latitude,lo=p.coords.longitude,sp=p.coords.speed||0;S.currentSpeed=sp*3.6;if(S.lastPos){var d=haversine(S.lastPos.lat,S.lastPos.lon,la,lo);if(d>2&&d<500){S.distMeters+=d;S.lastMoveTime=Date.now();checkMilestone(S.distMeters);}}S.lastPos={lat:la,lon:lo};document.getElementById('live-speed').textContent=Math.round(S.currentSpeed);}catch(e){}},function(){},{enableHighAccuracy:true,maximumAge:3000,timeout:15000});}catch(e){}}
 function stopGPS(){try{if(S.watchId!==null){navigator.geolocation.clearWatch(S.watchId);S.watchId=null;}}catch(e){}}
 
@@ -1329,7 +1392,7 @@ document.getElementById('btn-start').addEventListener('click',function(){
   document.getElementById('btn-cant').disabled=true;document.getElementById('btn-talk-menu').disabled=true;document.getElementById('btn-later').disabled=true;
   var _walkId=S.walkStart;setTimeout(function(){if(S.walking&&S.walkStart===_walkId){document.getElementById('btn-end').disabled=false;}},2000);
   clearTimers();sh('live-bar');
-  var lw=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+  var lw=S.logs.filter(function(l){return isRealWalk(l);});
   var last=lw.length?lw[lw.length-1].ts:null;
   var mins=last?Math.round((Date.now()-last)/60000):0;
   if(mins>120){setTimeout(function(){showBubbleLocked(rand(MSG.finally),5000);},500);}
@@ -1356,7 +1419,7 @@ document.getElementById('btn-end').addEventListener('click',function(){
     })(logEntry,S.lastPos.lat,S.lastPos.lon);
   }
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
-  var totalWalks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
+  var totalWalks=S.logs.filter(function(l){return isRealWalk(l);}).length;
   checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
   document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-talk-menu').disabled=false;document.getElementById('btn-later').disabled=false;
   showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');setTimeout(function(){openMoodPopup(S.logs[S.logs.length-1]);},600);
@@ -1391,7 +1454,7 @@ document.getElementById('btn-export').addEventListener('click',function(){
     var json=JSON.stringify(data,null,2);
     var uri='data:application/json;charset=utf-8,'+encodeURIComponent(json);
     var a=document.createElement('a');
-    var today=new Date();var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    var today=new Date();var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0')+'_'+String(today.getHours()).padStart(2,'0')+'-'+String(today.getMinutes()).padStart(2,'0');
     a.href=uri;a.download='puppy-walks-'+ds+'.json';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     showBubble("Walks saved!! 📤✅",3000);
@@ -1404,7 +1467,7 @@ document.getElementById('import-file').addEventListener('change',function(e){var
 function renderStreak(){
   try{
     var today=new Date();today.setHours(0,0,0,0);
-    var walkedDays=new Set(S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).map(function(l){var d=new Date(l.ts);d.setHours(0,0,0,0);return d.getTime();}));
+    var walkedDays=new Set(S.logs.filter(function(l){return isRealWalk(l);}).map(function(l){var d=new Date(l.ts);d.setHours(0,0,0,0);return d.getTime();}));
     var restSet=new Set(S.restDays.map(function(r){var d=new Date(r.ts);d.setHours(0,0,0,0);return d.getTime();}));
     var sleepSet=new Set(S.logs.filter(function(l){return l.isSleep;}).map(function(l){var d=new Date(l.ts);d.setHours(0,0,0,0);return d.getTime();}));
     var focusSet=new Set(S.logs.filter(function(l){return l.isFocus||l.isTired||l.isMetime;}).map(function(l){var d=new Date(l.ts);d.setHours(0,0,0,0);return d.getTime();}));
@@ -1423,7 +1486,7 @@ function renderStreak(){
 
 function renderSummary(){
   try{
-    var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+    var walks=S.logs.filter(function(l){return isRealWalk(l);});
     document.getElementById('sum-total').textContent=walks.length;
     if(!walks.length){document.getElementById('sum-avgtime').textContent='—';document.getElementById('sum-totaldist').textContent='0m';document.getElementById('sum-avgdist').textContent='—';return;}
     document.getElementById('sum-avgtime').textContent=fmtDur(walks.reduce(function(a,l){return a+(l.durMs||0);},0)/walks.length);
@@ -1441,7 +1504,7 @@ function renderChart(){
     var container=document.getElementById('chart-bars');
     var empty=document.getElementById('chart-empty');
     container.innerHTML='';
-    var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+    var walks=S.logs.filter(function(l){return isRealWalk(l);});
     var now=new Date(); var todayStr2=now.toLocaleDateString();
     var cols=[];
 
@@ -1635,7 +1698,7 @@ saveLogs=function(){
     driveSyncT=setTimeout(driveSync,2000); // debounce 2s
   }
   // Auto-backup every 10th walk
-  var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+  var walks=S.logs.filter(function(l){return isRealWalk(l);});
   if(walks.length>0&&walks.length%10===0){
     try{
       var data={logs:S.logs,restDays:S.restDays,exportedAt:new Date().toISOString()};
@@ -1643,7 +1706,7 @@ saveLogs=function(){
       var uri='data:application/json;charset=utf-8,'+encodeURIComponent(json);
       var a=document.createElement('a');
       a.href=uri;
-      var today2=new Date();var ds2=today2.getFullYear()+'-'+String(today2.getMonth()+1).padStart(2,'0')+'-'+String(today2.getDate()).padStart(2,'0');
+      var today2=new Date();var ds2=today2.getFullYear()+'-'+String(today2.getMonth()+1).padStart(2,'0')+'-'+String(today2.getDate()).padStart(2,'0')+'_'+String(today2.getHours()).padStart(2,'0')+'-'+String(today2.getMinutes()).padStart(2,'0');
       a.download='puppy-walks-'+ds2+'.json';
       document.body.appendChild(a);a.click();document.body.removeChild(a);
       URL.revokeObjectURL(url);
@@ -1711,7 +1774,7 @@ document.getElementById('already-confirm').addEventListener('click',function(){
   // Sort logs by timestamp so order is correct
   S.logs.sort(function(a,b){return a.ts-b.ts;});
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
-  var totalWalks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
+  var totalWalks=S.logs.filter(function(l){return isRealWalk(l);}).length;
   checkBadges(totalWalks);renderBadges();
   closeAlreadySheet();
   updateAlreadyBtn();
@@ -1957,7 +2020,7 @@ function checkBadges(totalWalks){
 
 function renderBadges(){
   try{
-    var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;}).length;
+    var walks=S.logs.filter(function(l){return isRealWalk(l);}).length;
     // Find current level & next badge
     var nextBadge=null;
     for(var i=0;i<BADGES.length;i++){if(BADGES[i].walks>walks){nextBadge=BADGES[i];break;}}
@@ -2005,17 +2068,19 @@ function renderLog(){
     function makeItem(w){
       var d=document.createElement('div');
       var cls='log-item';
-      if(w.rest)cls+=' rest-item';
+      if(w.testWalk)cls+=' focus-item'; // reuse green tint, visually distinct
+      else if(w.rest)cls+=' rest-item';
       else if(w.isSleep)cls+=' sleep-item';
       else if(w.isFocus||w.isMetime)cls+=' focus-item';
       else if(w.isTired)cls+=' rest-item';
       d.className=cls;
       var dist=w.distM>0?' · '+fmtDist(w.distM):'';
       var weather=w.weather?' · '+w.weather:'';
-      var meta=w.rest?(w.restEmoji||'🛡️')+' Rest day':w.isSleep?'🌙 Sleep time':w.isFocus?'🎯 Focus time':w.isMetime?'🧘 Me-time':w.isTired?'😫 Rest — exhausted':dist+weather;
-      var moodTag=(w.mood||w.seasonal)?' <span style="font-size:15px;">'+(w.mood||'')+(w.seasonal?' '+w.seasonal:'')+'</span>':'';
+      var meta=w.testWalk?'🧪 Test walk (not counted)':w.rest?(w.restEmoji||'🛡️')+' Rest day':w.isSleep?'🌙 Sleep time':w.isFocus?'🎯 Focus time':w.isMetime?'🧘 Me-time':w.isTired?'😫 Rest — exhausted':dist+weather;
+      var moodTag=(!w.testWalk&&(w.mood||w.seasonal))?' <span style="font-size:15px;">'+(w.mood||'')+(w.seasonal?' '+w.seasonal:'')+'</span>':'';
       var memoTag=w.memo?'<div class="log-memo">'+w.memo+'</div>':'';
-      d.innerHTML='<div class="log-left"><span class="log-date">'+w.date+' · '+w.time+'</span><span class="log-meta">'+meta+moodTag+'</span>'+memoTag+'</div><span class="log-dur">'+w.dur+'</span>';
+      var durLabel=w.testWalk?'<span style="opacity:0.45;">'+w.dur+'</span>':w.dur;
+      d.innerHTML='<div class="log-left"><span class="log-date">'+w.date+' · '+w.time+'</span><span class="log-meta">'+meta+moodTag+'</span>'+memoTag+'</div><span class="log-dur">'+durLabel+'</span>';
       return d;
     }
     if(recent.length){
@@ -2134,7 +2199,13 @@ document.getElementById('mood-skip-btn').addEventListener('click', closeMoodPopu
 function toggleTestMode(){
   _testModeOn = !_testModeOn;
   document.getElementById('adv-test-bar').style.display = _testModeOn ? 'flex' : 'none';
-  document.getElementById('adv-tab-test').style.color = _testModeOn ? '#f5a623' : '';
+  document.getElementById('adv-test-walk-bar').style.display = _testModeOn ? 'flex' : 'none';
+  var devBtn = document.getElementById('dev-test-btn');
+  devBtn.style.background = _testModeOn ? '#f5a623' : '#f0ebe4';
+  devBtn.style.color = _testModeOn ? '#fff' : '#a09080';
+  devBtn.style.opacity = _testModeOn ? '1' : '0.6';
+  // Scroll adventure into view so test bars are visible
+  if(_testModeOn) document.getElementById('adventure-wrap').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function addTestKm(km){
@@ -2149,34 +2220,112 @@ function resetTestKm(){
 
 // _testKm is included directly in getTotalDistKm
 
+// ── Test Walk — simulate full walk flow without GPS ────────────────
+function runTestWalk(durationMins, distanceM){
+  if(S.walking){
+    showBubble('Stop current walk first! 🛑',2000);
+    return;
+  }
+  // Prevent double-tap
+  if(document.getElementById('adv-test-walk-bar').dataset.running==='1')return;
+  document.getElementById('adv-test-walk-bar').dataset.running='1';
+
+  var durMs = durationMins * 60 * 1000;
+  var fakeStart = Date.now() - durMs; // pretend walk started durationMins ago
+  var fakeStartDate = new Date(fakeStart);
+
+  // Build log entry (same shape as real walks)
+  var logEntry = {
+    ts: fakeStart,
+    date: fmtDate(fakeStartDate),
+    time: fmtTime(fakeStartDate),
+    dur: fmtDur(durMs),
+    durMs: durMs,
+    distM: distanceM,
+    rest: false,
+    isSleep: false,
+    isFocus: false,
+    isTired: false,
+    isMetime: false,
+    testWalk: true  // tag so you can identify test entries
+  };
+
+  S.logs.push(logEntry);
+  S.logs.sort(function(a,b){return a.ts-b.ts;});
+
+  // Add km to testKm so adventure panel updates immediately
+  _testKm += distanceM / 1000;
+
+  saveLogs(); // triggers Supabase cloud sync
+  renderLog();
+  renderStreak();
+  renderSummary();
+  renderChart();
+
+  var totalWalks = S.logs.filter(isRealWalk).length;
+  checkBadges(totalWalks);
+  renderBadges();
+  renderAdventure();
+  updateAlreadyBtn();
+
+  // Animate puppy as if returning from walk
+  setMood('walking');
+  setTimeout(function(){
+    setMood('sleeping');
+    showBubbleLocked(
+      '🧪 Test walk done!! '+fmtDur(durMs)+' · '+fmtDist(distanceM)+' 🐾',
+      4000
+    );
+    // Open mood popup — same as real walk end
+    setTimeout(function(){
+      openMoodPopup(S.logs[S.logs.length-1]);
+    }, 700);
+    setTimeout(function(){
+      if(!S.walking && S.mood==='sleeping'){
+        setMood('happy');
+        scheduleMood();
+      }
+    }, 8000);
+    document.getElementById('adv-test-walk-bar').dataset.running='0';
+  }, 1200);
+}
+
 // ── Adventure Render ──────────────────────────────────────────────
 function renderAdventure(){
   try{
-    // Space
-    var sp=getAdventureProgress(SPACE_WAYPOINTS);
-    document.getElementById('adv-space-dest').textContent=sp.current.emoji;
-    document.getElementById('adv-space-name').textContent=sp.current.name;
-    document.getElementById('adv-space-fact').textContent=sp.current.fact;
-    document.getElementById('adv-space-km').textContent=sp.km.toFixed(1)+' km walked total';
-    if(sp.next){
-      var pct=Math.min(100,((sp.km-sp.current.km)/(sp.next.km-sp.current.km))*100);
+    var km=getTotalDistKm();
+    var hasRealGPS=S.logs.some(function(l){return isRealWalk(l)&&l.distM>0;});
+    var kmLabel=km.toFixed(1)+' km walked'+(hasRealGPS||_testKm>0?'':' ~est.');
+
+    // Space — uses same total km
+    var spIdx=0;
+    SPACE_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)spIdx=i;});
+    var spCur=SPACE_WAYPOINTS[spIdx], spNext=SPACE_WAYPOINTS[spIdx+1]||null;
+    document.getElementById('adv-space-dest').textContent=spCur.emoji;
+    document.getElementById('adv-space-name').textContent=spCur.name;
+    document.getElementById('adv-space-fact').textContent=spCur.fact;
+    document.getElementById('adv-space-km').textContent=kmLabel;
+    if(spNext){
+      var pct=Math.min(100,((km-spCur.km)/(spNext.km-spCur.km))*100);
       document.getElementById('adv-space-fill').style.width=pct+'%';
-      document.getElementById('adv-space-next').textContent='→ '+sp.next.name+' ('+sp.next.km+'km)';
+      document.getElementById('adv-space-next').textContent='→ '+spNext.name+' ('+spNext.km+'km)';
     } else {
       document.getElementById('adv-space-fill').style.width='100%';
       document.getElementById('adv-space-next').textContent='🎉 Complete!';
     }
 
-    // Silk Road
-    var sl=getAdventureProgress(SILK_WAYPOINTS);
-    document.getElementById('adv-silk-dest').textContent=sl.current.emoji;
-    document.getElementById('adv-silk-name').textContent=sl.current.name;
-    document.getElementById('adv-silk-fact').textContent=sl.current.fact;
-    document.getElementById('adv-silk-km').textContent=sl.km.toFixed(1)+' km walked total';
-    if(sl.next){
-      var pct2=Math.min(100,((sl.km-sl.current.km)/(sl.next.km-sl.current.km))*100);
+    // Silk Road — same total km
+    var slIdx=0;
+    SILK_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)slIdx=i;});
+    var slCur=SILK_WAYPOINTS[slIdx], slNext=SILK_WAYPOINTS[slIdx+1]||null;
+    document.getElementById('adv-silk-dest').textContent=slCur.emoji;
+    document.getElementById('adv-silk-name').textContent=slCur.name;
+    document.getElementById('adv-silk-fact').textContent=slCur.fact;
+    document.getElementById('adv-silk-km').textContent=kmLabel;
+    if(slNext){
+      var pct2=Math.min(100,((km-slCur.km)/(slNext.km-slCur.km))*100);
       document.getElementById('adv-silk-fill').style.width=pct2+'%';
-      document.getElementById('adv-silk-next').textContent='→ '+sl.next.name+' ('+sl.next.km+'km)';
+      document.getElementById('adv-silk-next').textContent='→ '+slNext.name+' ('+slNext.km+'km)';
     } else {
       document.getElementById('adv-silk-fill').style.width='100%';
       document.getElementById('adv-silk-next').textContent='🎉 Complete!';
@@ -2218,7 +2367,7 @@ function checkOnOpen(){
       }
     }
     var now=new Date(),h=now.getHours();
-    var walks=S.logs.filter(function(l){return !l.rest&&!l.isSleep&&!l.isFocus&&!l.isTired&&!l.isMetime;});
+    var walks=S.logs.filter(function(l){return isRealWalk(l);});
     var lastWalk=walks.length?walks[walks.length-1]:null;
     var lastTs=lastWalk?lastWalk.ts:null;
     var today=new Date();today.setHours(0,0,0,0);
@@ -2317,5 +2466,14 @@ if('serviceWorker' in navigator){
   });
 }
 </script>
+<!-- ── Dev / Test Mode floating button ─────────────────────────── -->
+<button id="dev-test-btn" onclick="toggleTestMode()" title="Test Mode (dev only)"
+  style="position:fixed;bottom:18px;right:16px;z-index:500;
+         width:42px;height:42px;border-radius:50%;border:none;
+         background:#f0ebe4;color:#a09080;font-size:20px;
+         box-shadow:0 2px 10px rgba(0,0,0,0.15);cursor:pointer;
+         display:flex;align-items:center;justify-content:center;
+         opacity:0.6;transition:opacity 0.2s,background 0.2s;">🧪</button>
+
 </body>
 </html>
