@@ -662,7 +662,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <div class="adventure-tabs">
     <button class="adv-tab active" id="adv-tab-space" onclick="showAdventureTab('space')">🚀 Space</button>
     <button class="adv-tab" id="adv-tab-silk" onclick="showAdventureTab('silk')">🗺️ Silk Road</button>
-
+    <button class="adv-tab" id="adv-tab-quest" onclick="showAdventureTab('quest')">⚔️ Quest</button>
   </div>
   <div class="adv-test-bar" id="adv-test-bar" style="display:none">
     <span class="adv-test-label">Test mode — add fake km:</span>
@@ -695,21 +695,81 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     </div>
   </div>
 
-  <!-- Silk Road Panel -->
-  <div class="adv-panel" id="adv-panel-silk" style="display:none">
-    <div class="adv-scene adv-scene-silk" id="adv-silk-scene">
-      <div class="adv-route-dots" id="adv-route-dots"></div>
-      <div class="adv-destination" id="adv-silk-dest">🏯</div>
-    </div>
-    <div class="adv-info">
-      <div class="adv-location" id="adv-silk-name">Xi'an, China 🏯</div>
-      <div class="adv-fact" id="adv-silk-fact">Start walking to begin the Silk Road journey!</div>
-      <div class="adv-progress-row">
-        <div class="adv-progress-track"><div class="adv-progress-fill adv-progress-silk" id="adv-silk-fill"></div></div>
-        <span class="adv-next-label" id="adv-silk-next"></span>
+  <!-- Quest / RPG Panel -->
+  <div class="adv-panel" id="adv-panel-quest" style="display:none">
+
+    <!-- World selector -->
+    <div class="rpg-world-select">
+      <div class="rpg-world-label">⚔️ Choose your myth world</div>
+      <div class="rpg-worlds" id="rpg-worlds">
+        <button class="rpg-world-btn active" data-world="japan" onclick="rpgSetWorld(this)">🗾 Japan</button>
+        <button class="rpg-world-btn" data-world="greece" onclick="rpgSetWorld(this)">🏛️ Greece</button>
+        <button class="rpg-world-btn" data-world="norse" onclick="rpgSetWorld(this)">🌨️ Norse</button>
+        <button class="rpg-world-btn" data-world="egypt" onclick="rpgSetWorld(this)">🏺 Egypt</button>
+        <button class="rpg-world-btn" data-world="china" onclick="rpgSetWorld(this)">🐉 China</button>
       </div>
-      <div class="adv-km" id="adv-silk-km">0 km walked</div>
     </div>
+
+    <!-- AP bar -->
+    <div class="rpg-ap-bar">
+      <div class="rpg-ap-label">⚡ AP</div>
+      <div class="rpg-ap-val" id="rpg-ap-val">0</div>
+      <div class="rpg-ap-sub" id="rpg-ap-sub">walk to earn more</div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="rpg-stats-row">
+      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-lvl">1</div><div class="rpg-stat-lbl">Level</div></div>
+      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-wins">0</div><div class="rpg-stat-lbl">Wins</div></div>
+      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-gold">0</div><div class="rpg-stat-lbl">🪙 Gold</div></div>
+      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-streak">—</div><div class="rpg-stat-lbl">Streak</div></div>
+    </div>
+
+    <!-- Battle screen -->
+    <div id="rpg-battle-screen">
+      <!-- Scene -->
+      <div class="rpg-scene-wrap" id="rpg-scene-wrap">
+        <div class="rpg-puppy-sprite" id="rpg-puppy">🐶</div>
+        <div class="rpg-vs" id="rpg-vs">VS</div>
+        <div class="rpg-enemy-sprite" id="rpg-enemy-sprite">❓</div>
+      </div>
+
+      <!-- HP bars -->
+      <div class="rpg-hp-row">
+        <div class="rpg-hp-block">
+          <div class="rpg-hp-name">🐶 Puppy</div>
+          <div class="rpg-hp-track"><div class="rpg-hp-fill player" id="rpg-hp-player" style="width:100%"></div></div>
+          <div class="rpg-hp-text" id="rpg-hp-player-txt">100 / 100</div>
+        </div>
+        <div class="rpg-hp-block">
+          <div class="rpg-hp-name" id="rpg-enemy-name">Enemy</div>
+          <div class="rpg-hp-track"><div class="rpg-hp-fill enemy" id="rpg-hp-enemy" style="width:100%"></div></div>
+          <div class="rpg-hp-text" id="rpg-hp-enemy-txt">— / —</div>
+        </div>
+      </div>
+
+      <!-- Battle log -->
+      <div class="rpg-log" id="rpg-log">Choose a world and start a battle! ⚔️</div>
+
+      <!-- Action buttons -->
+      <div class="rpg-actions">
+        <button class="rpg-btn attack" id="rpg-btn-attack" onclick="rpgAction('attack')">⚔️ Attack<span class="cost">2 AP</span></button>
+        <button class="rpg-btn magic" id="rpg-btn-magic" onclick="rpgAction('magic')">✨ Magic<span class="cost">5 AP</span></button>
+        <button class="rpg-btn heal" id="rpg-btn-heal" onclick="rpgAction('heal')">💊 Heal<span class="cost">3 AP</span></button>
+        <button class="rpg-btn flee" id="rpg-btn-flee" onclick="rpgAction('flee')">🏃 Flee<span class="cost">0 AP</span></button>
+      </div>
+    </div>
+
+    <!-- Result screen (hidden) -->
+    <div id="rpg-result-screen" style="display:none">
+      <div class="rpg-result">
+        <div class="rpg-result-emoji" id="rpg-result-emoji">🎉</div>
+        <div class="rpg-result-title" id="rpg-result-title">Victory!</div>
+        <div class="rpg-result-sub" id="rpg-result-sub"></div>
+        <button class="rpg-result-btn" onclick="rpgNextBattle()">Next Battle ⚔️</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2331,13 +2391,330 @@ function renderAdventure(){
       document.getElementById('adv-silk-next').textContent='🎉 Complete!';
     }
   }catch(e){console.warn('Adventure render error',e);}
+  // Refresh RPG AP bar if quest tab is active
+  if(rpgState && document.getElementById('adv-panel-quest').style.display!=='none'){
+    rpgRenderStats();
+    rpgUpdateBtnState();
+  }
 }
 
 function showAdventureTab(which){
   document.getElementById('adv-tab-space').classList.toggle('active',which==='space');
   document.getElementById('adv-tab-silk').classList.toggle('active',which==='silk');
+  document.getElementById('adv-tab-quest').classList.toggle('active',which==='quest');
   document.getElementById('adv-panel-space').style.display=which==='space'?'block':'none';
   document.getElementById('adv-panel-silk').style.display=which==='silk'?'block':'none';
+  document.getElementById('adv-panel-quest').style.display=which==='quest'?'block':'none';
+  if(which==='quest'){
+    if(!rpgState) rpgInit();
+    else { rpgRenderStats(); rpgUpdateBtnState(); }
+  }
+}
+
+// ── RPG Quest System ─────────────────────────────────────────────
+var RPG_WORLDS = {
+  japan: {
+    bg: 'linear-gradient(180deg,#1a0a2e 0%,#2d1b4e 60%,#4a2060 100%)',
+    enemies: [
+      {name:'Kappa 河童',    emoji:'🥒', hp:30,  atk:8,  xp:15, gold:10, lore:'A river sprite who steals cucumbers — and courage.'},
+      {name:'Tengu 天狗',    emoji:'👺', hp:50,  atk:14, xp:28, gold:18, lore:'A proud mountain demon with a long red nose.'},
+      {name:'Oni 鬼',        emoji:'👹', hp:80,  atk:20, xp:45, gold:30, lore:'A fearsome horned demon from the mountains of Kirishima.'},
+      {name:'Yuki-onna 雪女',emoji:'🌨️', hp:65,  atk:17, xp:38, gold:25, lore:'The Snow Woman — her touch freezes the bravest samurai.'},
+      {name:'Raijin 雷神',   emoji:'⚡', hp:110, atk:28, xp:70, gold:50, lore:'God of thunder and lightning. The sky screams his name.'},
+    ]
+  },
+  greece: {
+    bg: 'linear-gradient(180deg,#0d2b52 0%,#1e4d8c 60%,#2a6abf 100%)',
+    enemies: [
+      {name:'Satyr',     emoji:'🐐', hp:28,  atk:7,  xp:12, gold:8,  lore:'Half-goat, half-man. Loves wine and mischief.'},
+      {name:'Cyclops',   emoji:'👁️', hp:60,  atk:16, xp:32, gold:22, lore:'A one-eyed giant with a temper like the Aegean.'},
+      {name:'Medusa',    emoji:'🐍', hp:75,  atk:22, xp:48, gold:35, lore:'Her gaze turns heroes to stone. Don\'t look directly.'},
+      {name:'Minotaur',  emoji:'🐂', hp:90,  atk:25, xp:58, gold:42, lore:'The maze-beast of Crete, half-man half-bull.'},
+      {name:'Typhon',    emoji:'🌪️', hp:130, atk:32, xp:85, gold:60, lore:'The deadliest monster in all of Greek myth.'},
+    ]
+  },
+  norse: {
+    bg: 'linear-gradient(180deg,#0a1a2e 0%,#1a3050 60%,#2a4a70 100%)',
+    enemies: [
+      {name:'Draugr',    emoji:'💀', hp:32,  atk:9,  xp:16, gold:10, lore:'A revenant Viking warrior — restless and undying.'},
+      {name:'Frost Giant',emoji:'🧊',hp:70,  atk:18, xp:40, gold:28, lore:'A giant of Jotunheim, cold as the void before creation.'},
+      {name:'Fenrir',    emoji:'🐺', hp:95,  atk:26, xp:60, gold:45, lore:'The great wolf. Even the gods fear his binding chains.'},
+      {name:'Valkyrie',  emoji:'⚔️', hp:80,  atk:21, xp:50, gold:38, lore:'Chooser of the slain — beautiful, merciless, inevitable.'},
+      {name:'Jörmungandr',emoji:'🐍',hp:140, atk:35, xp:90, gold:65, lore:'The World Serpent. Its tail circles all of Midgard.'},
+    ]
+  },
+  egypt: {
+    bg: 'linear-gradient(180deg,#1a1000 0%,#3a2800 60%,#6a4a10 100%)',
+    enemies: [
+      {name:'Sand Scorpion',emoji:'🦂',hp:25, atk:8,  xp:13, gold:9,  lore:'Sekhmet\'s favourite herald. Tiny, furious, lethal.'},
+      {name:'Anubis Guard', emoji:'🐺',hp:55, atk:15, xp:30, gold:20, lore:'A jackal-headed guardian of the underworld\'s gates.'},
+      {name:'Sphinx',       emoji:'🏛️',hp:80, atk:23, xp:50, gold:37, lore:'It asks a riddle. Answer wrong and face its claws.'},
+      {name:'Ra Serpent',   emoji:'☀️',hp:100,atk:27, xp:65, gold:47, lore:'A servant of the sun god, born from scorching light.'},
+      {name:'Set',          emoji:'🌩️',hp:125,atk:33, xp:82, gold:58, lore:'God of chaos and storms — he slew his own brother.'},
+    ]
+  },
+  china: {
+    bg: 'linear-gradient(180deg,#1a0a0a 0%,#3a1010 60%,#6a2020 100%)',
+    enemies: [
+      {name:'Fox Spirit',  emoji:'🦊', hp:30,  atk:9,  xp:15, gold:11, lore:'A nine-tailed fox spirit, shapeshifter and trickster.'},
+      {name:'Jade Soldier',emoji:'🗿', hp:55,  atk:14, xp:30, gold:21, lore:'An ancient terracotta warrior, reanimated by dark magic.'},
+      {name:'Jiangshi',    emoji:'🧟', hp:70,  atk:19, xp:43, gold:31, lore:'A hopping vampire — arms out, breath holds them still.'},
+      {name:'Storm Dragon',emoji:'🐉', hp:100, atk:26, xp:65, gold:48, lore:'A dragon of the Eastern sky, master of clouds and rain.'},
+      {name:'Hundun',      emoji:'🌀', hp:135, atk:34, xp:88, gold:62, lore:'The primordial chaos that existed before the world.'},
+    ]
+  }
+};
+
+var RPG_PUPPY_ITEMS = ['🐶','🐶‍🦮','🦴','🐾'];
+var rpgState = null;
+
+function loadRpgState(){
+  try{var r=localStorage.getItem('puppy_rpg');return r?JSON.parse(r):null;}catch(e){return null;}
+}
+function saveRpgState(){
+  try{if(rpgState)localStorage.setItem('puppy_rpg',JSON.stringify(rpgState));}catch(e){}
+}
+
+function rpgGetAP(){
+  // 1 km walked = 10 AP; integer
+  return Math.floor(getTotalDistKm() * 10);
+}
+
+function rpgInit(){
+  var saved = loadRpgState();
+  if(saved){
+    rpgState = saved;
+  } else {
+    rpgState = {
+      world: 'japan',
+      hp: 100, maxHp: 100,
+      level: 1,
+      wins: 0,
+      gold: 0,
+      xpTotal: 0,
+      spentAP: 0,
+      inBattle: false,
+      enemy: null,
+      enemyHp: 0
+    };
+  }
+  rpgRenderStats();
+  if(rpgState.inBattle && rpgState.enemy){
+    rpgRenderBattle();
+  } else {
+    rpgSpawnEnemy();
+  }
+}
+
+function rpgRenderStats(){
+  var ap = rpgGetAP();
+  var avail = ap - (rpgState.spentAP||0);
+  document.getElementById('rpg-ap-val').textContent = avail;
+  document.getElementById('rpg-ap-sub').textContent = ap.toFixed(0)+' total AP · '+getTotalDistKm().toFixed(1)+'km walked';
+  document.getElementById('rpg-stat-lvl').textContent = rpgState.level;
+  document.getElementById('rpg-stat-wins').textContent = rpgState.wins;
+  document.getElementById('rpg-stat-gold').textContent = rpgState.gold;
+  // streak from walk data
+  var streak = parseInt(document.getElementById('streak-text').textContent)||0;
+  document.getElementById('rpg-stat-streak').textContent = streak ? streak+'🔥' : '—';
+}
+
+function rpgSetWorld(btn){
+  document.querySelectorAll('.rpg-world-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  rpgState.world = btn.dataset.world;
+  rpgState.inBattle = false;
+  rpgState.enemy = null;
+  saveRpgState();
+  rpgSpawnEnemy();
+}
+
+function rpgSpawnEnemy(){
+  var world = RPG_WORLDS[rpgState.world];
+  var scene = document.getElementById('rpg-scene-wrap');
+  scene.style.background = world.bg;
+
+  // Pick enemy based on level (scale through enemies array as wins increase)
+  var enemies = world.enemies;
+  var tier = Math.min(Math.floor(rpgState.wins / 2), enemies.length-1);
+  // Random from 0..tier (weighted toward tier)
+  var idx = Math.random() < 0.6 ? tier : Math.max(0, tier - Math.floor(Math.random()*2));
+  var template = enemies[idx];
+  // Scale HP/ATK with level
+  var lvlMult = 1 + (rpgState.level-1)*0.15;
+  var enemy = {
+    name: template.name,
+    emoji: template.emoji,
+    hp: Math.round(template.hp * lvlMult),
+    atk: Math.round(template.atk * lvlMult),
+    xp: template.xp,
+    gold: template.gold,
+    lore: template.lore
+  };
+  rpgState.enemy = enemy;
+  rpgState.enemyHp = enemy.hp;
+  rpgState.inBattle = true;
+  saveRpgState();
+  rpgRenderBattle();
+  document.getElementById('rpg-log').textContent = enemy.emoji+' '+enemy.name+' appears! '+enemy.lore;
+}
+
+function rpgRenderBattle(){
+  var state = rpgState;
+  var enemy = state.enemy;
+  if(!enemy) return;
+
+  // Set world bg
+  var world = RPG_WORLDS[state.world];
+  document.getElementById('rpg-scene-wrap').style.background = world.bg;
+
+  document.getElementById('rpg-enemy-sprite').textContent = enemy.emoji;
+  document.getElementById('rpg-enemy-name').textContent = enemy.emoji+' '+enemy.name;
+
+  // Player HP
+  var phpPct = Math.max(0,Math.round((state.hp/state.maxHp)*100));
+  document.getElementById('rpg-hp-player').style.width = phpPct+'%';
+  document.getElementById('rpg-hp-player-txt').textContent = state.hp+' / '+state.maxHp;
+
+  // Enemy HP
+  var ehpPct = Math.max(0,Math.round((state.enemyHp/enemy.hp)*100));
+  document.getElementById('rpg-hp-enemy').style.width = ehpPct+'%';
+  document.getElementById('rpg-hp-enemy-txt').textContent = state.enemyHp+' / '+enemy.hp;
+
+  rpgRenderStats();
+  rpgUpdateBtnState();
+
+  document.getElementById('rpg-battle-screen').style.display = '';
+  document.getElementById('rpg-result-screen').style.display = 'none';
+}
+
+function rpgUpdateBtnState(){
+  var avail = rpgGetAP() - (rpgState.spentAP||0);
+  document.getElementById('rpg-btn-attack').disabled = avail < 2;
+  document.getElementById('rpg-btn-magic').disabled = avail < 5;
+  document.getElementById('rpg-btn-heal').disabled = avail < 3 || rpgState.hp >= rpgState.maxHp;
+}
+
+function rpgAction(action){
+  if(!rpgState.inBattle || !rpgState.enemy) return;
+  var avail = rpgGetAP() - (rpgState.spentAP||0);
+  var log = '';
+  var costs = {attack:2, magic:5, heal:3, flee:0};
+  var cost = costs[action]||0;
+  if(avail < cost){
+    document.getElementById('rpg-log').textContent = '⚠️ Not enough AP! Walk more to earn AP! 🐾';
+    return;
+  }
+
+  var enemy = rpgState.enemy;
+  var dmg = 0, enemyDmg = 0;
+  var lvlBonus = Math.floor((rpgState.level-1)*2);
+
+  if(action === 'attack'){
+    rpgState.spentAP += cost;
+    dmg = Math.round((8 + Math.random()*10 + lvlBonus) * (1 + (avail/100)));
+    rpgState.enemyHp = Math.max(0, rpgState.enemyHp - dmg);
+    log = '🐶 Puppy attacks! ' + dmg + ' damage!';
+    // Animate enemy hit
+    var eSprite = document.getElementById('rpg-enemy-sprite');
+    eSprite.classList.add('hit');
+    setTimeout(function(){eSprite.classList.remove('hit');},350);
+  } else if(action === 'magic'){
+    rpgState.spentAP += cost;
+    dmg = Math.round((18 + Math.random()*15 + lvlBonus*2) * (1 + (avail/80)));
+    rpgState.enemyHp = Math.max(0, rpgState.enemyHp - dmg);
+    log = '✨ Magic blast! ' + dmg + ' damage!';
+    var eSprite2 = document.getElementById('rpg-enemy-sprite');
+    eSprite2.classList.add('hit');
+    setTimeout(function(){eSprite2.classList.remove('hit');},350);
+  } else if(action === 'heal'){
+    rpgState.spentAP += cost;
+    var healAmt = Math.round(20 + Math.random()*15 + lvlBonus);
+    rpgState.hp = Math.min(rpgState.maxHp, rpgState.hp + healAmt);
+    log = '💊 Healed ' + healAmt + ' HP!';
+  } else if(action === 'flee'){
+    rpgState.inBattle = false;
+    rpgState.enemy = null;
+    saveRpgState();
+    document.getElementById('rpg-log').textContent = '🏃 Puppy fled! Choose a world to try again.';
+    rpgRenderStats();
+    rpgUpdateBtnState();
+    return;
+  }
+
+  // Check enemy dead
+  if(rpgState.enemyHp <= 0){
+    rpgState.wins++;
+    rpgState.gold += enemy.gold;
+    rpgState.xpTotal += enemy.xp;
+    // Level up check: xp needed = level * 50
+    while(rpgState.xpTotal >= rpgState.level * 50){
+      rpgState.xpTotal -= rpgState.level * 50;
+      rpgState.level++;
+      rpgState.maxHp = 100 + (rpgState.level-1)*20;
+      rpgState.hp = rpgState.maxHp; // full heal on level up!
+    }
+    rpgState.inBattle = false;
+    saveRpgState();
+    rpgShowResult('win', enemy, log);
+    return;
+  }
+
+  // Enemy attacks back (unless heal)
+  if(action !== 'flee'){
+    var missChance = 0.12;
+    if(Math.random() < missChance){
+      log += '\n' + enemy.emoji + ' ' + enemy.name + ' missed!';
+    } else {
+      enemyDmg = Math.round(enemy.atk * (0.8 + Math.random()*0.5));
+      rpgState.hp = Math.max(0, rpgState.hp - enemyDmg);
+      log += '\n' + enemy.emoji + ' counterattacks! -' + enemyDmg + ' HP!';
+    }
+  }
+
+  // Check player dead
+  if(rpgState.hp <= 0){
+    rpgState.hp = 0;
+    rpgState.inBattle = false;
+    saveRpgState();
+    rpgShowResult('lose', enemy, log);
+    return;
+  }
+
+  saveRpgState();
+  document.getElementById('rpg-log').textContent = log;
+  rpgRenderBattle();
+}
+
+function rpgShowResult(outcome, enemy, lastLog){
+  document.getElementById('rpg-battle-screen').style.display = 'none';
+  document.getElementById('rpg-result-screen').style.display = '';
+
+  if(outcome === 'win'){
+    document.getElementById('rpg-result-emoji').textContent = '🏆';
+    document.getElementById('rpg-result-title').textContent = 'Victory!';
+    document.getElementById('rpg-result-sub').textContent =
+      'Defeated ' + enemy.emoji + ' ' + enemy.name + '!\n+' + enemy.gold + ' 🪙 Gold  ·  +' + enemy.xp + ' XP\n\n' + lastLog;
+    showBubbleLocked('PUPPY WINS!! ⚔️🎉 Defeated ' + enemy.name + '!!', 3500);
+  } else {
+    document.getElementById('rpg-result-emoji').textContent = '💔';
+    document.getElementById('rpg-result-title').textContent = 'Defeated...';
+    document.getElementById('rpg-result-sub').textContent =
+      enemy.emoji + ' ' + enemy.name + ' was too strong!\n\nWalk more to recover AP and try again! 🐾\n\n' + lastLog;
+    // Restore some HP on loss so player can try again
+    rpgState.hp = Math.round(rpgState.maxHp * 0.4);
+    saveRpgState();
+    showBubbleLocked('Puppy was defeated... 💔 Walk to recover! 🐾', 3500);
+  }
+  rpgRenderStats();
+}
+
+function rpgNextBattle(){
+  rpgState.hp = rpgState.maxHp; // heal between battles
+  saveRpgState();
+  document.getElementById('rpg-battle-screen').style.display = '';
+  document.getElementById('rpg-result-screen').style.display = 'none';
+  rpgSpawnEnemy();
 }
 
 // ── Button state recovery on app resume ──────────────────────────
