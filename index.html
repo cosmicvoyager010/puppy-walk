@@ -88,6 +88,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .talk-menu-item{width:100%;padding:14px;border-radius:16px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:#fdf0ff;color:#9060c0;margin-bottom:8px;text-align:left;transition:transform 0.12s;}
 .talk-menu-cant{background:#fff0f0;color:#e07070;}
 .talk-menu-later{background:#f0f8ff;color:#4a90d4;}
+.talk-menu-already{background:#e8f8e8;color:#3a8a3a;}
 .talk-menu-item:active{transform:scale(0.98);}
 .talk-menu-cancel{width:100%;padding:12px;border-radius:16px;font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:#f0ebe4;color:#a09080;margin-top:4px;}
 .btn-cant-full{width:100%;padding:11px;border-radius:18px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:2px solid #f5d0d0;background:#fff0f0;color:#e07070;transition:transform 0.12s;}
@@ -155,9 +156,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .friend-banner-close{background:none;border:none;font-size:14px;color:#c8a882;cursor:pointer;padding:4px;flex-shrink:0;}
 
 /* Already walked button */
-.btn-already{width:100%;padding:11px;border-radius:14px;font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:1.5px solid #b8e0b8;background:#f4fbf4;color:#4a8a4a;transition:transform 0.12s,opacity 0.3s;letter-spacing:0.01em;}
-.btn-already:active{transform:scale(0.97);}
-.btn-already.hidden{display:none;}
+
 
 /* Walk later button */
 .btn-later{width:100%;padding:11px;border-radius:18px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:2px solid #d0e8f5;background:#f0f8ff;color:#4a90d4;transition:transform 0.12s;}
@@ -176,6 +175,11 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .later-sheet-title{font-size:18px;font-weight:800;color:#3d2b1a;}
 .later-sheet-sub{font-size:13px;color:#a07850;margin-top:2px;}
 .later-quick-times{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;}
+.later-day-row{display:flex;gap:8px;margin-bottom:14px;}
+.later-day-btn{flex:1;padding:10px 8px;border-radius:14px;background:#f6f1ea;color:#a07850;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;border:2px solid transparent;cursor:pointer;transition:all 0.15s;text-align:center;}
+.later-day-btn.selected{background:#4a90d4;color:#fff;border-color:#4a90d4;}
+.later-day-btn.later-day-pick{background:#fff8f2;color:#c87010;border:2px dashed #f0d8b8;}
+.later-day-btn.later-day-pick.selected{background:#f5a623;color:#fff;border-color:#f5a623;border-style:solid;}
 .later-chip{padding:10px 16px;border-radius:20px;background:#e8f4ff;color:#4a90d4;font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;border:2px solid transparent;cursor:pointer;transition:all 0.15s;}
 .later-chip.selected{background:#4a90d4;color:#fff;border-color:#4a90d4;}
 .later-custom-row{margin-bottom:14px;}
@@ -296,8 +300,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
 /* Cant walk sheet */
 .cant-sheet{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:28px 28px 0 0;padding:20px 16px 36px;box-shadow:0 -8px 40px rgba(0,0,0,0.18);z-index:100;max-width:420px;margin:0 auto;}
-.cant-sheet h3{font-size:17px;font-weight:800;color:#3d2b1a;text-align:center;margin-bottom:4px;}
-.cant-sheet p{font-size:13px;color:#a07850;text-align:center;margin-bottom:14px;}
+
 .reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
 .reason-btn{padding:12px 8px;border-radius:16px;background:#fff8f0;border:2px solid #f5e6d0;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;text-align:center;color:#3d2b1a;transition:all 0.15s;}
 .reason-btn.selected{background:#fde8bc;border-color:#f5a623;}
@@ -311,8 +314,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
 /* Still walking */
 .still-sheet{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:28px 28px 0 0;padding:24px 20px 36px;box-shadow:0 -8px 40px rgba(0,0,0,0.18);z-index:100;max-width:420px;margin:0 auto;}
-.still-sheet h3{font-size:18px;font-weight:800;color:#3d2b1a;text-align:center;margin-bottom:6px;}
-.still-sheet p{font-size:14px;color:#a07850;text-align:center;margin-bottom:16px;}
+
 .still-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .still-btn{padding:14px;border-radius:16px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;border:none;cursor:pointer;}
 .still-yes{background:#f5a623;color:#fff;}
@@ -366,14 +368,14 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .adv-stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:20px 20px;opacity:0.3;}
 .adv-route-dots{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(126,200,80,0.3) 0,rgba(126,200,80,0.3) 4px,transparent 4px,transparent 20px);opacity:0.4;}
 .adv-info{padding:12px 14px 14px;}
-.adv-location{font-size:15px;font-weight:800;color:#3d2b1a;margin-bottom:4px;}
-.adv-fact{font-size:12px;color:#a07850;line-height:1.5;margin-bottom:10px;}
-.adv-progress-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.adv-progress-track{flex:1;height:7px;background:#f0e8dc;border-radius:10px;overflow:hidden;}
+.adv-location{font-size:18px;font-weight:800;color:#3d2b1a;margin-bottom:6px;}
+.adv-fact{font-size:15px;color:#7a5c3a;line-height:1.55;margin-bottom:12px;}
+.adv-progress-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.adv-progress-track{flex:1 1 100%;height:8px;background:#f0e8dc;border-radius:10px;overflow:hidden;order:1;}
 .adv-progress-fill{height:100%;background:linear-gradient(90deg,#4466ff,#f5a623);border-radius:10px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);width:0%;}
 .adv-progress-silk{background:linear-gradient(90deg,#7ec850,#f5a623);}
-.adv-next-label{font-size:11px;color:#c8a882;font-weight:700;white-space:nowrap;}
-.adv-km{font-size:11px;color:#c8a882;font-weight:600;}
+.adv-next-label{font-size:13px;color:#a07850;font-weight:700;order:2;flex:1 1 100%;}
+.adv-km{font-size:13px;color:#a07850;font-weight:600;}
 @keyframes adv-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.08)}}
 
 
@@ -533,8 +535,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <button class="btn btn-end" id="btn-end" disabled>🏠 End walk</button>
   </div>
 
-  <!-- Already walked — right under walk buttons for quick access -->
-  <button class="btn-already" id="btn-already">✅ Already walked today!</button>
+  
 
 <!-- Post-walk mood & memo popup -->
 <div class="mood-overlay" id="mood-overlay" style="display:none"></div>
@@ -558,11 +559,12 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <!-- Talk to Puppy merged button -->
   <button class="btn-tell" id="btn-talk-menu">💬 Talk to Puppy...</button>
 
-  <!-- Talk menu popup — simple direct sheet, no nested menu -->
+  <!-- Talk menu popup -->
   <div class="talk-menu-overlay" id="talk-menu-overlay" style="display:none"></div>
   <div class="talk-menu-popup" id="talk-menu-popup" style="display:none">
     <div class="talk-menu-title">What's up? 🐾</div>
     <button class="talk-menu-item" id="btn-tell">💬 Tell Puppy something</button>
+    <button class="talk-menu-item talk-menu-already" id="btn-already">✅ Already walked today!</button>
     <button class="talk-menu-item talk-menu-cant" id="btn-cant">🥺 Can't walk right now</button>
     <button class="talk-menu-item talk-menu-later" id="btn-later">🕐 I'll walk later</button>
     <button class="talk-menu-cancel" id="talk-menu-close">Cancel</button>
@@ -660,7 +662,8 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <div class="adventure-tabs">
     <button class="adv-tab active" id="adv-tab-space" onclick="showAdventureTab('space')">🚀 Space</button>
     <button class="adv-tab" id="adv-tab-silk" onclick="showAdventureTab('silk')">🗺️ Silk Road</button>
-    <button class="adv-tab" id="adv-tab-quest" onclick="showAdventureTab('quest')">⚔️ Quest</button>
+    <button class="adv-tab" id="adv-tab-rpg" onclick="showAdventureTab('rpg')">⚔️ Quest</button>
+
   </div>
   <div class="adv-test-bar" id="adv-test-bar" style="display:none">
     <span class="adv-test-label">Test mode — add fake km:</span>
@@ -696,7 +699,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <!-- Silk Road Panel -->
   <div class="adv-panel" id="adv-panel-silk" style="display:none">
     <div class="adv-scene adv-scene-silk" id="adv-silk-scene">
-      <div class="adv-route-dots"></div>
+      <div class="adv-route-dots" id="adv-route-dots"></div>
       <div class="adv-destination" id="adv-silk-dest">🏯</div>
     </div>
     <div class="adv-info">
@@ -710,78 +713,68 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     </div>
   </div>
 
-  <!-- Quest / RPG Panel -->
-  <div class="adv-panel" id="adv-panel-quest" style="display:none">
+  <!-- ⚔️ RPG Quest Panel -->
+  <div class="adv-panel rpg-wrap" id="adv-panel-rpg" style="display:none">
 
     <!-- World selector -->
     <div class="rpg-world-select">
-      <div class="rpg-world-label">⚔️ Choose your myth world</div>
-      <div class="rpg-worlds" id="rpg-worlds">
-        <button class="rpg-world-btn active" data-world="japan" onclick="rpgSetWorld(this)">🗾 Japan</button>
-        <button class="rpg-world-btn" data-world="greece" onclick="rpgSetWorld(this)">🏛️ Greece</button>
-        <button class="rpg-world-btn" data-world="norse" onclick="rpgSetWorld(this)">🌨️ Norse</button>
-        <button class="rpg-world-btn" data-world="egypt" onclick="rpgSetWorld(this)">🏺 Egypt</button>
-        <button class="rpg-world-btn" data-world="china" onclick="rpgSetWorld(this)">🐉 China</button>
-      </div>
+      <div class="rpg-world-label">Choose your myth world:</div>
+      <div class="rpg-worlds" id="rpg-worlds"></div>
     </div>
 
     <!-- AP bar -->
     <div class="rpg-ap-bar">
-      <div class="rpg-ap-label">⚡ AP</div>
-      <div class="rpg-ap-val" id="rpg-ap-val">0</div>
-      <div class="rpg-ap-sub" id="rpg-ap-sub">walk to earn more</div>
+      <span class="rpg-ap-label">⚡ Adventure Points</span>
+      <span class="rpg-ap-val" id="rpg-ap-val">0</span>
+      <span class="rpg-ap-sub" id="rpg-ap-sub">Walk more to earn AP</span>
     </div>
 
-    <!-- Stats row -->
-    <div class="rpg-stats-row">
-      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-lvl">1</div><div class="rpg-stat-lbl">Level</div></div>
-      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-wins">0</div><div class="rpg-stat-lbl">Wins</div></div>
-      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-gold">0</div><div class="rpg-stat-lbl">🪙 Gold</div></div>
-      <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-streak">—</div><div class="rpg-stat-lbl">Streak</div></div>
-    </div>
-
-    <!-- Battle screen -->
-    <div id="rpg-battle-screen">
+    <!-- Battle view -->
+    <div id="rpg-battle-view">
       <!-- Scene -->
-      <div class="rpg-scene-wrap" id="rpg-scene-wrap">
+      <div class="adv-scene" id="rpg-scene" style="height:120px;">
         <div class="rpg-puppy-sprite" id="rpg-puppy">🐶</div>
-        <div class="rpg-vs" id="rpg-vs">VS</div>
+        <div class="rpg-vs">VS</div>
         <div class="rpg-enemy-sprite" id="rpg-enemy-sprite">❓</div>
       </div>
-
       <!-- HP bars -->
       <div class="rpg-hp-row">
         <div class="rpg-hp-block">
-          <div class="rpg-hp-name">🐶 Puppy</div>
-          <div class="rpg-hp-track"><div class="rpg-hp-fill player" id="rpg-hp-player" style="width:100%"></div></div>
-          <div class="rpg-hp-text" id="rpg-hp-player-txt">100 / 100</div>
+          <div class="rpg-hp-name" id="rpg-player-name">Puppy</div>
+          <div class="rpg-hp-track"><div class="rpg-hp-fill player" id="rpg-player-hp-fill" style="width:100%"></div></div>
+          <div class="rpg-hp-text" id="rpg-player-hp-text">HP 20/20</div>
         </div>
         <div class="rpg-hp-block">
           <div class="rpg-hp-name" id="rpg-enemy-name">Enemy</div>
-          <div class="rpg-hp-track"><div class="rpg-hp-fill enemy" id="rpg-hp-enemy" style="width:100%"></div></div>
-          <div class="rpg-hp-text" id="rpg-hp-enemy-txt">— / —</div>
+          <div class="rpg-hp-track"><div class="rpg-hp-fill enemy" id="rpg-enemy-hp-fill" style="width:100%"></div></div>
+          <div class="rpg-hp-text" id="rpg-enemy-hp-text">HP —</div>
         </div>
       </div>
-
       <!-- Battle log -->
-      <div class="rpg-log" id="rpg-log">Choose a world and start a battle! ⚔️</div>
-
+      <div class="rpg-log" id="rpg-log">Choose a world and spend AP to fight! 🗡️</div>
       <!-- Action buttons -->
       <div class="rpg-actions">
-        <button class="rpg-btn attack" id="rpg-btn-attack" onclick="rpgAction('attack')">⚔️ Attack<span class="cost">2 AP</span></button>
-        <button class="rpg-btn magic" id="rpg-btn-magic" onclick="rpgAction('magic')">✨ Magic<span class="cost">5 AP</span></button>
-        <button class="rpg-btn heal" id="rpg-btn-heal" onclick="rpgAction('heal')">💊 Heal<span class="cost">3 AP</span></button>
-        <button class="rpg-btn flee" id="rpg-btn-flee" onclick="rpgAction('flee')">🏃 Flee<span class="cost">0 AP</span></button>
+        <button class="rpg-btn attack" id="rpg-btn-fight" onclick="rpgFight()">⚔️ Fight<span class="cost">2 AP</span></button>
+        <button class="rpg-btn magic" id="rpg-btn-magic" onclick="rpgMagic()">✨ Magic<span class="cost">4 AP</span></button>
+        <button class="rpg-btn heal" id="rpg-btn-heal" onclick="rpgHeal()">💊 Heal<span class="cost">3 AP</span></button>
+        <button class="rpg-btn flee" id="rpg-btn-flee" onclick="rpgFlee()">🏃 Flee</button>
+      </div>
+      <!-- Stats row -->
+      <div class="rpg-stats-row">
+        <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-lv">1</div><div class="rpg-stat-lbl">Level</div></div>
+        <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-kills">0</div><div class="rpg-stat-lbl">Defeated</div></div>
+        <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-gold">0</div><div class="rpg-stat-lbl">🪙 Gold</div></div>
+        <div class="rpg-stat"><div class="rpg-stat-val" id="rpg-stat-streak">0</div><div class="rpg-stat-lbl">🔥 Streak</div></div>
       </div>
     </div>
 
-    <!-- Result screen (hidden) -->
-    <div id="rpg-result-screen" style="display:none">
+    <!-- Victory / Defeat overlay (hidden by default) -->
+    <div id="rpg-result-view" style="display:none">
       <div class="rpg-result">
-        <div class="rpg-result-emoji" id="rpg-result-emoji">🎉</div>
+        <div class="rpg-result-emoji" id="rpg-result-emoji">🏆</div>
         <div class="rpg-result-title" id="rpg-result-title">Victory!</div>
         <div class="rpg-result-sub" id="rpg-result-sub"></div>
-        <button class="rpg-result-btn" onclick="rpgNextBattle()">Next Battle ⚔️</button>
+        <button class="rpg-result-btn" onclick="rpgNextEnemy()">Next Enemy ⚔️</button>
       </div>
     </div>
 
@@ -898,6 +891,12 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <div class="later-sheet-title">When will you walk?</div>
     <div class="later-sheet-sub">Puppy will be ready and waiting 🐾</div>
   </div>
+  <div class="later-day-row" id="later-day-row">
+    <button class="later-day-btn selected" id="later-day-today" data-day="0">Today</button>
+    <button class="later-day-btn" id="later-day-tomorrow" data-day="1">Tomorrow</button>
+    <button class="later-day-btn later-day-pick" id="later-day-custom">📅 Pick date</button>
+  </div>
+  <input type="date" id="later-date-input" class="reminder-time-input" style="display:none;margin-bottom:10px;">
   <div class="later-quick-times" id="later-quick-times"></div>
   <div class="later-custom-row">
     <div class="later-custom-label">Or pick a time</div>
@@ -909,8 +908,11 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
 <!-- Can't walk sheet -->
 <div class="cant-sheet" id="cant-sheet">
-  <h3>What's stopping you? 🥺</h3>
-  <p>Tell Puppy — streak protected!</p>
+  <div class="later-sheet-header">
+    <div class="later-sheet-emoji">🥺</div>
+    <div class="later-sheet-title">What's stopping you?</div>
+    <div class="later-sheet-sub">Tell Puppy — streak protected! 🛡️</div>
+  </div>
   <div class="reason-grid">
     <button class="reason-btn" data-reason="rain" data-emoji="🌧️" data-msg="Aww raining... Puppy will wait inside! 🌧️🏠" data-alt="Rain stopped? Walk time? 🌈🐾">🌧️ Raining</button>
     <button class="reason-btn" data-reason="hot" data-emoji="🌡️" data-msg="Too hot for Puppy paws!! 🥵 Streak safe!" data-alt="Cooler now? Walk time? 🌅🐾">🌡️ Too hot</button>
@@ -934,8 +936,11 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
 <!-- Still walking sheet -->
 <div class="still-sheet" id="still-sheet">
-  <h3>🤔 Still walking, Puppy?</h3>
-  <p id="still-msg">No movement detected... still on a walk?</p>
+  <div class="later-sheet-header">
+    <div class="later-sheet-emoji">🤔</div>
+    <div class="later-sheet-title">Still walking, Puppy?</div>
+    <div class="later-sheet-sub" id="still-msg">No movement detected... still on a walk?</div>
+  </div>
   <div class="still-btns">
     <button class="still-btn still-yes" id="still-yes">🐾 Yes!</button>
     <button class="still-btn still-no" id="still-no">🏠 End walk</button>
@@ -1034,7 +1039,7 @@ function cloudLoad(){
         if(d.restDays)S.restDays=d.restDays;
         localStorage.setItem('puppy_logs',JSON.stringify(S.logs));
         localStorage.setItem('puppy_rest',JSON.stringify(S.restDays));
-        renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();
+        renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();rpgRefreshAP();
         console.log('Cloud data loaded: '+S.logs.length+' walks');
       }
     });
@@ -1080,7 +1085,7 @@ var S={
   selectedReason:null,selectedRemindMins:0
 };
 
-function saveLogs(){try{localStorage.setItem('puppy_logs',JSON.stringify(S.logs));cloudSave();renderAdventure();}catch(e){}}
+function saveLogs(){try{localStorage.setItem('puppy_logs',JSON.stringify(S.logs));cloudSave();renderAdventure();rpgRefreshAP();}catch(e){}}
 function saveRestDays(){try{localStorage.setItem('puppy_rest',JSON.stringify(S.restDays));}catch(e){}}
 function saveSettings(){try{localStorage.setItem('puppy_settings',JSON.stringify(S.settings));}catch(e){}}
 function fmtDur(ms){var s=Math.round(ms/1000);if(s<60)return s+'s';var m=Math.floor(s/60),r=s%60;return r?m+'m '+r+'s':m+'m';}
@@ -1107,6 +1112,18 @@ function showBubbleLocked(msg,dur){
 function sendNotif(title,body){
   if(!S.settings.notifEnabled||isSilent())return;
   if(!('Notification' in window)||Notification.permission!=='granted')return;
+  // Prefer the Service Worker so the notification fires reliably even
+  // if this tab is backgrounded or the screen is off (PWA/Home Screen app).
+  if(navigator.serviceWorker && navigator.serviceWorker.controller){
+    navigator.serviceWorker.controller.postMessage({type:'SHOW_NOTIF',title:title,body:body,tag:'puppy-walk-'+Date.now()});
+    return;
+  }
+  if(navigator.serviceWorker && navigator.serviceWorker.ready){
+    navigator.serviceWorker.ready.then(function(reg){
+      reg.showNotification(title,{body:body,icon:'./icon-192.png',badge:'./icon-192.png',vibrate:[120,60,120]});
+    }).catch(function(){ try{new Notification(title,{body:body,icon:'./icon-192.png'});}catch(e){} });
+    return;
+  }
   try{new Notification(title,{body:body,icon:'./icon-192.png'});}catch(e){}
 }
 
@@ -1297,30 +1314,13 @@ function selectFocus(btn){
   S.selectedFocusMins=parseInt(btn.dataset.mins)||0;
 }
 
-function openTalkMenu(){
-  if(S.walking)return; // Don't open during walk
-  document.getElementById('talk-menu-popup').style.display='block';
-  document.getElementById('talk-menu-overlay').style.display='block';
-}
-function closeTalkMenu(){
-  document.getElementById('talk-menu-popup').style.display='none';
-  document.getElementById('talk-menu-overlay').style.display='none';
-}
-document.getElementById('btn-talk-menu').addEventListener('click',function(){ openTalkMenu(); });
+// ── Talk to Puppy merged menu ────────────────────────────────────
+function openTalkMenu(){document.getElementById('talk-menu-popup').style.display='block';document.getElementById('talk-menu-overlay').style.display='block';}
+function closeTalkMenu(){document.getElementById('talk-menu-popup').style.display='none';document.getElementById('talk-menu-overlay').style.display='none';}
+document.getElementById('btn-talk-menu').addEventListener('click',function(){if(!S.walking)openTalkMenu();});
 document.getElementById('talk-menu-close').addEventListener('click',closeTalkMenu);
 document.getElementById('talk-menu-overlay').addEventListener('click',closeTalkMenu);
-document.getElementById('btn-tell').addEventListener('click',function(){ closeTalkMenu(); openTalkSheet(); });
-document.getElementById('btn-cant').addEventListener('click',function(){
-  if(S.walking)return;
-  closeTalkMenu();
-  document.getElementById('cant-sheet').style.display='block';
-  document.getElementById('sheet-overlay').style.display='block';
-  reasonBtns.forEach(function(b){b.classList.remove('selected');});
-  S.selectedReason=null; S.selectedRemindMins=0;
-  remindChips.forEach(function(c){c.classList.remove('selected');});
-  document.querySelectorAll('.remind-chip[data-mins="0"]')[0].classList.add('selected');
-});
-document.getElementById('btn-later').addEventListener('click',function(){ closeTalkMenu(); openLaterSheet(); });
+document.getElementById('btn-tell').addEventListener('click',function(){closeTalkMenu();if(!S.walking)openTalkSheet();});
 
 document.getElementById('talk-confirm').addEventListener('click',function(){
   var type=S.selectedTell;if(!type)return;
@@ -1344,10 +1344,12 @@ document.getElementById('talk-confirm').addEventListener('click',function(){
     saveLogs();renderLog();renderStreak();
     showBubbleLocked('Good night!! Sweet dreams!! 🌙\nI\'ll wake you at '+wakeTime+'!! 💤',5000);
     sendNotif('🌙 Good night!','Sweet dreams! Puppy is sleeping too 💤 Wake at '+wakeTime);
+    S.settings.wakeTargetTs=wake.getTime();saveSettings(); // persist so a reload/close doesn't lose the alarm
     S.wakeT=setTimeout(function(){
       S.currentMode=null;hideBanner();setMood('happy');
       showBubbleLocked(rand(MSG.after_sleep),5000);
       sendNotif('🌅 Good morning!!','WAKE UP!! WALK TIME?? 🐾🎉');
+      S.settings.wakeTargetTs=null;saveSettings();
       scheduleMood();scheduleNotifications();
     },msUntilWake);
 
@@ -1472,12 +1474,16 @@ document.getElementById('still-no').addEventListener('click',function(){document
 document.getElementById('btn-start').addEventListener('click',function(){
   if(S.walking)return;
   if(S.currentMode)endCurrentMode();
+  // Reset all buttons cleanly before starting
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-end').disabled=false;
+  document.getElementById('btn-cant').disabled=false;
+  document.getElementById('btn-talk-menu').disabled=false;
+  document.getElementById('btn-later').disabled=false;
   S.walking=true;S.walkStart=Date.now();S.lastMoveTime=Date.now();
   friendDismissOnWalk();
-  document.getElementById('btn-start').disabled=true;
-  document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-talk-menu').disabled=true;
-  document.getElementById('btn-already').disabled=true;
+  document.getElementById('btn-start').disabled=true;document.getElementById('btn-end').disabled=true;
+  document.getElementById('btn-cant').disabled=true;document.getElementById('btn-talk-menu').disabled=true;document.getElementById('btn-later').disabled=true;
   var _walkId=S.walkStart;setTimeout(function(){if(S.walking&&S.walkStart===_walkId){document.getElementById('btn-end').disabled=false;}},2000);
   clearTimers();sh('live-bar');
   var lw=S.logs.filter(function(l){return isRealWalk(l);});
@@ -1508,11 +1514,8 @@ document.getElementById('btn-end').addEventListener('click',function(){
   }
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
   var totalWalks=S.logs.filter(function(l){return isRealWalk(l);}).length;
-  checkBadges(totalWalks);renderBadges();updateAlreadyBtn();
-  document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-start').disabled=false;
-  document.getElementById('btn-talk-menu').disabled=false;
-  document.getElementById('btn-already').disabled=false;
+  checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
+  document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-talk-menu').disabled=false;document.getElementById('btn-later').disabled=false;
   showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');setTimeout(function(){openMoodPopup(S.logs[S.logs.length-1]);},600);
   setTimeout(function(){if(!S.walking&&S.mood==='sleeping'){setMood('happy');scheduleMood();}},8000);
 });
@@ -1522,6 +1525,7 @@ var reasonBtns=document.querySelectorAll('.reason-btn');
 var remindChips=document.querySelectorAll('.remind-chip');
 reasonBtns.forEach(function(b){b.addEventListener('click',function(){reasonBtns.forEach(function(x){x.classList.remove('selected');});b.classList.add('selected');S.selectedReason=b.dataset;});});
 remindChips.forEach(function(c){c.addEventListener('click',function(){remindChips.forEach(function(x){x.classList.remove('selected');});c.classList.add('selected');S.selectedRemindMins=parseInt(c.dataset.mins)||0;});});
+document.getElementById('btn-cant').addEventListener('click',function(){if(S.walking)return;closeTalkMenu();document.getElementById('cant-sheet').style.display='block';document.getElementById('sheet-overlay').style.display='block';reasonBtns.forEach(function(b){b.classList.remove('selected');});S.selectedReason=null;S.selectedRemindMins=0;remindChips.forEach(function(c){c.classList.remove('selected');});document.querySelectorAll('.remind-chip[data-mins="0"]')[0].classList.add('selected');});
 document.getElementById('cant-cancel').addEventListener('click',function(){document.getElementById('cant-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
 document.getElementById('sheet-overlay').addEventListener('click',function(){document.getElementById('cant-sheet').style.display='none';document.getElementById('talk-sheet').style.display='none';document.getElementById('still-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
 document.getElementById('cant-confirm').addEventListener('click',function(){
@@ -1551,7 +1555,7 @@ document.getElementById('btn-export').addEventListener('click',function(){
   }catch(e){alert('Export failed.');}
 });
 document.getElementById('btn-import').addEventListener('click',function(){document.getElementById('import-file').click();});
-document.getElementById('import-file').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data.logs&&Array.isArray(data.logs)){S.logs=data.logs.map(function(l){return{ts:l.ts||Date.now(),date:l.date||'—',time:l.time||'—',dur:l.dur||'0s',durMs:l.durMs||0,distM:l.distM||0,rest:l.rest||false,restReason:l.restReason||'',restEmoji:l.restEmoji||'',isSleep:l.isSleep||false,isFocus:l.isFocus||false,isTired:l.isTired||false,isMetime:l.isMetime||false};});if(data.restDays)S.restDays=data.restDays;saveLogs();saveRestDays();renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();showBubbleLocked("Walks restored!! 📥🎉 Welcome back!!",4000);}else{alert('Invalid backup file.');}}catch(err){alert('Could not read file.');}};reader.readAsText(file);e.target.value='';});
+document.getElementById('import-file').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data.logs&&Array.isArray(data.logs)){S.logs=data.logs.map(function(l){return{ts:l.ts||Date.now(),date:l.date||'—',time:l.time||'—',dur:l.dur||'0s',durMs:l.durMs||0,distM:l.distM||0,rest:l.rest||false,restReason:l.restReason||'',restEmoji:l.restEmoji||'',isSleep:l.isSleep||false,isFocus:l.isFocus||false,isTired:l.isTired||false,isMetime:l.isMetime||false};});if(data.restDays)S.restDays=data.restDays;saveLogs();saveRestDays();renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();rpgRefreshAP();showBubbleLocked("Walks restored!! 📥🎉 Welcome back!!",4000);}else{alert('Invalid backup file.');}}catch(err){alert('Could not read file.');}};reader.readAsText(file);e.target.value='';});
 
 // ── Streak & Summary ───────────────────────────────────────────────
 function renderStreak(){
@@ -1773,7 +1777,7 @@ function driveRestore(){
       S.logs=data.logs;
       if(data.restDays)S.restDays=data.restDays;
       saveLogs();saveRestDays();
-      renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();
+      renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();rpgRefreshAP();
       showBubbleLocked('☁️ Walks restored from Drive!! 🎉',4000);
     }
   }).catch(function(){});
@@ -1847,7 +1851,7 @@ document.querySelectorAll('#already-durations .later-chip').forEach(function(chi
   });
 });
 
-document.getElementById('btn-already').addEventListener('click',openAlreadySheet);
+document.getElementById('btn-already').addEventListener('click',function(){closeTalkMenu();openAlreadySheet();});
 document.getElementById('already-cancel').addEventListener('click',closeAlreadySheet);
 
 document.getElementById('already-confirm').addEventListener('click',function(){
@@ -1884,34 +1888,46 @@ document.getElementById('already-confirm').addEventListener('click',function(){
 // ── Walk Later ─────────────────────────────────────────────────────
 var laterIntentT = null;
 var selectedLaterTime = null;
+var selectedLaterDayOffset = 0; // 0=today, 1=tomorrow, -1=custom date picked
+var selectedLaterCustomDate = null; // 'YYYY-MM-DD' when custom date picked
+
+function laterTargetBaseDate(){
+  if(selectedLaterDayOffset===-1 && selectedLaterCustomDate){
+    var p=selectedLaterCustomDate.split('-');
+    return new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+  }
+  var d=new Date();
+  d.setDate(d.getDate()+selectedLaterDayOffset);
+  return d;
+}
 
 function buildLaterQuickTimes(){
   var container=document.getElementById('later-quick-times');
   container.innerHTML='';
   var now=new Date();
-  var nowH=now.getHours();
+  var isToday=(selectedLaterDayOffset===0);
 
-  // Fixed afternoon slots
-  var fixed=[13,14,15,16,17,18]; // 1pm–6pm
+  // Fixed afternoon/evening slots
+  var fixed=[9,11,13,14,15,16,17,18,19,20];
   var shown=[];
 
   fixed.forEach(function(h){
-    // Only show if at least 30 min away
-    var slotMs=new Date();slotMs.setHours(h,0,0,0);
-    if(slotMs.getTime()-now.getTime()<30*60*1000)return;
+    if(isToday){
+      var slotMs=new Date();slotMs.setHours(h,0,0,0);
+      if(slotMs.getTime()-now.getTime()<30*60*1000)return; // skip times too close/past today
+    }
     var ampm=h>=12?'pm':'am';var h12=h%12||12;
     shown.push({label:h12+':00'+ampm, val:String(h).padStart(2,'0')+':00'});
   });
 
-  // If fewer than 3 fixed slots remain (late day), add relative ones too
-  if(shown.length<3){
+  // If fewer than 3 slots remain (e.g. late in the day today), add relative ones
+  if(isToday && shown.length<3){
     [1,2,3,4].forEach(function(offset){
       var t=new Date(now.getTime()+offset*3600000);
       var th=t.getHours(),tm=t.getMinutes();
       var ampm=th>=12?'pm':'am';var h12=th%12||12;
       var mm=String(tm).padStart(2,'0');
       var val=String(th).padStart(2,'0')+':'+mm;
-      // Don't duplicate if already in fixed
       var dupe=shown.some(function(s){return s.val.slice(0,2)===String(th).padStart(2,'0');});
       if(!dupe)shown.push({label:h12+':'+mm+ampm,val:val});
     });
@@ -1932,9 +1948,47 @@ function buildLaterQuickTimes(){
   });
 }
 
+function selectLaterDay(offset){
+  selectedLaterDayOffset=offset;
+  selectedLaterCustomDate=null;
+  document.getElementById('later-day-today').classList.toggle('selected',offset===0);
+  document.getElementById('later-day-tomorrow').classList.toggle('selected',offset===1);
+  document.getElementById('later-day-custom').classList.remove('selected');
+  document.getElementById('later-date-input').style.display='none';
+  selectedLaterTime=null;
+  document.querySelectorAll('.later-chip').forEach(function(c){c.classList.remove('selected');});
+  buildLaterQuickTimes();
+}
+
+document.getElementById('later-day-today').addEventListener('click',function(){selectLaterDay(0);});
+document.getElementById('later-day-tomorrow').addEventListener('click',function(){selectLaterDay(1);});
+document.getElementById('later-day-custom').addEventListener('click',function(){
+  selectedLaterDayOffset=-1;
+  document.getElementById('later-day-today').classList.remove('selected');
+  document.getElementById('later-day-tomorrow').classList.remove('selected');
+  document.getElementById('later-day-custom').classList.add('selected');
+  var dateInput=document.getElementById('later-date-input');
+  dateInput.style.display='block';
+  if(!dateInput.value){
+    var d=new Date();d.setDate(d.getDate()+2);
+    dateInput.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  selectedLaterCustomDate=dateInput.value;
+  document.getElementById('later-quick-times').innerHTML=''; // quick chips don't apply to arbitrary future dates
+});
+document.getElementById('later-date-input').addEventListener('change',function(){
+  selectedLaterCustomDate=this.value;
+});
+
 function openLaterSheet(){
   if(S.walking)return;
   selectedLaterTime=null;
+  selectedLaterDayOffset=0;
+  selectedLaterCustomDate=null;
+  document.getElementById('later-day-today').classList.add('selected');
+  document.getElementById('later-day-tomorrow').classList.remove('selected');
+  document.getElementById('later-day-custom').classList.remove('selected');
+  document.getElementById('later-date-input').style.display='none';
   buildLaterQuickTimes();
   // Default time input to 1hr from now
   var def=new Date(Date.now()+3600000);
@@ -1954,6 +2008,7 @@ function cancelLaterIntent(){
   showBubble('Okay! Just say when 🐾',2500);
 }
 
+document.getElementById('btn-later').addEventListener('click',function(){closeTalkMenu();openLaterSheet();});
 document.getElementById('later-cancel').addEventListener('click',closeLaterSheet);
 
 document.getElementById('later-time-input').addEventListener('change',function(){
@@ -1966,26 +2021,49 @@ document.getElementById('later-confirm').addEventListener('click',function(){
   if(!timeVal){showBubble('Pick a time first! 🕐',2000);return;}
   var parts=timeVal.split(':'),th=parseInt(parts[0]),tm=parseInt(parts[1]||0);
   var now=new Date();
-  var fire=new Date();fire.setHours(th,tm,0,0);
-  if(fire<=now)fire.setDate(fire.getDate()+1);
+
+  var base=laterTargetBaseDate(); // explicit day: today / tomorrow / custom date
+  var fire=new Date(base.getFullYear(),base.getMonth(),base.getDate(),th,tm,0,0);
+
+  // Only auto-roll to the next day if "Today" was selected AND that time has already passed —
+  // this is the one case where rolling forward is unambiguous, not a guess.
+  if(selectedLaterDayOffset===0 && fire<=now){
+    fire.setDate(fire.getDate()+1);
+  }
+
   var msUntil=fire.getTime()-now.getTime();
+  if(msUntil<=0){showBubble('That time has already passed! 🕐',2500);return;}
+
   var h12=th%12||12,ampm=th>=12?'pm':'am',mm=String(tm).padStart(2,'0');
-  var label=h12+':'+mm+ampm;
+  var timeLabel=h12+':'+mm+ampm;
+
+  // Build a clear date label so it's obvious which day was picked
+  var today0=new Date();today0.setHours(0,0,0,0);
+  var fireDay=new Date(fire.getFullYear(),fire.getMonth(),fire.getDate());
+  var dayDiff=Math.round((fireDay-today0)/86400000);
+  var dateLabel = dayDiff===0?'today':dayDiff===1?'tomorrow':fire.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});
+  var label=timeLabel+' '+dateLabel;
+
   // Show intent banner
-  document.getElementById('later-banner-name').textContent='Walking at '+label;
+  document.getElementById('later-banner-name').textContent='Walking '+label;
   document.getElementById('later-banner').style.display='flex';
   closeLaterSheet();
-  showBubbleLocked('Okay!! Walking at '+label+'!! Puppy will be ready!! 🐾⏰',4000);
+  showBubbleLocked('Okay!! Walking '+label+'!! Puppy will be ready!! 🐾⏰',4000);
   // Clear any previous intent timer
   clearTimeout(laterIntentT);
+  // Persist target so the reminder survives a closed/reloaded app (esp. for tomorrow+)
+  S.settings.laterTargetTs=fire.getTime();
+  S.settings.laterTargetLabel=label;
+  saveSettings();
   // Remind when time comes
   laterIntentT=setTimeout(function(){
     document.getElementById('later-banner').style.display='none';
     if(!S.walking&&!walkedToday()){
       showBubbleLocked('It\'s '+label+'!! Walk time!! Let\'s go!! 🐾🎉',5000);
       setMood('happy');
-      sendNotif('🐾 Walk time!','You said you\'d walk at '+label+' — Puppy is ready!!');
+      sendNotif('🐾 Walk time!','You said you\'d walk '+label+' — Puppy is ready!!');
     }
+    S.settings.laterTargetTs=null;saveSettings();
   },msUntil);
 });
 
@@ -2299,12 +2377,12 @@ function toggleTestMode(){
 
 function addTestKm(km){
   _testKm += km;
-  renderAdventure();
+  renderAdventure();rpgRefreshAP();
 }
 
 function resetTestKm(){
   _testKm = 0;
-  renderAdventure();
+  renderAdventure();rpgRefreshAP();
 }
 
 // _testKm is included directly in getTotalDistKm
@@ -2354,7 +2432,7 @@ function runTestWalk(durationMins, distanceM){
   var totalWalks = S.logs.filter(isRealWalk).length;
   checkBadges(totalWalks);
   renderBadges();
-  renderAdventure();
+  renderAdventure();rpgRefreshAP();
   updateAlreadyBtn();
 
   // Animate puppy as if returning from walk
@@ -2380,390 +2458,65 @@ function runTestWalk(durationMins, distanceM){
 }
 
 // ── Adventure Render ──────────────────────────────────────────────
-function setEl(id, prop, val){ var el=document.getElementById(id); if(el) el[prop]=val; }
-function setStyle(id, prop, val){ var el=document.getElementById(id); if(el) el.style[prop]=val; }
-
 function renderAdventure(){
   try{
     var km=getTotalDistKm();
     var hasRealGPS=S.logs.some(function(l){return isRealWalk(l)&&l.distM>0;});
     var kmLabel=km.toFixed(1)+' km walked'+(hasRealGPS||_testKm>0?'':' ~est.');
 
-    // Space
+    // Space — uses same total km
     var spIdx=0;
     SPACE_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)spIdx=i;});
     var spCur=SPACE_WAYPOINTS[spIdx], spNext=SPACE_WAYPOINTS[spIdx+1]||null;
-    setEl('adv-space-dest','textContent',spCur.emoji);
-    setEl('adv-space-name','textContent',spCur.name);
-    setEl('adv-space-fact','textContent',spCur.fact);
-    setEl('adv-space-km','textContent',kmLabel);
+    document.getElementById('adv-space-dest').textContent=spCur.emoji;
+    document.getElementById('adv-space-name').textContent=spCur.name;
+    document.getElementById('adv-space-fact').textContent=spCur.fact;
+    document.getElementById('adv-space-km').textContent=kmLabel;
     if(spNext){
       var pct=Math.min(100,((km-spCur.km)/(spNext.km-spCur.km))*100);
-      setStyle('adv-space-fill','width',pct+'%');
-      setEl('adv-space-next','textContent','→ '+spNext.name+' ('+spNext.km+'km)');
+      document.getElementById('adv-space-fill').style.width=pct+'%';
+      document.getElementById('adv-space-next').textContent='→ '+spNext.name+' ('+spNext.km+'km)';
     } else {
-      setStyle('adv-space-fill','width','100%');
-      setEl('adv-space-next','textContent','🎉 Complete!');
+      document.getElementById('adv-space-fill').style.width='100%';
+      document.getElementById('adv-space-next').textContent='🎉 Complete!';
     }
 
-    // Silk Road
+    // Silk Road — same total km
     var slIdx=0;
     SILK_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)slIdx=i;});
     var slCur=SILK_WAYPOINTS[slIdx], slNext=SILK_WAYPOINTS[slIdx+1]||null;
-    setEl('adv-silk-dest','textContent',slCur.emoji);
-    setEl('adv-silk-name','textContent',slCur.name);
-    setEl('adv-silk-fact','textContent',slCur.fact);
-    setEl('adv-silk-km','textContent',kmLabel);
+    document.getElementById('adv-silk-dest').textContent=slCur.emoji;
+    document.getElementById('adv-silk-name').textContent=slCur.name;
+    document.getElementById('adv-silk-fact').textContent=slCur.fact;
+    document.getElementById('adv-silk-km').textContent=kmLabel;
     if(slNext){
       var pct2=Math.min(100,((km-slCur.km)/(slNext.km-slCur.km))*100);
-      setStyle('adv-silk-fill','width',pct2+'%');
-      setEl('adv-silk-next','textContent','→ '+slNext.name+' ('+slNext.km+'km)');
+      document.getElementById('adv-silk-fill').style.width=pct2+'%';
+      document.getElementById('adv-silk-next').textContent='→ '+slNext.name+' ('+slNext.km+'km)';
     } else {
-      setStyle('adv-silk-fill','width','100%');
-      setEl('adv-silk-next','textContent','🎉 Complete!');
+      document.getElementById('adv-silk-fill').style.width='100%';
+      document.getElementById('adv-silk-next').textContent='🎉 Complete!';
     }
   }catch(e){console.warn('Adventure render error',e);}
-
-  // Refresh RPG if quest tab visible
-  if(rpgState){
-    var qPanel=document.getElementById('adv-panel-quest');
-    if(qPanel && qPanel.style.display!=='none'){
-      rpgRenderStats();
-      rpgUpdateBtnState();
-    }
-  }
 }
 
 function showAdventureTab(which){
   document.getElementById('adv-tab-space').classList.toggle('active',which==='space');
   document.getElementById('adv-tab-silk').classList.toggle('active',which==='silk');
-  document.getElementById('adv-tab-quest').classList.toggle('active',which==='quest');
+  document.getElementById('adv-tab-rpg').classList.toggle('active',which==='rpg');
   document.getElementById('adv-panel-space').style.display=which==='space'?'block':'none';
   document.getElementById('adv-panel-silk').style.display=which==='silk'?'block':'none';
-  document.getElementById('adv-panel-quest').style.display=which==='quest'?'block':'none';
-  if(which==='quest'){
-    if(!rpgState) rpgInit();
-    else { rpgRenderStats(); rpgUpdateBtnState(); }
-  }
-}
-
-// ── RPG Quest System ─────────────────────────────────────────────
-var RPG_WORLDS = {
-  japan: {
-    bg: 'linear-gradient(180deg,#1a0a2e 0%,#2d1b4e 60%,#4a2060 100%)',
-    enemies: [
-      {name:'Kappa 河童',    emoji:'🥒', hp:30,  atk:8,  xp:15, gold:10, lore:'A river sprite who steals cucumbers — and courage.'},
-      {name:'Tengu 天狗',    emoji:'👺', hp:50,  atk:14, xp:28, gold:18, lore:'A proud mountain demon with a long red nose.'},
-      {name:'Oni 鬼',        emoji:'👹', hp:80,  atk:20, xp:45, gold:30, lore:'A fearsome horned demon from the mountains of Kirishima.'},
-      {name:'Yuki-onna 雪女',emoji:'🌨️', hp:65,  atk:17, xp:38, gold:25, lore:'The Snow Woman — her touch freezes the bravest samurai.'},
-      {name:'Raijin 雷神',   emoji:'⚡', hp:110, atk:28, xp:70, gold:50, lore:'God of thunder and lightning. The sky screams his name.'},
-    ]
-  },
-  greece: {
-    bg: 'linear-gradient(180deg,#0d2b52 0%,#1e4d8c 60%,#2a6abf 100%)',
-    enemies: [
-      {name:'Satyr',     emoji:'🐐', hp:28,  atk:7,  xp:12, gold:8,  lore:'Half-goat, half-man. Loves wine and mischief.'},
-      {name:'Cyclops',   emoji:'👁️', hp:60,  atk:16, xp:32, gold:22, lore:'A one-eyed giant with a temper like the Aegean.'},
-      {name:'Medusa',    emoji:'🐍', hp:75,  atk:22, xp:48, gold:35, lore:'Her gaze turns heroes to stone. Don\'t look directly.'},
-      {name:'Minotaur',  emoji:'🐂', hp:90,  atk:25, xp:58, gold:42, lore:'The maze-beast of Crete, half-man half-bull.'},
-      {name:'Typhon',    emoji:'🌪️', hp:130, atk:32, xp:85, gold:60, lore:'The deadliest monster in all of Greek myth.'},
-    ]
-  },
-  norse: {
-    bg: 'linear-gradient(180deg,#0a1a2e 0%,#1a3050 60%,#2a4a70 100%)',
-    enemies: [
-      {name:'Draugr',    emoji:'💀', hp:32,  atk:9,  xp:16, gold:10, lore:'A revenant Viking warrior — restless and undying.'},
-      {name:'Frost Giant',emoji:'🧊',hp:70,  atk:18, xp:40, gold:28, lore:'A giant of Jotunheim, cold as the void before creation.'},
-      {name:'Fenrir',    emoji:'🐺', hp:95,  atk:26, xp:60, gold:45, lore:'The great wolf. Even the gods fear his binding chains.'},
-      {name:'Valkyrie',  emoji:'⚔️', hp:80,  atk:21, xp:50, gold:38, lore:'Chooser of the slain — beautiful, merciless, inevitable.'},
-      {name:'Jörmungandr',emoji:'🐍',hp:140, atk:35, xp:90, gold:65, lore:'The World Serpent. Its tail circles all of Midgard.'},
-    ]
-  },
-  egypt: {
-    bg: 'linear-gradient(180deg,#1a1000 0%,#3a2800 60%,#6a4a10 100%)',
-    enemies: [
-      {name:'Sand Scorpion',emoji:'🦂',hp:25, atk:8,  xp:13, gold:9,  lore:'Sekhmet\'s favourite herald. Tiny, furious, lethal.'},
-      {name:'Anubis Guard', emoji:'🐺',hp:55, atk:15, xp:30, gold:20, lore:'A jackal-headed guardian of the underworld\'s gates.'},
-      {name:'Sphinx',       emoji:'🏛️',hp:80, atk:23, xp:50, gold:37, lore:'It asks a riddle. Answer wrong and face its claws.'},
-      {name:'Ra Serpent',   emoji:'☀️',hp:100,atk:27, xp:65, gold:47, lore:'A servant of the sun god, born from scorching light.'},
-      {name:'Set',          emoji:'🌩️',hp:125,atk:33, xp:82, gold:58, lore:'God of chaos and storms — he slew his own brother.'},
-    ]
-  },
-  china: {
-    bg: 'linear-gradient(180deg,#1a0a0a 0%,#3a1010 60%,#6a2020 100%)',
-    enemies: [
-      {name:'Fox Spirit',  emoji:'🦊', hp:30,  atk:9,  xp:15, gold:11, lore:'A nine-tailed fox spirit, shapeshifter and trickster.'},
-      {name:'Jade Soldier',emoji:'🗿', hp:55,  atk:14, xp:30, gold:21, lore:'An ancient terracotta warrior, reanimated by dark magic.'},
-      {name:'Jiangshi',    emoji:'🧟', hp:70,  atk:19, xp:43, gold:31, lore:'A hopping vampire — arms out, breath holds them still.'},
-      {name:'Storm Dragon',emoji:'🐉', hp:100, atk:26, xp:65, gold:48, lore:'A dragon of the Eastern sky, master of clouds and rain.'},
-      {name:'Hundun',      emoji:'🌀', hp:135, atk:34, xp:88, gold:62, lore:'The primordial chaos that existed before the world.'},
-    ]
-  }
-};
-
-var RPG_PUPPY_ITEMS = ['🐶','🐶‍🦮','🦴','🐾'];
-var rpgState = null;
-
-function loadRpgState(){
-  try{var r=localStorage.getItem('puppy_rpg');return r?JSON.parse(r):null;}catch(e){return null;}
-}
-function saveRpgState(){
-  try{if(rpgState)localStorage.setItem('puppy_rpg',JSON.stringify(rpgState));}catch(e){}
-}
-
-function rpgGetAP(){
-  // 20 free starter AP + 10 AP per km walked
-  return 20 + Math.floor(getTotalDistKm() * 10);
-}
-
-function rpgInit(){
-  var saved = loadRpgState();
-  if(saved){
-    rpgState = saved;
-  } else {
-    rpgState = {
-      world: 'japan',
-      hp: 100, maxHp: 100,
-      level: 1,
-      wins: 0,
-      gold: 0,
-      xpTotal: 0,
-      spentAP: 0,
-      inBattle: false,
-      enemy: null,
-      enemyHp: 0
-    };
-  }
-  // Restore active world button
-  document.querySelectorAll('.rpg-world-btn').forEach(function(b){
-    b.classList.toggle('active', b.dataset.world === rpgState.world);
-  });
-  rpgRenderStats();
-  rpgSpawnEnemy(); // always spawn fresh enemy on init
-}
-
-function rpgRenderStats(){
-  var ap = rpgGetAP();
-  var avail = ap - (rpgState.spentAP||0);
-  document.getElementById('rpg-ap-val').textContent = avail;
-  var km = getTotalDistKm();
-  var sub = '🎁 20 free + ' + Math.floor(km*10) + ' from ' + km.toFixed(1) + 'km walked';
-  document.getElementById('rpg-ap-sub').textContent = sub;
-  document.getElementById('rpg-stat-lvl').textContent = rpgState.level;
-  document.getElementById('rpg-stat-wins').textContent = rpgState.wins;
-  document.getElementById('rpg-stat-gold').textContent = rpgState.gold;
-  var streak = parseInt((document.getElementById('streak-text')||{}).textContent)||0;
-  document.getElementById('rpg-stat-streak').textContent = streak ? streak+'🔥' : '—';
-}
-
-function rpgSetWorld(btn){
-  document.querySelectorAll('.rpg-world-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  rpgState.world = btn.dataset.world;
-  rpgState.inBattle = false;
-  rpgState.enemy = null;
-  saveRpgState();
-  rpgSpawnEnemy();
-}
-
-function rpgSpawnEnemy(){
-  var world = RPG_WORLDS[rpgState.world];
-  var scene = document.getElementById('rpg-scene-wrap');
-  scene.style.background = world.bg;
-
-  // Pick enemy based on level (scale through enemies array as wins increase)
-  var enemies = world.enemies;
-  var tier = Math.min(Math.floor(rpgState.wins / 2), enemies.length-1);
-  // Random from 0..tier (weighted toward tier)
-  var idx = Math.random() < 0.6 ? tier : Math.max(0, tier - Math.floor(Math.random()*2));
-  var template = enemies[idx];
-  // Scale HP/ATK with level
-  var lvlMult = 1 + (rpgState.level-1)*0.15;
-  var enemy = {
-    name: template.name,
-    emoji: template.emoji,
-    hp: Math.round(template.hp * lvlMult),
-    atk: Math.round(template.atk * lvlMult),
-    xp: template.xp,
-    gold: template.gold,
-    lore: template.lore
-  };
-  rpgState.enemy = enemy;
-  rpgState.enemyHp = enemy.hp;
-  rpgState.inBattle = true;
-  saveRpgState();
-  rpgRenderBattle();
-  document.getElementById('rpg-log').textContent = enemy.emoji+' '+enemy.name+' appears! '+enemy.lore;
-}
-
-function rpgRenderBattle(){
-  var state = rpgState;
-  var enemy = state.enemy;
-  if(!enemy) return;
-
-  // Set world bg
-  var world = RPG_WORLDS[state.world];
-  document.getElementById('rpg-scene-wrap').style.background = world.bg;
-
-  document.getElementById('rpg-enemy-sprite').textContent = enemy.emoji;
-  document.getElementById('rpg-enemy-name').textContent = enemy.emoji+' '+enemy.name;
-
-  // Player HP
-  var phpPct = Math.max(0,Math.round((state.hp/state.maxHp)*100));
-  document.getElementById('rpg-hp-player').style.width = phpPct+'%';
-  document.getElementById('rpg-hp-player-txt').textContent = state.hp+' / '+state.maxHp;
-
-  // Enemy HP
-  var ehpPct = Math.max(0,Math.round((state.enemyHp/enemy.hp)*100));
-  document.getElementById('rpg-hp-enemy').style.width = ehpPct+'%';
-  document.getElementById('rpg-hp-enemy-txt').textContent = state.enemyHp+' / '+enemy.hp;
-
-  rpgRenderStats();
-  rpgUpdateBtnState();
-
-  document.getElementById('rpg-battle-screen').style.display = '';
-  document.getElementById('rpg-result-screen').style.display = 'none';
-}
-
-function rpgUpdateBtnState(){
-  var avail = rpgGetAP() - (rpgState.spentAP||0);
-  var attackBtn = document.getElementById('rpg-btn-attack');
-  var magicBtn  = document.getElementById('rpg-btn-magic');
-  var healBtn   = document.getElementById('rpg-btn-heal');
-  attackBtn.disabled = avail < 2;
-  magicBtn.disabled  = avail < 5;
-  healBtn.disabled   = avail < 3 || rpgState.hp >= rpgState.maxHp;
-  // Update cost labels to reflect availability
-  attackBtn.innerHTML = '⚔️ Attack<span class="cost">' + (avail < 2 ? '⚠️ need '+(2-avail)+' AP' : '2 AP') + '</span>';
-  magicBtn.innerHTML  = '✨ Magic<span class="cost">'  + (avail < 5 ? '⚠️ need '+(5-avail)+' AP' : '5 AP') + '</span>';
-  healBtn.innerHTML   = '💊 Heal<span class="cost">'   + (rpgState.hp >= rpgState.maxHp ? 'HP full' : avail < 3 ? '⚠️ need '+(3-avail)+' AP' : '3 AP') + '</span>';
-}
-
-function rpgAction(action){
-  if(!rpgState.inBattle || !rpgState.enemy) return;
-  var avail = rpgGetAP() - (rpgState.spentAP||0);
-  var log = '';
-  var costs = {attack:2, magic:5, heal:3, flee:0};
-  var cost = costs[action]||0;
-  if(avail < cost){
-    var needed = cost - avail;
-    document.getElementById('rpg-log').textContent = '⚠️ Need '+needed+' more AP! Walk '+(needed/10).toFixed(1)+'km to earn it! 🐾';
-    return;
-  }
-
-  var enemy = rpgState.enemy;
-  var dmg = 0, enemyDmg = 0;
-  var lvlBonus = Math.floor((rpgState.level-1)*2);
-
-  if(action === 'attack'){
-    rpgState.spentAP += cost;
-    dmg = Math.round((8 + Math.random()*10 + lvlBonus) * (1 + (avail/100)));
-    rpgState.enemyHp = Math.max(0, rpgState.enemyHp - dmg);
-    log = '🐶 Puppy attacks! ' + dmg + ' damage!';
-    var eSprite = document.getElementById('rpg-enemy-sprite');
-    eSprite.classList.add('hit');
-    setTimeout(function(){eSprite.classList.remove('hit');},350);
-  } else if(action === 'magic'){
-    rpgState.spentAP += cost;
-    dmg = Math.round((18 + Math.random()*15 + lvlBonus*2) * (1 + (avail/80)));
-    rpgState.enemyHp = Math.max(0, rpgState.enemyHp - dmg);
-    log = '✨ Magic blast! ' + dmg + ' damage!';
-    var eSprite2 = document.getElementById('rpg-enemy-sprite');
-    eSprite2.classList.add('hit');
-    setTimeout(function(){eSprite2.classList.remove('hit');},350);
-  } else if(action === 'heal'){
-    rpgState.spentAP += cost;
-    var healAmt = Math.round(20 + Math.random()*15 + lvlBonus);
-    rpgState.hp = Math.min(rpgState.maxHp, rpgState.hp + healAmt);
-    log = '💊 Healed ' + healAmt + ' HP!';
-  } else if(action === 'flee'){
-    // Flee: skip this enemy, spawn new one, small HP penalty
-    var fleeDmg = Math.round(enemy.atk * 0.5);
-    rpgState.hp = Math.max(1, rpgState.hp - fleeDmg);
-    saveRpgState();
-    document.getElementById('rpg-log').textContent = '🏃 Puppy fled! Lost ' + fleeDmg + ' HP. Next enemy coming...';
-    setTimeout(function(){ rpgSpawnEnemy(); }, 900);
-    rpgRenderBattle();
-    return;
-  }
-
-  // Check enemy dead
-  if(rpgState.enemyHp <= 0){
-    rpgState.wins++;
-    rpgState.gold += enemy.gold;
-    rpgState.xpTotal += enemy.xp;
-    while(rpgState.xpTotal >= rpgState.level * 50){
-      rpgState.xpTotal -= rpgState.level * 50;
-      rpgState.level++;
-      rpgState.maxHp = 100 + (rpgState.level-1)*20;
-      rpgState.hp = rpgState.maxHp;
-    }
-    rpgState.inBattle = false;
-    saveRpgState();
-    rpgShowResult('win', enemy, log);
-    return;
-  }
-
-  // Enemy counterattacks
-  var missChance = 0.12;
-  if(Math.random() < missChance){
-    log += '\n' + enemy.emoji + ' ' + enemy.name + ' missed!';
-  } else {
-    enemyDmg = Math.round(enemy.atk * (0.8 + Math.random()*0.5));
-    rpgState.hp = Math.max(0, rpgState.hp - enemyDmg);
-    log += '\n' + enemy.emoji + ' counterattacks! -' + enemyDmg + ' HP!';
-  }
-
-  // Check player dead
-  if(rpgState.hp <= 0){
-    rpgState.hp = 0;
-    rpgState.inBattle = false;
-    saveRpgState();
-    rpgShowResult('lose', enemy, log);
-    return;
-  }
-
-  saveRpgState();
-  document.getElementById('rpg-log').textContent = log;
-  rpgRenderBattle();
-}
-
-function rpgShowResult(outcome, enemy, lastLog){
-  document.getElementById('rpg-battle-screen').style.display = 'none';
-  document.getElementById('rpg-result-screen').style.display = '';
-
-  if(outcome === 'win'){
-    document.getElementById('rpg-result-emoji').textContent = '🏆';
-    document.getElementById('rpg-result-title').textContent = 'Victory!';
-    document.getElementById('rpg-result-sub').textContent =
-      enemy.emoji+' '+enemy.name+' defeated!\n+'+enemy.gold+' 🪙 Gold  ·  +'+enemy.xp+' XP\n\n'+lastLog;
-    showBubbleLocked('PUPPY WINS!! ⚔️🎉 Defeated '+enemy.name+'!!', 3500);
-  } else {
-    document.getElementById('rpg-result-emoji').textContent = '💔';
-    document.getElementById('rpg-result-title').textContent = 'Defeated...';
-    document.getElementById('rpg-result-sub').textContent =
-      enemy.emoji+' '+enemy.name+' was too strong!\n\nPuppy recovers some HP. Try again! 🐾\n\n'+lastLog;
-    rpgState.hp = Math.round(rpgState.maxHp * 0.5);
-    saveRpgState();
-    showBubbleLocked('Puppy was defeated... 💔 Recovered 50% HP! Try again! 🐾', 3500);
-  }
-  rpgRenderStats();
-}
-
-function rpgNextBattle(){
-  rpgState.hp = rpgState.maxHp; // heal between battles
-  saveRpgState();
-  document.getElementById('rpg-battle-screen').style.display = '';
-  document.getElementById('rpg-result-screen').style.display = 'none';
-  rpgSpawnEnemy();
+  document.getElementById('adv-panel-rpg').style.display=which==='rpg'?'block':'none';
+  if(which==='rpg') rpgRefreshUI();
 }
 
 // ── Button state recovery on app resume ──────────────────────────
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible'&&!S.walking){
     document.getElementById('btn-start').disabled=false;
+    document.getElementById('btn-cant').disabled=false;
     document.getElementById('btn-talk-menu').disabled=false;
-    document.getElementById('btn-already').disabled=false;
+    document.getElementById('btn-later').disabled=false;
   }
 });
 
@@ -2772,6 +2525,57 @@ document.addEventListener('visibilitychange',function(){
 // ── In-app alarm on open ───────────────────────────────────────────
 function checkOnOpen(){
   try{
+    // ── Catch up a missed wake alarm ──────────────────────────────
+    // If the app was closed/backgrounded past the scheduled wake time,
+    // the in-page setTimeout never fired — catch it up here instead.
+    if(S.settings.wakeTargetTs){
+      if(Date.now()>=S.settings.wakeTargetTs){
+        clearTimeout(S.wakeT);
+        S.currentMode=null;hideBanner();setMood('happy');
+        showBubbleLocked(rand(MSG.after_sleep),5000);
+        sendNotif('🌅 Good morning!!','WAKE UP!! WALK TIME?? 🐾🎉');
+        S.settings.wakeTargetTs=null;saveSettings();
+        scheduleMood();scheduleNotifications();
+      } else if(S.currentMode==='sleep'){
+        // Still asleep — re-arm the timer in case it was cleared by a reload
+        clearTimeout(S.wakeT);
+        var msLeft=S.settings.wakeTargetTs-Date.now();
+        S.wakeT=setTimeout(function(){
+          S.currentMode=null;hideBanner();setMood('happy');
+          showBubbleLocked(rand(MSG.after_sleep),5000);
+          sendNotif('🌅 Good morning!!','WAKE UP!! WALK TIME?? 🐾🎉');
+          S.settings.wakeTargetTs=null;saveSettings();
+          scheduleMood();scheduleNotifications();
+        },msLeft);
+      }
+    }
+    // ── Catch up a missed "walk later" reminder ───────────────────
+    if(S.settings.laterTargetTs){
+      var lbl=S.settings.laterTargetLabel||'now';
+      if(Date.now()>=S.settings.laterTargetTs){
+        clearTimeout(laterIntentT);
+        document.getElementById('later-banner').style.display='none';
+        if(!S.walking&&!walkedToday()){
+          showBubbleLocked('It\'s '+lbl+'!! Walk time!! Let\'s go!! 🐾🎉',5000);
+          setMood('happy');
+          sendNotif('🐾 Walk time!','You said you\'d walk '+lbl+' — Puppy is ready!!');
+        }
+        S.settings.laterTargetTs=null;saveSettings();
+      } else {
+        // Re-arm in case the timer was lost on reload
+        clearTimeout(laterIntentT);
+        var msLeftLater=S.settings.laterTargetTs-Date.now();
+        laterIntentT=setTimeout(function(){
+          document.getElementById('later-banner').style.display='none';
+          if(!S.walking&&!walkedToday()){
+            showBubbleLocked('It\'s '+lbl+'!! Walk time!! Let\'s go!! 🐾🎉',5000);
+            setMood('happy');
+            sendNotif('🐾 Walk time!','You said you\'d walk '+lbl+' — Puppy is ready!!');
+          }
+          S.settings.laterTargetTs=null;saveSettings();
+        },msLeftLater);
+      }
+    }
     if(S.currentMode||S.walking)return;
     // In-app reminder fallback (works even if notification was missed)
     if(S.settings.notifEnabled&&S.settings.reminderTime&&!walkedToday()){
@@ -2867,7 +2671,8 @@ function checkOnOpen(){
 }
 
 // ── Init ───────────────────────────────────────────────────────────
-renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();
+rpgLoad();
+renderLog();renderStreak();renderSummary();renderChart();renderBadges();renderAdventure();rpgRefreshAP();
 cloudLoad();
 updateReminderUI();updateAlreadyBtn();updateDriveUI();// Run on-open alarm check
 checkOnOpen();
@@ -2876,6 +2681,358 @@ document.addEventListener('visibilitychange',function(){
   if(!document.hidden){checkOnOpen();}
 });
 scheduleMood();scheduleNotifications();
+// ── Service Worker registration ────────────────────────────────────
+// Only attempts registration if sw.js actually exists (avoids console
+// noise on previews/hosts that don't serve it, e.g. this chat preview).
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    fetch('sw.js',{method:'HEAD'}).then(function(res){
+      if(res.ok){
+        navigator.serviceWorker.register('sw.js').catch(function(){/* silent */});
+      }
+      // else: sw.js not found here — skip silently, no warning
+    }).catch(function(){/* network/preview environment — skip silently */});
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ⚔️  RPG QUEST SYSTEM
+// Walk km → Adventure Points (AP).  Spend AP to battle enemies.
+// ══════════════════════════════════════════════════════════════════
+
+var RPG_WORLDS = {
+  japan:  { label:'⛩️ Japan',  bg:'linear-gradient(135deg,#1a0a00,#3d1a00)', puppy:'🐕',
+    enemies:[
+      {name:'Kappa',      emoji:'🐢', hp:12, atk:3, magic:2, gold:8,  exp:10, fact:'River demon of Japanese folklore — loves cucumbers!'},
+      {name:'Tengu',      emoji:'👺', hp:18, atk:5, magic:4, gold:14, exp:18, fact:'Proud bird-demon who guards mountain temples.'},
+      {name:'Oni',        emoji:'👹', hp:28, atk:7, magic:5, gold:22, exp:28, fact:'Horned giant — feared even by other demons.'},
+      {name:'Nine-Tail Fox',emoji:'🦊',hp:38,atk:9, magic:8, gold:35, exp:42, fact:'The Kitsune — a fox of nine tails holds divine power.'},
+      {name:'Yamata Orochi',emoji:'🐍',hp:55,atk:12,magic:10,gold:60, exp:65, fact:'Eight-headed serpent slain by the god Susanoo!'},
+    ]
+  },
+  greece: { label:'🏛️ Greece', bg:'linear-gradient(135deg,#0a1a3d,#1a3a6d)', puppy:'🐩',
+    enemies:[
+      {name:'Satyr',      emoji:'🐐', hp:10, atk:3, magic:2, gold:7,  exp:9,  fact:'Half-man half-goat — followers of Dionysus.'},
+      {name:'Medusa',     emoji:'🐍', hp:20, atk:6, magic:5, gold:18, exp:22, fact:'Her gaze turned men to stone. Perseus used a mirror!'},
+      {name:'Minotaur',   emoji:'🐂', hp:32, atk:8, magic:3, gold:28, exp:35, fact:'Half-man half-bull, trapped in the Labyrinth of Crete.'},
+      {name:'Cyclops',    emoji:'👁️', hp:44, atk:11,magic:4, gold:42, exp:50, fact:'One-eyed giants — Odysseus blinded Polyphemus to escape.'},
+      {name:'Hydra',      emoji:'🐲', hp:60, atk:13,magic:8, gold:70, exp:72, fact:'Cut off one head — two grow back. Heracles burned the stumps!'},
+    ]
+  },
+  norse:  { label:'⚡ Norse',  bg:'linear-gradient(135deg,#0d1a2d,#1a2d4d)', puppy:'🐺',
+    enemies:[
+      {name:'Draugr',     emoji:'💀', hp:11, atk:4, magic:2, gold:8,  exp:11, fact:'Undead Viking warriors who guard burial mounds.'},
+      {name:'Troll',      emoji:'🧌', hp:22, atk:6, magic:2, gold:16, exp:20, fact:'Norwegian trolls turn to stone in sunlight!'},
+      {name:'Valkyrie',   emoji:'⚔️', hp:35, atk:9, magic:6, gold:30, exp:38, fact:'Odin\'s shield-maidens choose who lives and dies in battle.'},
+      {name:'Fenrir',     emoji:'🐺', hp:48, atk:12,magic:5, gold:48, exp:55, fact:'The great wolf bound by gods — destined to break free at Ragnarök.'},
+      {name:'Jörmungandr',emoji:'🌊', hp:65, atk:14,magic:10,gold:75, exp:80, fact:'The World Serpent — so huge it encircles the whole Earth!'},
+    ]
+  },
+  egypt:  { label:'𓂀 Egypt',  bg:'linear-gradient(135deg,#1a1200,#3d2d00)', puppy:'🐕',
+    enemies:[
+      {name:'Mummy',      emoji:'🧟', hp:12, atk:3, magic:3, gold:9,  exp:11, fact:'Ancient priests wrapped the dead to preserve them for the afterlife.'},
+      {name:'Scorpion',   emoji:'🦂', hp:18, atk:5, magic:4, gold:14, exp:18, fact:'Sacred to the goddess Serket, protector of the dead.'},
+      {name:'Sphinx',     emoji:'🦁', hp:30, atk:7, magic:7, gold:26, exp:33, fact:'Asks riddles — wrong answers have deadly consequences!'},
+      {name:'Set',        emoji:'🌩️', hp:45, atk:10,magic:9, gold:45, exp:52, fact:'God of storms and chaos — murdered his brother Osiris.'},
+      {name:'Apophis',    emoji:'🐍', hp:62, atk:14,magic:11,gold:72, exp:78, fact:'The serpent of chaos who tries to swallow the sun every night!'},
+    ]
+  },
+  celtic: { label:'🍀 Celtic', bg:'linear-gradient(135deg,#001a0a,#003d1a)', puppy:'🐕',
+    enemies:[
+      {name:'Pixie',      emoji:'🧚', hp:8,  atk:3, magic:4, gold:7,  exp:9,  fact:'Mischievous fairies of Cornwall — love to lead travelers astray.'},
+      {name:'Banshee',    emoji:'👻', hp:20, atk:5, magic:7, gold:16, exp:22, fact:'Her wail foretells death — only those who hear her are doomed.'},
+      {name:'Dullahan',   emoji:'🎃', hp:32, atk:8, magic:5, gold:27, exp:34, fact:'The headless horseman of Ireland — he carries his head under his arm!'},
+      {name:'Cu Sith',    emoji:'🐾', hp:44, atk:11,magic:6, gold:42, exp:50, fact:'Giant fairy hound — its bark is heard three times before doom strikes.'},
+      {name:'Cú Chulainn',emoji:'🗡️', hp:60, atk:14,magic:8, gold:68, exp:76, fact:'The greatest Irish hero — his battle rage turned him inside out!'},
+    ]
+  },
+  china:  { label:'🐉 China',  bg:'linear-gradient(135deg,#1a0010,#3d0020)', puppy:'🦮',
+    enemies:[
+      {name:'Jiangshi',   emoji:'🧟', hp:13, atk:4, magic:2, gold:9,  exp:12, fact:'Chinese hopping vampire — a yellow talisman on the forehead stops it!'},
+      {name:'Nian',       emoji:'🐂', hp:22, atk:6, magic:4, gold:17, exp:21, fact:'The beast that eats villagers on New Year — scared by red and fireworks!'},
+      {name:'Dragon',     emoji:'🐉', hp:36, atk:9, magic:9, gold:33, exp:40, fact:'Chinese dragons bring rain and fortune — very different from Western ones!'},
+      {name:'Sun Wukong', emoji:'🐒', hp:50, atk:12,magic:10,gold:50, exp:58, fact:'The Monkey King — born from stone, equal to gods, impossible to kill!'},
+      {name:'Yellow Dragon',emoji:'⭐',hp:68, atk:15,magic:12,gold:80, exp:85, fact:'The celestial dragon of the centre — said to have taught writing to humanity.'},
+    ]
+  },
+  arthur: { label:'🏰 Arthur', bg:'linear-gradient(135deg,#0d001a,#1a003d)', puppy:'🐕',
+    enemies:[
+      {name:'Dark Knight', emoji:'🗡️',hp:14, atk:5, magic:2, gold:10, exp:13, fact:'A fallen knight corrupted by Morgan le Fay\'s dark magic.'},
+      {name:'Black Knight',emoji:'🛡️',hp:24, atk:7, magic:3, gold:20, exp:25, fact:'Guards the bridge: "None shall pass!" — Monty Python got it right!'},
+      {name:'Green Knight',emoji:'💚',hp:36, atk:9, magic:6, gold:32, exp:38, fact:'Could survive decapitation — Gawain\'s honour was tested for a year.'},
+      {name:'Morgan le Fay',emoji:'🧙',hp:48, atk:10,magic:14,gold:48, exp:57, fact:'Half-sister of King Arthur — sorceress who sought to bring Camelot down.'},
+      {name:'Mordred',    emoji:'👑', hp:65, atk:14,magic:10,gold:75, exp:82, fact:'Arthur\'s treacherous son — they slew each other at the Battle of Camlann.'},
+    ]
+  },
+  rome:   { label:'🦅 Rome',   bg:'linear-gradient(135deg,#1a0a00,#2d1500)', puppy:'🐕',
+    enemies:[
+      {name:'Gladiator',  emoji:'⚔️', hp:15, atk:5, magic:1, gold:11, exp:14, fact:'Gladiators rarely fought to the death — the crowd usually spared the brave!'},
+      {name:'Harpy',      emoji:'🦅', hp:22, atk:6, magic:5, gold:16, exp:21, fact:'Storm spirits who snatched food and people — borrowed from Greek myth by Rome.'},
+      {name:'Werewolf',   emoji:'🐺', hp:34, atk:9, magic:4, gold:28, exp:36, fact:'Ancient Rome had lycanthropy legends — full moon transformations!'},
+      {name:'Legate',     emoji:'🏛️', hp:46, atk:12,magic:5, gold:46, exp:54, fact:'Commanders of Roman legions — some led 6,000 soldiers into battle.'},
+      {name:'Mars',       emoji:'⚡', hp:70, atk:16,magic:12,gold:85, exp:90, fact:'God of war — Rome\'s most important deity after Jupiter himself.'},
+    ]
+  }
+};
+
+// RPG save state (stored in S.rpg via saveLogs / loaded via loadLogs)
+var RPG = {
+  world:   'japan',
+  lv:      1,
+  hp:      20,
+  maxHp:   20,
+  exp:     0,
+  gold:    0,
+  kills:   0,
+  streak:  0,
+  spentAp: 0,   // total AP spent (so AP = earned - spent)
+  enemy:   null // current enemy state
+};
+
+function rpgLoad(){
+  try{
+    var saved=localStorage.getItem('rpg_save');
+    if(saved){ var p=JSON.parse(saved); Object.assign(RPG,p); }
+  }catch(e){}
+}
+function rpgSave(){
+  try{ localStorage.setItem('rpg_save',JSON.stringify(RPG)); }catch(e){}
+}
+
+// AP = 1 per km walked (real walks only), minus what's been spent
+function rpgGetAP(){
+  var earned = Math.floor(getTotalDistKm());
+  return Math.max(0, earned - RPG.spentAp);
+}
+function rpgSpendAP(n){
+  RPG.spentAp += n;
+  rpgSave();
+  rpgRefreshAP();
+}
+
+function rpgRefreshAP(){
+  if(typeof RPG === 'undefined' || RPG.spentAp === undefined) return;
+  var ap = rpgGetAP();
+  document.getElementById('rpg-ap-val').textContent = ap;
+  var km = getTotalDistKm();
+  document.getElementById('rpg-ap-sub').textContent =
+    km < 1 ? 'Walk 1km to earn your first AP!' :
+    '1 AP per km walked · '+km.toFixed(1)+' km total';
+  // disable buttons if not enough AP
+  var fightOk = ap >= 2 && RPG.enemy;
+  var magicOk = ap >= 4 && RPG.enemy;
+  var healOk  = ap >= 3 && RPG.hp < RPG.maxHp;
+  if(document.getElementById('rpg-btn-fight'))
+    document.getElementById('rpg-btn-fight').disabled = !fightOk;
+  if(document.getElementById('rpg-btn-magic'))
+    document.getElementById('rpg-btn-magic').disabled = !magicOk;
+  if(document.getElementById('rpg-btn-heal'))
+    document.getElementById('rpg-btn-heal').disabled = !healOk;
+}
+
+function rpgGetEnemyPool(){
+  var world = RPG_WORLDS[RPG.world];
+  // unlock stronger enemies as player levels up
+  var maxTier = Math.min(RPG.lv, world.enemies.length);
+  return world.enemies.slice(0, maxTier);
+}
+
+function rpgSpawnEnemy(){
+  var pool = rpgGetEnemyPool();
+  var base = pool[Math.floor(Math.random()*pool.length)];
+  // scale HP/ATK slightly with level
+  var scale = 1 + (RPG.lv - 1) * 0.12;
+  RPG.enemy = {
+    name:    base.name,
+    emoji:   base.emoji,
+    fact:    base.fact,
+    gold:    base.gold,
+    expGain: base.exp,
+    maxHp:   Math.round(base.hp * scale),
+    hp:      Math.round(base.hp * scale),
+    atk:     Math.round(base.atk * scale),
+    magicDmg:Math.round(base.magic * scale)
+  };
+  rpgSave();
+}
+
+function rpgLevelCheck(){
+  var needed = RPG.lv * 20;
+  while(RPG.exp >= needed){
+    RPG.exp -= needed;
+    RPG.lv++;
+    RPG.maxHp += 5;
+    RPG.hp = RPG.maxHp; // full heal on level up
+    needed = RPG.lv * 20;
+    rpgLog('🎉 Level up! Now Lv '+RPG.lv+' — HP fully restored!');
+  }
+}
+
+function rpgLog(msg){ document.getElementById('rpg-log').textContent = msg; }
+
+function rpgRefreshScene(){
+  var world = RPG_WORLDS[RPG.world];
+  document.getElementById('rpg-scene').style.background = world.bg;
+  document.getElementById('rpg-puppy').textContent = world.puppy;
+  if(RPG.enemy){
+    document.getElementById('rpg-enemy-sprite').textContent = RPG.enemy.emoji;
+    document.getElementById('rpg-enemy-name').textContent = RPG.enemy.name;
+    var epct = Math.max(0,(RPG.enemy.hp/RPG.enemy.maxHp)*100);
+    document.getElementById('rpg-enemy-hp-fill').style.width = epct+'%';
+    document.getElementById('rpg-enemy-hp-text').textContent = 'HP '+RPG.enemy.hp+'/'+RPG.enemy.maxHp;
+  } else {
+    document.getElementById('rpg-enemy-sprite').textContent = '❓';
+    document.getElementById('rpg-enemy-name').textContent = 'Enemy';
+    document.getElementById('rpg-enemy-hp-fill').style.width = '100%';
+    document.getElementById('rpg-enemy-hp-text').textContent = 'HP —';
+  }
+  var ppct = Math.max(0,(RPG.hp/RPG.maxHp)*100);
+  document.getElementById('rpg-player-hp-fill').style.width = ppct+'%';
+  document.getElementById('rpg-player-hp-text').textContent = 'HP '+RPG.hp+'/'+RPG.maxHp;
+  document.getElementById('rpg-stat-lv').textContent    = RPG.lv;
+  document.getElementById('rpg-stat-kills').textContent = RPG.kills;
+  document.getElementById('rpg-stat-gold').textContent  = RPG.gold;
+  document.getElementById('rpg-stat-streak').textContent= RPG.streak;
+}
+
+function rpgRefreshUI(){
+  // Build world buttons
+  var wrap = document.getElementById('rpg-worlds');
+  wrap.innerHTML='';
+  Object.keys(RPG_WORLDS).forEach(function(k){
+    var b=document.createElement('button');
+    b.className='rpg-world-btn'+(k===RPG.world?' active':'');
+    b.textContent=RPG_WORLDS[k].label;
+    b.onclick=function(){ rpgSelectWorld(k); };
+    wrap.appendChild(b);
+  });
+  // Ensure an enemy is spawned
+  if(!RPG.enemy) rpgSpawnEnemy();
+  rpgRefreshScene();
+  rpgRefreshAP();
+  document.getElementById('rpg-battle-view').style.display='block';
+  document.getElementById('rpg-result-view').style.display='none';
+  if(!document.getElementById('rpg-log').textContent || document.getElementById('rpg-log').textContent==='Choose a world and spend AP to fight! 🗡️'){
+    rpgLog('⚔️ A '+RPG.enemy.name+' appears! ('+RPG.enemy.fact+')');
+  }
+}
+
+function rpgSelectWorld(k){
+  RPG.world = k;
+  RPG.enemy = null; // new enemy for new world
+  rpgSave();
+  rpgRefreshUI();
+  rpgLog('🌍 Entering '+RPG_WORLDS[k].label+' — a new '+RPG.enemy.name+' awaits!');
+}
+
+function rpgPlayerTurn(dmg, apCost, actionLabel){
+  if(!RPG.enemy) return;
+  var ap = rpgGetAP();
+  if(ap < apCost){ rpgLog('⚡ Not enough AP! Walk more to earn points.'); return; }
+  rpgSpendAP(apCost);
+
+  // Player hits enemy
+  var crit = Math.random() < 0.15;
+  var hit  = crit ? Math.round(dmg * 1.8) : dmg;
+  RPG.enemy.hp = Math.max(0, RPG.enemy.hp - hit);
+  var msg = actionLabel+(crit?' 💥 CRITICAL!':'')+' dealt '+hit+' damage!';
+
+  if(RPG.enemy.hp <= 0){
+    // Victory
+    RPG.kills++;
+    RPG.streak++;
+    RPG.gold  += RPG.enemy.gold;
+    RPG.exp   += RPG.enemy.expGain;
+    rpgLevelCheck();
+    var fact = RPG.enemy.fact;
+    var gainMsg = '+'+RPG.enemy.gold+'🪙  +'+RPG.enemy.expGain+' EXP';
+    RPG.enemy = null;
+    rpgSave();
+    rpgRefreshScene();
+    rpgRefreshAP();
+    document.getElementById('rpg-battle-view').style.display='none';
+    document.getElementById('rpg-result-view').style.display='block';
+    document.getElementById('rpg-result-emoji').textContent='🏆';
+    document.getElementById('rpg-result-title').textContent='Victory! ('+gainMsg+')';
+    document.getElementById('rpg-result-sub').textContent=
+      '📖 '+fact+'\n\n🔥 Win streak: '+RPG.streak;
+    return;
+  }
+
+  // Enemy counter-attacks
+  var eatk = RPG.enemy.atk;
+  var emiss = Math.random() < 0.2; // 20% miss
+  if(!emiss){
+    RPG.hp = Math.max(0, RPG.hp - eatk);
+    msg += '\n'+RPG.enemy.emoji+' '+RPG.enemy.name+' hits back for '+eatk+'!';
+  } else {
+    msg += '\n'+RPG.enemy.emoji+' '+RPG.enemy.name+' missed!';
+  }
+
+  if(RPG.hp <= 0){
+    RPG.streak = 0;
+    RPG.enemy  = null;
+    rpgSave();
+    rpgRefreshScene();
+    rpgRefreshAP();
+    document.getElementById('rpg-battle-view').style.display='none';
+    document.getElementById('rpg-result-view').style.display='block';
+    document.getElementById('rpg-result-emoji').textContent='💀';
+    document.getElementById('rpg-result-title').textContent='Defeated...';
+    document.getElementById('rpg-result-sub').textContent=
+      'Puppy was knocked out! HP restored for next fight.\nStreak lost — try again! 🐾';
+    RPG.hp = RPG.maxHp; // reset HP for next round
+    rpgSave();
+    return;
+  }
+
+  rpgSave();
+  rpgRefreshScene();
+  rpgLog(msg);
+}
+
+function rpgFight(){
+  var base = 4 + Math.floor(RPG.lv * 1.5);
+  rpgPlayerTurn(base + Math.floor(Math.random()*4), 2, '⚔️ Attack');
+}
+
+function rpgMagic(){
+  if(!RPG.enemy){return;}
+  var base = 7 + Math.floor(RPG.lv * 2);
+  rpgPlayerTurn(base + Math.floor(Math.random()*6), 4, '✨ Magic');
+}
+
+function rpgHeal(){
+  var ap = rpgGetAP();
+  if(ap < 3){ rpgLog('⚡ Not enough AP!'); return; }
+  if(RPG.hp >= RPG.maxHp){ rpgLog('💚 Already at full HP!'); return; }
+  rpgSpendAP(3);
+  var restore = 8 + RPG.lv * 2;
+  RPG.hp = Math.min(RPG.maxHp, RPG.hp + restore);
+  rpgSave();
+  rpgRefreshScene();
+  rpgLog('💊 Healed +'+restore+' HP! ('+RPG.hp+'/'+RPG.maxHp+')');
+}
+
+function rpgFlee(){
+  RPG.streak = 0;
+  RPG.enemy  = null;
+  rpgSave();
+  rpgSpawnEnemy();
+  rpgRefreshScene();
+  rpgRefreshAP();
+  rpgLog('🏃 You fled! A new enemy appears... '+RPG.enemy.emoji+' '+RPG.enemy.name);
+}
+
+function rpgNextEnemy(){
+  RPG.enemy = null;
+  rpgSpawnEnemy();
+  document.getElementById('rpg-battle-view').style.display='block';
+  document.getElementById('rpg-result-view').style.display='none';
+  rpgRefreshScene();
+  rpgRefreshAP();
+  rpgLog('⚔️ A '+RPG.enemy.name+' appears! ('+RPG.enemy.fact+')');
+}
 </script>
 <!-- ── Dev / Test Mode floating button ─────────────────────────── -->
 <button id="dev-test-btn" onclick="toggleTestMode()" title="Test Mode (dev only)"
