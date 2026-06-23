@@ -38,7 +38,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 @keyframes floatZ{0%{opacity:0;transform:translateY(0) scale(0.8)}30%{opacity:1}80%{opacity:0.5;transform:translateY(-22px) scale(1.1)}100%{opacity:0;transform:translateY(-34px)}}
 
 /* Speech bubble */
-.speech-bubble{position:absolute;top:-78px;left:50%;transform:translateX(-50%);background:#fff;border-radius:18px;padding:8px 14px;font-size:13px;font-weight:700;color:#3d2b1a;box-shadow:0 4px 16px rgba(0,0,0,0.12);opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:10;border:2px solid #f5e6d0;max-width:260px;white-space:normal;text-align:center;line-height:1.4;}
+.speech-bubble{position:absolute;top:-88px;left:50%;transform:translateX(-50%);background:#fff;border-radius:18px;padding:10px 16px;font-size:15px;font-weight:700;color:#3d2b1a;box-shadow:0 4px 16px rgba(0,0,0,0.12);opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:10;border:2px solid #f5e6d0;max-width:270px;white-space:normal;text-align:center;line-height:1.45;}
 .speech-bubble::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#fff;}
 .speech-bubble::before{content:'';position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#f5e6d0;}
 .speech-bubble.show{opacity:1;}
@@ -256,7 +256,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;backdrop-filter:blur(2px);}
 
 /* Talk to Puppy sheet */
-.talk-sheet{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:28px 28px 0 0;padding:20px 16px 36px;box-shadow:0 -8px 40px rgba(0,0,0,0.18);z-index:100;max-width:420px;margin:0 auto;transition:transform 0.3s;}
+.talk-sheet{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:28px 28px 0 0;padding:20px 16px 36px;box-shadow:0 -8px 40px rgba(0,0,0,0.18);z-index:100;max-width:420px;margin:0 auto;transition:transform 0.3s;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .talk-header{text-align:center;margin-bottom:16px;}
 .talk-puppy-emoji{font-size:32px;margin-bottom:4px;}
 .talk-title{font-size:18px;font-weight:800;color:#3d2b1a;}
@@ -265,13 +265,16 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 /* Step 1 — what are you telling Puppy */
 .talk-step{display:none;}
 .talk-step.active{display:block;}
-.tell-grid{display:flex;flex-direction:column;gap:8px;}
+.tell-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .tell-btn{width:100%;padding:14px 16px;border-radius:16px;background:#fff8f0;border:2px solid #f5e6d0;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;text-align:left;color:#3d2b1a;display:flex;align-items:center;gap:10px;transition:all 0.15s;}
 .tell-btn:active{background:#fde8bc;border-color:#f5a623;transform:scale(0.98);}
 .tell-btn-emoji{font-size:24px;width:32px;text-align:center;}
 .tell-btn-text{display:flex;flex-direction:column;}
 .tell-btn-label{font-size:14px;font-weight:800;}
 .tell-btn-sub{font-size:11px;color:#a07850;font-weight:600;margin-top:1px;}
+.tell-btn-positive{background:#fff9e8;border-color:#f5e0a0;}
+.tell-btn-positive:active{background:#fef0c0;border-color:#f5c020;}
+.tell-group-label{font-size:11px;font-weight:800;color:#c8865a;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 8px 2px;}
 
 /* Step 2 — Puppy responds + detail options */
 .puppy-response{background:#fff8f0;border-radius:16px;padding:14px;margin-bottom:14px;text-align:center;}
@@ -324,25 +327,67 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .puppy-wrap{position:relative;}
 @keyframes bounce{0%,100%{transform:translateY(0)}20%{transform:translateY(-22px)}40%{transform:translateY(-10px)}60%{transform:translateY(-26px)}80%{transform:translateY(-6px)}}
 @keyframes wagTail{0%,100%{transform:rotate(0deg)}30%{transform:rotate(22deg)}70%{transform:rotate(-22deg)}}
+@keyframes walkLegL{0%,100%{transform:translateX(0) translateY(0) rotate(0deg)}25%{transform:translateX(-6px) translateY(-7px) rotate(-18deg)}75%{transform:translateX(5px) translateY(2px) rotate(10deg)}}
+@keyframes walkLegR{0%,100%{transform:translateX(0) translateY(0) rotate(0deg)}25%{transform:translateX(5px) translateY(2px) rotate(10deg)}75%{transform:translateX(-6px) translateY(-7px) rotate(-18deg)}}
+@keyframes walkBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes sniffle{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 @keyframes bored{0%,100%{transform:rotate(0deg) translateY(0)}50%{transform:rotate(-5deg) translateY(4px)}}
 @keyframes sadBob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 @keyframes tearDrop{0%,40%{opacity:0;transform:translateY(0)}60%{opacity:0.9}100%{opacity:0;transform:translateY(14px)}}
 @keyframes celebrate{0%,100%{transform:scale(1) rotate(0deg)}25%{transform:scale(1.15) rotate(-5deg)}75%{transform:scale(1.15) rotate(5deg)}}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+/* ── Nap micro-behaviours ─────────────────────────────────────── */
+@keyframes napTwitch{0%,100%{transform:translateX(0) rotate(0deg)}15%{transform:translateX(-4px) rotate(-3deg)}30%{transform:translateX(3px) rotate(2deg)}45%{transform:translateX(-2px) rotate(-1deg)}60%,100%{transform:translateX(0) rotate(0deg)}}
+@keyframes dreamShudder{0%,100%{transform:translateX(0) scale(1)}10%{transform:translateX(-2px) scale(1.01)}20%{transform:translateX(2px) scale(0.99)}35%{transform:translateX(-3px) scale(1.01)}50%{transform:translateX(2px)}70%,100%{transform:translateX(0)}}
+@keyframes bodyShake{0%,100%{transform:rotate(0deg) scale(1)}10%{transform:rotate(-6deg) scale(1.04)}25%{transform:rotate(7deg) scale(1.06)}40%{transform:rotate(-8deg) scale(1.05)}55%{transform:rotate(6deg) scale(1.04)}70%{transform:rotate(-4deg) scale(1.02)}85%{transform:rotate(3deg)}}
+@keyframes doorBounce{0%,100%{transform:translateY(0) scale(1)}20%{transform:translateY(-18px) scale(1.06)}40%{transform:translateY(-4px) scale(0.97)}60%{transform:translateY(-22px) scale(1.08)}80%{transform:translateY(-6px) scale(0.98)}}
+@keyframes drinkWater{0%,100%{transform:rotate(0deg) translateY(0)}20%{transform:rotate(22deg) translateY(8px)}40%{transform:rotate(18deg) translateY(7px)}60%{transform:rotate(22deg) translateY(8px)}80%{transform:rotate(16deg) translateY(6px)}}
+@keyframes mouthShake{0%,100%{transform:rotate(0deg)}15%{transform:rotate(-10deg)}30%{transform:rotate(10deg)}50%{transform:rotate(-8deg)}70%{transform:rotate(6deg)}}
+@keyframes flop{0%{transform:scaleY(1) translateY(0)}40%{transform:scaleY(0.88) translateY(6px)}70%{transform:scaleY(0.9) translateY(5px)}100%{transform:scaleY(0.9) translateY(5px)}}
+@keyframes contentBreathe{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.025) translateY(-2px)}}
+@keyframes contentTail{0%,100%{transform:rotate(0deg)}40%{transform:rotate(14deg)}70%{transform:rotate(-8deg)}}
+.body-shake{animation:bodyShake 0.7s ease-in-out;}
+.door-bounce{animation:doorBounce 0.5s ease-in-out 3;}
+.drinking svg{animation:drinkWater 0.7s ease-in-out infinite;}
+.content-rest svg{animation:contentBreathe 4s ease-in-out infinite;}
+.content-rest #tail-g{animation:contentTail 3s ease-in-out infinite;transform-origin:28px 78px;}
+/* ── Idle home behaviours ──────────────────────────────────────── */
+@keyframes wander{0%{transform:translateX(0) rotate(0deg)}20%{transform:translateX(18px) rotate(3deg)}50%{transform:translateX(-14px) rotate(-3deg)}80%{transform:translateX(10px) rotate(2deg)}100%{transform:translateX(0) rotate(0deg)}}
+@keyframes sniffGround{0%,100%{transform:rotate(0deg) translateY(0)}30%{transform:rotate(18deg) translateY(6px)}60%{transform:rotate(14deg) translateY(5px)}80%{transform:rotate(0deg) translateY(0)}}
+@keyframes scratchEar{0%,100%{transform:rotate(0deg)}10%{transform:rotate(-8deg) translateX(-3px)}20%{transform:rotate(8deg) translateX(3px)}30%{transform:rotate(-6deg) translateX(-2px)}40%{transform:rotate(6deg) translateX(2px)}60%{transform:rotate(-3deg)}80%{transform:rotate(0deg)}}
+@keyframes spin{0%{transform:rotate(0deg) scale(1)}40%{transform:rotate(200deg) scale(1.08)}70%{transform:rotate(330deg) scale(1.12)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes superJump{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(-34px) scale(1.08)}30%{transform:translateY(-8px) scale(0.95)}45%{transform:translateY(-40px) scale(1.12)}60%{transform:translateY(-6px) scale(0.95)}75%{transform:translateY(-28px) scale(1.06)}90%{transform:translateY(-5px) scale(0.97)}}
+@keyframes yawn{0%,100%{transform:scale(1)}30%{transform:scale(1.07) translateY(-3px)}60%{transform:scale(1.04) translateY(-2px)}80%{transform:scale(1)}}
+@keyframes headTilt{0%,100%{transform:rotate(0deg)}30%{transform:rotate(-20deg)}70%{transform:rotate(-16deg)}}
+@keyframes stretch{0%,100%{transform:scaleX(1) scaleY(1)}40%{transform:scaleX(1.2) scaleY(0.86)}70%{transform:scaleX(1.15) scaleY(0.9)}}
+@keyframes sitLook{0%,100%{transform:translateY(0) rotate(0deg)}40%{transform:translateY(-5px) rotate(-7deg)}70%{transform:translateY(-4px) rotate(-5deg)}}
 .bouncing{animation:bounce 0.55s ease-in-out 3;}
 .walking #tail-g{animation:wagTail 0.32s ease-in-out infinite;transform-origin:28px 78px;}
+.walking #leg-left{animation:walkLegL 0.55s ease-in-out infinite;transform-origin:62px 141px;}
+.walking #leg-right{animation:walkLegR 0.55s ease-in-out infinite;transform-origin:98px 141px;}
+.walking svg{animation:walkBob 0.55s ease-in-out infinite;}
 .sniffling{animation:sniffle 0.45s ease-in-out infinite;}
 .bored-anim{animation:bored 2.2s ease-in-out infinite;}
 .sad-anim{animation:sadBob 1.6s ease-in-out infinite;}
 .celebrating{animation:celebrate 0.4s ease-in-out infinite;}
 .sleep-anim{animation:breathe 3s ease-in-out infinite;}
+.tail-wag-only #tail-g{animation:wagTail 0.32s ease-in-out infinite;transform-origin:28px 78px;}
 .name-tag{font-size:7px;font-weight:800;fill:#3d2b1a;text-anchor:middle;letter-spacing:0.5px;}
 
 /* Mood popup */
 .mood-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:300;}
 .mood-popup{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff8f0;border-radius:24px 24px 0 0;padding:22px 18px 36px;z-index:301;box-shadow:0 -4px 28px rgba(0,0,0,0.13);}
 .mood-popup-title{font-size:16px;font-weight:800;color:#3d2b1a;text-align:center;margin-bottom:16px;}
+
+/* Collapsed (default) state — calm, no decision pressure */
+.mood-collapsed{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 0 2px;}
+.mood-collapsed-emoji{font-size:38px;margin-bottom:6px;animation:mood-pop 0.4s ease;}
+.mood-collapsed-text{font-size:17px;font-weight:800;color:#3d2b1a;margin-bottom:14px;}
+.mood-add-link{background:none;border:none;color:#a07850;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;padding:8px;margin-bottom:10px;text-decoration:underline;text-underline-offset:3px;}
+.mood-add-link:active{opacity:0.6;}
+.mood-done-btn{width:100%;padding:13px;border-radius:16px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:linear-gradient(135deg,#f5a623,#e8922a);color:#fff;}
+@keyframes mood-pop{0%{transform:scale(0.6);opacity:0;}60%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+
 .mood-emojis{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
 .mood-emoji-btn{font-size:28px;background:#fff;border:2.5px solid #f0e0cc;border-radius:14px;width:50px;height:50px;cursor:pointer;transition:transform 0.12s,border-color 0.12s;}
 .mood-emoji-btn:active,.mood-emoji-btn.selected{transform:scale(1.18);border-color:#f5a623;}
@@ -364,6 +409,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .adv-panel{}
 .adv-scene{height:110px;background:linear-gradient(135deg,#060d1f,#0d1f3c);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .adv-scene-silk{background:linear-gradient(135deg,#1a3a1a,#2a5a2a);}
+.adv-scene-sea{background:linear-gradient(135deg,#001a3a,#003a6a);}
 .adv-destination{font-size:48px;z-index:2;animation:adv-float 3s ease-in-out infinite;}
 .adv-stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:20px 20px;opacity:0.3;}
 .adv-route-dots{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(126,200,80,0.3) 0,rgba(126,200,80,0.3) 4px,transparent 4px,transparent 20px);opacity:0.4;}
@@ -374,6 +420,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .adv-progress-track{flex:1 1 100%;height:8px;background:#f0e8dc;border-radius:10px;overflow:hidden;order:1;}
 .adv-progress-fill{height:100%;background:linear-gradient(90deg,#4466ff,#f5a623);border-radius:10px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);width:0%;}
 .adv-progress-silk{background:linear-gradient(90deg,#7ec850,#f5a623);}
+.adv-progress-sea{background:linear-gradient(90deg,#00b4d8,#0077b6);}
 .adv-next-label{font-size:13px;color:#a07850;font-weight:700;order:2;flex:1 1 100%;}
 .adv-km{font-size:13px;color:#a07850;font-weight:600;}
 @keyframes adv-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.08)}}
@@ -396,7 +443,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .rpg-ap-bar{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#f9f4ee;border-top:1px solid #f0e8dc;border-bottom:1px solid #f0e8dc;}
 .rpg-ap-label{font-size:12px;font-weight:800;color:#7a5c3a;}
 .rpg-ap-val{font-size:18px;font-weight:900;color:#f5a623;font-family:'Nunito',sans-serif;}
-.rpg-ap-sub{font-size:10px;color:#c8a882;margin-left:auto;}
+.rpg-ap-sub{font-size:13px;color:#c8a882;margin-left:auto;}
 .rpg-scene-wrap{position:relative;height:120px;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:20px;}
 .rpg-puppy-sprite{font-size:38px;z-index:2;animation:adv-float 2.5s ease-in-out infinite;}
 .rpg-vs{font-size:16px;font-weight:900;color:rgba(255,255,255,0.7);z-index:2;}
@@ -404,13 +451,13 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .rpg-enemy-sprite.hit{animation:rpg-hit 0.3s ease;}
 .rpg-hp-row{display:flex;gap:8px;padding:8px 14px 4px;align-items:center;}
 .rpg-hp-block{flex:1;}
-.rpg-hp-name{font-size:10px;font-weight:800;color:#a07850;margin-bottom:3px;}
+.rpg-hp-name{font-size:13px;font-weight:800;color:#a07850;margin-bottom:3px;}
 .rpg-hp-track{height:8px;background:#f0e8dc;border-radius:8px;overflow:hidden;}
 .rpg-hp-fill{height:100%;border-radius:8px;transition:width 0.4s;}
 .rpg-hp-fill.player{background:linear-gradient(90deg,#4caf50,#8bc34a);}
 .rpg-hp-fill.enemy{background:linear-gradient(90deg,#ef5350,#ff7043);}
-.rpg-hp-text{font-size:10px;color:#a07850;margin-top:2px;}
-.rpg-log{min-height:36px;padding:6px 14px;font-size:12px;color:#7a5c3a;line-height:1.5;font-weight:600;}
+.rpg-hp-text{font-size:12px;color:#a07850;margin-top:2px;}
+.rpg-log{min-height:44px;padding:8px 14px;font-size:15px;color:#7a5c3a;line-height:1.5;font-weight:600;}
 .rpg-actions{display:flex;gap:8px;padding:8px 14px 14px;flex-wrap:wrap;}
 .rpg-btn{flex:1;min-width:70px;padding:10px 6px;border-radius:14px;border:none;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .rpg-btn span.cost{font-size:10px;font-weight:700;opacity:0.75;}
@@ -428,7 +475,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 .rpg-stats-row{display:flex;gap:8px;padding:8px 14px;border-top:1px solid #f0e8dc;flex-wrap:wrap;}
 .rpg-stat{flex:1;min-width:60px;text-align:center;padding:7px 4px;background:#fff8f2;border-radius:12px;}
 .rpg-stat-val{font-size:17px;font-weight:900;color:#f5a623;}
-.rpg-stat-lbl{font-size:10px;color:#a07850;font-weight:700;}
+.rpg-stat-lbl{font-size:12px;color:#a07850;font-weight:700;}
 @keyframes rpg-hit{0%{transform:translateX(0)}20%{transform:translateX(-12px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}100%{transform:translateX(0)}}
 @keyframes rpg-shake{0%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}100%{transform:rotate(0)}}
 </style>
@@ -453,8 +500,8 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
       <svg id="puppy" viewBox="0 0 160 170" width="190" height="200">
         <ellipse cx="80" cy="114" rx="40" ry="32" fill="#C8955A"/>
         <g id="tail-g"><path d="M114 107 Q134 86 128 70 Q122 57 111 65" stroke="#C8955A" stroke-width="11" fill="none" stroke-linecap="round"/></g>
-        <ellipse cx="62" cy="141" rx="13" ry="9" fill="#B07D42"/>
-        <ellipse cx="98" cy="141" rx="13" ry="9" fill="#B07D42"/>
+        <g id="leg-left"><ellipse cx="62" cy="141" rx="13" ry="9" fill="#B07D42"/></g>
+        <g id="leg-right"><ellipse cx="98" cy="141" rx="13" ry="9" fill="#B07D42"/></g>
         <ellipse cx="80" cy="85" rx="23" ry="15" fill="#C8955A"/>
         <ellipse cx="80" cy="69" rx="31" ry="27" fill="#C8955A"/>
         <ellipse cx="53" cy="52" rx="15" ry="21" fill="#A06830" transform="rotate(-16 53 52)"/>
@@ -540,20 +587,33 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 <!-- Post-walk mood & memo popup -->
 <div class="mood-overlay" id="mood-overlay" style="display:none"></div>
 <div class="mood-popup" id="mood-popup" style="display:none">
-  <div class="mood-popup-title">How was the walk? 🐾</div>
-  <div class="mood-emojis" id="mood-emojis">
-    <button class="mood-emoji-btn" data-mood="😊" title="Great">😊</button>
-    <button class="mood-emoji-btn" data-mood="🌸" title="Lovely">🌸</button>
-    <button class="mood-emoji-btn" data-mood="😴" title="Tired">😴</button>
-    <button class="mood-emoji-btn" data-mood="🌧️" title="Rainy">🌧️</button>
-    <button class="mood-emoji-btn" data-mood="🔥" title="Energetic">🔥</button>
-    <button class="mood-emoji-btn" data-mood="😌" title="Peaceful">😌</button>
+
+  <!-- Collapsed (default) state — no decision pressure, just a calm confirmation -->
+  <div class="mood-collapsed" id="mood-collapsed">
+    <div class="mood-collapsed-emoji">🐾</div>
+    <div class="mood-collapsed-text">Good walk!</div>
+    <button class="mood-add-link" id="mood-add-link">+ Add mood or note</button>
+    <button class="mood-done-btn" id="mood-done-btn">Done ✅</button>
   </div>
-  <div class="mood-seasonal-label" id="mood-seasonal-label"></div>
-  <div class="mood-emojis" id="mood-seasonal"></div>
-  <textarea class="mood-memo" id="mood-memo" placeholder="Add a note... (optional)" rows="2" maxlength="120"></textarea>
-  <button class="mood-save-btn" id="mood-save-btn">Save & Done ✅</button>
-  <button class="mood-skip-btn" id="mood-skip-btn">Skip</button>
+
+  <!-- Expanded state — only shown if the person actively wants to add detail -->
+  <div class="mood-expanded" id="mood-expanded" style="display:none">
+    <div class="mood-popup-title">How was the walk? 🐾</div>
+    <div class="mood-emojis" id="mood-emojis">
+      <button class="mood-emoji-btn" data-mood="😊" title="Great">😊</button>
+      <button class="mood-emoji-btn" data-mood="🌸" title="Lovely">🌸</button>
+      <button class="mood-emoji-btn" data-mood="😴" title="Tired">😴</button>
+      <button class="mood-emoji-btn" data-mood="🌧️" title="Rainy">🌧️</button>
+      <button class="mood-emoji-btn" data-mood="🔥" title="Energetic">🔥</button>
+      <button class="mood-emoji-btn" data-mood="😌" title="Peaceful">😌</button>
+    </div>
+    <div class="mood-seasonal-label" id="mood-seasonal-label"></div>
+    <div class="mood-emojis" id="mood-seasonal"></div>
+    <textarea class="mood-memo" id="mood-memo" placeholder="Add a note... (optional)" rows="2" maxlength="120"></textarea>
+    <button class="mood-save-btn" id="mood-save-btn">Save & Done ✅</button>
+    <button class="mood-skip-btn" id="mood-skip-btn">Never mind</button>
+  </div>
+
 </div>
 
   <!-- Talk to Puppy merged button -->
@@ -565,7 +625,6 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
     <div class="talk-menu-title">What's up? 🐾</div>
     <button class="talk-menu-item" id="btn-tell">💬 Tell Puppy something</button>
     <button class="talk-menu-item talk-menu-already" id="btn-already">✅ Already walked today!</button>
-    <button class="talk-menu-item talk-menu-cant" id="btn-cant">🥺 Can't walk right now</button>
     <button class="talk-menu-item talk-menu-later" id="btn-later">🕐 I'll walk later</button>
     <button class="talk-menu-cancel" id="talk-menu-close">Cancel</button>
   </div>
@@ -662,6 +721,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <div class="adventure-tabs">
     <button class="adv-tab active" id="adv-tab-space" onclick="showAdventureTab('space')">🚀 Space</button>
     <button class="adv-tab" id="adv-tab-silk" onclick="showAdventureTab('silk')">🗺️ Silk Road</button>
+    <button class="adv-tab" id="adv-tab-sea" onclick="showAdventureTab('sea')">⛵ Sea Route</button>
     <button class="adv-tab" id="adv-tab-rpg" onclick="showAdventureTab('rpg')">⚔️ Quest</button>
 
   </div>
@@ -710,6 +770,22 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
         <span class="adv-next-label" id="adv-silk-next"></span>
       </div>
       <div class="adv-km" id="adv-silk-km">0 km walked</div>
+    </div>
+  </div>
+
+  <!-- ⚓ Sea Route Panel -->
+  <div class="adv-panel" id="adv-panel-sea" style="display:none">
+    <div class="adv-scene adv-scene-sea" id="adv-sea-scene">
+      <div class="adv-destination" id="adv-sea-dest">⚓</div>
+    </div>
+    <div class="adv-info">
+      <div class="adv-location" id="adv-sea-name">Guangzhou, China ⚓</div>
+      <div class="adv-fact" id="adv-sea-fact">Start walking to sail the ancient Maritime Silk Road!</div>
+      <div class="adv-progress-row">
+        <div class="adv-progress-track"><div class="adv-progress-fill adv-progress-sea" id="adv-sea-fill"></div></div>
+        <span class="adv-next-label" id="adv-sea-next"></span>
+      </div>
+      <div class="adv-km" id="adv-sea-km">0 km walked</div>
     </div>
   </div>
 
@@ -799,6 +875,28 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
   <!-- Step 1: Choose what to tell -->
   <div class="talk-step active" id="talk-step1">
+
+    <div class="tell-group-label tell-group-positive">💛 Say hi</div>
+    <div class="tell-grid">
+      <button class="tell-btn tell-btn-positive" onclick="selectTell('hi')">
+        <span class="tell-btn-emoji">👋</span>
+        <div class="tell-btn-text"><span class="tell-btn-label">Just say hi</span><span class="tell-btn-sub">Puppy lights up 🥰</span></div>
+      </button>
+      <button class="tell-btn tell-btn-positive" onclick="selectTell('great')">
+        <span class="tell-btn-emoji">🎉</span>
+        <div class="tell-btn-text"><span class="tell-btn-label">Had a great walk!</span><span class="tell-btn-sub">Puppy does zoomies 🐕💨</span></div>
+      </button>
+      <button class="tell-btn tell-btn-positive" onclick="selectTell('miss')">
+        <span class="tell-btn-emoji">🥰</span>
+        <div class="tell-btn-text"><span class="tell-btn-label">Miss you, puppy</span><span class="tell-btn-sub">Puppy melts ❤️</span></div>
+      </button>
+      <button class="tell-btn tell-btn-positive" onclick="selectTell('great_day')">
+        <span class="tell-btn-emoji">✨</span>
+        <div class="tell-btn-text"><span class="tell-btn-label">Feeling great today!</span><span class="tell-btn-sub">Puppy celebrates 🎊</span></div>
+      </button>
+    </div>
+
+    <div class="tell-group-label tell-group-needs">🐾 I need...</div>
     <div class="tell-grid">
       <button class="tell-btn" onclick="selectTell('sleep')">
         <span class="tell-btn-emoji">😴</span>
@@ -817,6 +915,27 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
         <div class="tell-btn-text"><span class="tell-btn-label">I need me-time</span><span class="tell-btn-sub">Puppy gives space 🌸</span></div>
       </button>
     </div>
+
+    <div class="tell-group-label tell-group-cant">🥺 Can't walk right now</div>
+    <div class="reason-grid">
+      <button class="reason-btn" data-reason="rain" data-emoji="🌧️" data-msg="Aww raining... Puppy will wait inside! 🌧️🏠" data-alt="Rain stopped? Walk time? 🌈🐾">🌧️ Raining</button>
+      <button class="reason-btn" data-reason="hot" data-emoji="🌡️" data-msg="Too hot for Puppy paws!! 🥵 Streak safe!" data-alt="Cooler now? Walk time? 🌅🐾">🌡️ Too hot</button>
+      <button class="reason-btn" data-reason="cold" data-emoji="🥶" data-msg="Brrr too cold!! Puppy understands 🥶❄️" data-alt="Warmer now? Let's go! 🧥🐾">🥶 Too cold</button>
+      <button class="reason-btn" data-reason="tired" data-emoji="😴" data-msg="Rest is important! Puppy approves 💤" data-alt="Rested now? Short walk? 🐾">😴 Too tired</button>
+      <button class="reason-btn" data-reason="sick" data-emoji="🤒" data-msg="Get better soon!! Puppy is waiting 🥺❤️" data-alt="Feeling better? Puppy misses you! 🐾">🤒 Not well</button>
+      <button class="reason-btn" data-reason="busy" data-emoji="😰" data-msg="Busy human! Puppy understands 😰 Streak safe!" data-alt="Free now? Puppy is ready!! 🐾">😰 Too busy</button>
+    </div>
+    <div class="remind-row">
+      <div class="remind-label">Remind me in:</div>
+      <div class="remind-options">
+        <button class="remind-chip" data-mins="60">1 hour</button>
+        <button class="remind-chip" data-mins="120">2 hours</button>
+        <button class="remind-chip" data-mins="180">3 hours</button>
+        <button class="remind-chip selected" data-mins="0">No reminder</button>
+      </div>
+    </div>
+    <button class="cant-confirm" id="cant-confirm">Tell Puppy 🐾</button>
+
     <button class="back-btn" onclick="closeTalkSheet()">Cancel</button>
   </div>
 
@@ -906,35 +1025,7 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
   <button class="cant-cancel" id="later-cancel">Cancel</button>
 </div>
 
-<!-- Can't walk sheet -->
-<div class="cant-sheet" id="cant-sheet">
-  <div class="later-sheet-header">
-    <div class="later-sheet-emoji">🥺</div>
-    <div class="later-sheet-title">What's stopping you?</div>
-    <div class="later-sheet-sub">Tell Puppy — streak protected! 🛡️</div>
-  </div>
-  <div class="reason-grid">
-    <button class="reason-btn" data-reason="rain" data-emoji="🌧️" data-msg="Aww raining... Puppy will wait inside! 🌧️🏠" data-alt="Rain stopped? Walk time? 🌈🐾">🌧️ Raining</button>
-    <button class="reason-btn" data-reason="hot" data-emoji="🌡️" data-msg="Too hot for Puppy paws!! 🥵 Streak safe!" data-alt="Cooler now? Walk time? 🌅🐾">🌡️ Too hot</button>
-    <button class="reason-btn" data-reason="cold" data-emoji="🥶" data-msg="Brrr too cold!! Puppy understands 🥶❄️" data-alt="Warmer now? Let's go! 🧥🐾">🥶 Too cold</button>
-    <button class="reason-btn" data-reason="tired" data-emoji="😴" data-msg="Rest is important! Puppy approves 💤" data-alt="Rested now? Short walk? 🐾">😴 Too tired</button>
-    <button class="reason-btn" data-reason="sick" data-emoji="🤒" data-msg="Get better soon!! Puppy is waiting 🥺❤️" data-alt="Feeling better? Puppy misses you! 🐾">🤒 Not well</button>
-    <button class="reason-btn" data-reason="busy" data-emoji="😰" data-msg="Busy human! Puppy understands 😰 Streak safe!" data-alt="Free now? Puppy is ready!! 🐾">😰 Too busy</button>
-  </div>
-  <div class="remind-row">
-    <div class="remind-label">Remind me in:</div>
-    <div class="remind-options">
-      <button class="remind-chip" data-mins="60">1 hour</button>
-      <button class="remind-chip" data-mins="120">2 hours</button>
-      <button class="remind-chip" data-mins="180">3 hours</button>
-      <button class="remind-chip selected" data-mins="0">No reminder</button>
-    </div>
-  </div>
-  <button class="cant-confirm" id="cant-confirm">Tell Puppy 🐾</button>
-  <button class="cant-cancel" id="cant-cancel">Cancel</button>
-</div>
 
-<!-- Still walking sheet -->
 <div class="still-sheet" id="still-sheet">
   <div class="later-sheet-header">
     <div class="later-sheet-emoji">🤔</div>
@@ -951,18 +1042,18 @@ body{min-height:100vh;background:#fff8f0;font-family:'Nunito',sans-serif;overflo
 
 // ── Adventure Data ────────────────────────────────────────────────
 var SPACE_WAYPOINTS=[
-  {km:0,    name:'Earth 🌍',      emoji:'🌍', fact:'Your journey begins! Every walk launches you further into the cosmos.'},
-  {km:1,    name:'Cloud Layer ☁️', emoji:'☁️', fact:'10km above Earth — you\'ve cleared the clouds. The sky turns darker.'},
-  {km:5,    name:'Stratosphere',   emoji:'🌤️', fact:'50km up — weather balloons float here. The air is razor thin.'},
-  {km:20,   name:'Earth Orbit 🛸', emoji:'🛸', fact:'400km up — the International Space Station orbits right here!'},
-  {km:50,   name:'The Moon 🌕',    emoji:'🌕', fact:'384,400 km away. Only 12 humans have ever stood on its surface.'},
-  {km:100,  name:'Mars 🔴',        emoji:'🔴', fact:'Olympus Mons on Mars is 3× taller than Everest. A volcano the size of France.'},
-  {km:200,  name:'Asteroid Belt ☄️',emoji:'☄️',fact:'Millions of rocky fragments between Mars and Jupiter. Navigate carefully!'},
-  {km:400,  name:'Jupiter 🪐',     emoji:'🪐', fact:'Jupiter\'s Great Red Spot is a storm bigger than Earth — raging for 400 years.'},
-  {km:700,  name:'Saturn\'s Rings 💫',emoji:'💫',fact:'Saturn\'s rings stretch 282,000 km wide but are only 1 km thick.'},
-  {km:1000, name:'Uranus 🔵',      emoji:'🔵', fact:'Uranus rotates on its side — it literally rolls around the Sun.'},
-  {km:1500, name:'Neptune 🌀',     emoji:'🌀', fact:'Neptune\'s winds hit 2,100 km/h — fastest in the solar system.'},
-  {km:2000, name:'Edge of Solar System ✨', emoji:'✨', fact:'You\'ve reached the heliopause — where solar wind meets interstellar space. Legendary!'},
+  {km:0,    name:'Earth 🌍',           emoji:'🌍', fact:'Your journey begins! Every walk launches you further into the cosmos.'},
+  {km:1,    name:'Cloud Layer ☁️',     emoji:'☁️', fact:'10km above Earth — you\'ve cleared the clouds. The sky turns darker blue.'},
+  {km:5,    name:'Stratosphere 🌤️',   emoji:'🌤️', fact:'50km up — weather balloons float here. The air is razor thin.'},
+  {km:20,   name:'Earth Orbit 🛰️',    emoji:'🛰️', fact:'400km up — the International Space Station orbits right here!'},
+  {km:50,   name:'The Moon 🌕',        emoji:'🌕', fact:'384,400 km away. Only 12 humans have ever stood on its surface.'},
+  {km:100,  name:'Mars 🔴',            emoji:'🔴', fact:'Olympus Mons on Mars is 3× taller than Everest — a volcano the size of France.'},
+  {km:200,  name:'Asteroid Belt 🪨',   emoji:'🪨', fact:'Millions of rocky fragments between Mars and Jupiter. Navigate carefully!'},
+  {km:400,  name:'Jupiter 🪐',         emoji:'🪐', fact:'Jupiter\'s Great Red Spot is a storm bigger than Earth — raging for 400 years.'},
+  {km:700,  name:'Saturn\'s Rings 🪐', emoji:'🪐', fact:'Saturn\'s rings stretch 282,000 km wide but are only 1 km thick. Mostly ice crystals!'},
+  {km:1000, name:'Uranus 🫧',          emoji:'🫧', fact:'Uranus rotates on its side — it literally rolls around the Sun like a bowling ball.'},
+  {km:1500, name:'Neptune 💙',         emoji:'💙', fact:'Neptune\'s winds hit 2,100 km/h — the fastest in the entire solar system.'},
+  {km:2000, name:'Edge of Solar System ⭐', emoji:'⭐', fact:'You\'ve reached the heliopause — where solar wind meets interstellar space. Legendary!'},
 ];
 
 var SILK_WAYPOINTS=[
@@ -977,6 +1068,36 @@ var SILK_WAYPOINTS=[
   {km:800, name:'Rome 🏛️',            emoji:'🏛️', fact:'At its peak Rome housed 1 million people — not matched again until 19th-century London.'},
   {km:950, name:'Venice 🚤',          emoji:'🚤', fact:'Marco Polo sailed from here to reach China, directly inspiring the Age of Exploration.'},
   {km:1200,name:'End of Silk Road 🎉',emoji:'🎉', fact:'You\'ve walked the length of the ancient world. Merchants who completed this changed history forever!'},
+];
+
+// Silk Road Round 2 — the Spice Route from India to Rome (different stops, same spirit)
+var SILK_WAYPOINTS_R2=[
+  {km:1200,name:'Calicut, India 🌶️',   emoji:'🌶️', fact:'The spice capital of the ancient world — pepper here was worth its weight in gold in Rome.'},
+  {km:1250,name:'Kozhikode Market 🫙', emoji:'🫙', fact:'Arab traders had a monopoly on spices here for centuries before Vasco da Gama arrived.'},
+  {km:1320,name:'Arabian Sea ⛵',       emoji:'⛵', fact:'Monsoon winds were the secret engine of trade — sailors waited months for the right breeze.'},
+  {km:1420,name:'Muscat, Oman 🌅',     emoji:'🌅', fact:'Gateway to the Persian Gulf — frankincense and myrrh flowed through here for 3,000 years.'},
+  {km:1550,name:'Hormuz Strait 🏝️',   emoji:'🏝️', fact:'One of the most strategic waterways in history — controlling it meant controlling world trade.'},
+  {km:1700,name:'Petra, Jordan 🗿',    emoji:'🗿', fact:'The rose-red city carved from rock — Nabataean merchants grew rich controlling caravan routes.'},
+  {km:1900,name:'Alexandria Again 📦', emoji:'📦', fact:'Goods from India arrived here before spreading across the Roman Empire by ship and road.'},
+  {km:2100,name:'Carthage, Tunisia 🐘',emoji:'🐘', fact:'Hannibal famously crossed the Alps with war elephants — once the greatest rival of Rome.'},
+  {km:2300,name:'Rome — Full Circle 🏆',emoji:'🏆',fact:'A Roman merchant could find Indian pepper, Chinese silk and African ivory all in one market. You walked it all! 🎉'},
+];
+
+// Ancient Sea Route — Maritime Silk Road
+var SEA_WAYPOINTS=[
+  {km:0,   name:'Guangzhou, China ⚓', emoji:'⚓', fact:'The world\'s busiest port for over 1,000 years — Tang Dynasty merchants sailed from here to Arabia.'},
+  {km:40,  name:'South China Sea 🌊',  emoji:'🌊', fact:'Typhoons, pirates and shallow reefs — sailors prayed to Mazu, goddess of the sea, before departing.'},
+  {km:120, name:'Vietnam Coast 🌴',    emoji:'🌴', fact:'The Cham kingdom controlled this coast — trading in cinnamon, aloe and exotic birds with China.'},
+  {km:220, name:'Malacca Strait 🚢',  emoji:'🚢', fact:'The most important sea passage in history — whoever controlled Malacca controlled Asian trade.'},
+  {km:360, name:'Sri Lanka 💎',        emoji:'💎', fact:'Called Serendib by Arab sailors — the origin of the word "serendipity." Famous for rubies and cinnamon.'},
+  {km:520, name:'Malabar Coast 🌶️',   emoji:'🌶️', fact:'The pepper coast of India — black pepper was so valuable it was used as currency in medieval Europe.'},
+  {km:700, name:'Arabian Sea ⛵',      emoji:'⛵', fact:'Arab dhows navigated by stars alone — the same stars that sailors use today had Arabic names first.'},
+  {km:900, name:'Muscat, Oman 🌅',    emoji:'🌅', fact:'The frankincense trade made southern Arabia the richest region on earth for 2,000 years.'},
+  {km:1100,name:'Aden, Yemen ☀️',     emoji:'☀️', fact:'The gateway between Asia and Africa — Roman ships loaded here for the final leg to Egypt.'},
+  {km:1350,name:'Mombasa, Kenya 🦁',  emoji:'🦁', fact:'Swahili merchants linked Africa to the Indian Ocean world — gold, ivory and enslaved people flowed here.'},
+  {km:1600,name:'Red Sea 🔴',         emoji:'🔴', fact:'Caravans crossed Sinai here — the same route Moses walked has been a trade road for 5,000 years.'},
+  {km:1800,name:'Alexandria, Egypt 🏛️',emoji:'🏛️',fact:'All roads of the ancient sea led here. The lighthouse of Alexandria guided sailors for 1,500 years!'},
+  {km:2000,name:'End of Sea Route 🌐',emoji:'🌐', fact:'You\'ve sailed the Maritime Silk Road — the ancient highway that shaped the modern world. Extraordinary! 🎉'},
 ];
 
 var _testKm=0;
@@ -1252,6 +1373,10 @@ function selectTell(type){
   else if(type==='focus'){emoji='🎯';text='Shh!! Puppy will be SO quiet!! 🤫\nGood luck!! You got this!! 💪';}
   else if(type==='tired'){emoji='💤';text='Rest is important!!\nPuppy approves naps! 😴❤️\nStreak is safe!';}
   else if(type==='metime'){emoji='🌸';text='Puppy understands!!\nPersonal time is important! 🧘\nI\'ll be here when you\'re ready! 🐾';}
+  else if(type==='hi'){emoji='🥰';text='Hiiii!! Puppy is SO happy you said hi!!\nTail wagging at 100%!! 🐾💛';}
+  else if(type==='great'){emoji='🎉';text='YESSS!! Puppy KNEW it would be great!!\nBest walk buddies ever!! 🎉🐾';}
+  else if(type==='miss'){emoji='🫶';text='Puppy misses you too!! SO much!!\nCan\'t wait for our next walk together!! 🥰🐾';}
+  else if(type==='great_day'){emoji='🕺';text='Puppy is doing a happy dance!! 🕺💃\nGreat days deserve great walks!! ✨🐾';}
   document.getElementById('resp-emoji').textContent=emoji;
   document.getElementById('resp-text').textContent=text;
   hi('wake-section');hi('focus-section');
@@ -1266,6 +1391,10 @@ function selectTell(type){
   }
   document.getElementById('talk-step1').className='talk-step';
   document.getElementById('talk-step2').className='talk-step active';
+  // Positive interactions need no extra setup — show "Got it!" instead of "Puppy understands!"
+  var confirmBtn=document.getElementById('talk-confirm');
+  var isPositive=(type==='hi'||type==='great'||type==='miss'||type==='great_day');
+  confirmBtn.textContent=isPositive?'Aww, thanks! 🐾':'Puppy understands! 🐾';
 }
 
 function buildQuickTimes(){
@@ -1384,6 +1513,20 @@ document.getElementById('talk-confirm').addEventListener('click',function(){
     S.logs.push({ts:Date.now(),date:fmtDate(now),time:fmtTime(now),dur:'Me-time',durMs:0,distM:0,rest:false,isSleep:false,isFocus:false,isTired:false,isMetime:true,restReason:'',restEmoji:''});
     saveLogs();renderLog();renderStreak();
     showBubbleLocked('Personal time!! 🧘\nPuppy gives you space! 🌸\nI\'ll be here! 🐾',5000);
+
+  } else if(type==='hi'||type==='great'||type==='miss'||type==='great_day'){
+    // Positive check-ins: no mode change, just a happy moment with Puppy
+    S.currentMode=null;
+    setMood('happy');
+    var posMsgs={
+      hi:'Hiiii!! Best part of my day!! 🥰🐾',
+      great:'YESSS!! Puppy loves walk days like that!! 🐕💨',
+      miss:'Puppy misses you too!! Always!! ❤️🐾',
+      great_day:'Great days call for tail wags!! ✨🐾'
+    };
+    showBubbleLocked(posMsgs[type],4000);
+    if(type==='great') setTimeout(playSuperhappyBurst, 500);
+    scheduleMood();
   }
 });
 
@@ -1391,14 +1534,15 @@ document.getElementById('talk-confirm').addEventListener('click',function(){
 var wrap=document.getElementById('puppy-wrap'),puppy=document.getElementById('puppy');
 function setMood(m){
   try{
+    clearTimeout(_napTwitchT);
     S.mood=m;wrap.className='puppy-wrap';puppy.className='';
     ['mouth-happy','mouth-sad','mouth-bored','sleep-eyes','tongue','tear'].forEach(hi);
     document.getElementById('zzz1').classList.remove('show');document.getElementById('zzz2').classList.remove('show');puppy.style.filter='';
     var ml=document.getElementById('mood-label'),sl=document.getElementById('status-sub');
     if(m==='happy'){sh('mouth-happy');ml.textContent='Hi, Puppy! 😊';sl.textContent='ready for a walk';}
     else if(m==='walking'){sh('mouth-happy');sh('tongue');wrap.classList.add('bouncing');puppy.classList.add('walking');ml.textContent='Puppy is walking! 🌳';sl.textContent='walk in progress';setTimeout(function(){wrap.classList.remove('bouncing');},1700);}
-    else if(m==='sleeping'){sh('mouth-happy');sh('sleep-eyes');document.getElementById('zzz1').classList.add('show');document.getElementById('zzz2').classList.add('show');puppy.style.filter='brightness(0.9)';ml.textContent='Puppy is napping... 😴';sl.textContent='good rest after walk';}
-    else if(m==='both-sleep'){sh('mouth-happy');sh('sleep-eyes');document.getElementById('zzz1').classList.add('show');document.getElementById('zzz2').classList.add('show');wrap.classList.add('sleep-anim');puppy.style.filter='brightness(0.8) hue-rotate(200deg)';ml.textContent='We are both sleeping 🌙';sl.textContent='sweet dreams... streak safe!';}
+    else if(m==='sleeping'){sh('mouth-happy');sh('sleep-eyes');document.getElementById('zzz1').classList.add('show');document.getElementById('zzz2').classList.add('show');puppy.style.filter='brightness(0.9)';ml.textContent='Puppy is napping... 😴';sl.textContent='good rest after walk';scheduleNapTwitch();}
+    else if(m==='both-sleep'){sh('mouth-happy');sh('sleep-eyes');document.getElementById('zzz1').classList.add('show');document.getElementById('zzz2').classList.add('show');wrap.classList.add('sleep-anim');puppy.style.filter='brightness(0.8) hue-rotate(200deg)';ml.textContent='We are both sleeping 🌙';sl.textContent='sweet dreams... streak safe!';scheduleNapTwitch();}
     else if(m==='focus-mode'){sh('mouth-happy');ml.textContent='Shh... Puppy is quiet 🤫';sl.textContent='focusing / me-time...';}
     else if(m==='resting'){sh('mouth-bored');wrap.classList.add('bored-anim');ml.textContent='Puppy is waiting... 🥺';sl.textContent='rest day — streak safe!';}
     else if(m==='bored'){sh('mouth-bored');wrap.classList.add('bored-anim');ml.textContent='Puppy is bored... 😒';sl.textContent='Puppy needs a walk!';}
@@ -1406,7 +1550,7 @@ function setMood(m){
   }catch(e){}
 }
 
-function clearTimers(){clearTimeout(S.boredT);}
+function clearTimers(){clearTimeout(S.boredT);clearTimeout(S.idleBehaviourT);}
 function scheduleMood(){
   clearTimers();clearInterval(S.bubbleT);
   if(isSilent())return;
@@ -1421,6 +1565,161 @@ function scheduleMood(){
     S.boredT=setTimeout(checkBored,30*60*1000);
   }
   S.boredT=setTimeout(checkBored,2*60*60*1000);
+  scheduleIdleBehaviour();
+}
+
+// ── Nap micro-behaviours (plays while mood=sleeping) ─────────────
+var _napTwitchT = null;
+function scheduleNapTwitch(){
+  clearTimeout(_napTwitchT);
+  if(S.mood!=='sleeping'&&S.mood!=='both-sleep')return;
+  var delay = 4000 + Math.random()*8000; // every 4–12s
+  _napTwitchT = setTimeout(function(){
+    if(S.mood!=='sleeping'&&S.mood!=='both-sleep')return;
+    var wrap = document.getElementById('puppy-wrap');
+    var svg  = document.getElementById('puppy');
+    var roll = Math.random();
+    if(roll < 0.5){
+      // Paw twitch
+      wrap.style.animation = 'napTwitch 0.8s ease-in-out';
+      setTimeout(function(){ wrap.style.animation=''; scheduleNapTwitch(); }, 1000);
+    } else {
+      // Dream shudder
+      svg.style.animation = 'dreamShudder 0.6s ease-in-out';
+      if(Math.random()<0.4) showBubble(rand(['Woof...(dream)','Mmph...🐾','..zzz..sniff..'])+'',1500);
+      setTimeout(function(){ svg.style.animation=''; scheduleNapTwitch(); }, 900);
+    }
+  }, delay);
+}
+
+// ── Wake-up → walk excitement sequence ───────────────────────────
+function playWakeUpSequence(callback){
+  var wrap = document.getElementById('puppy-wrap');
+  var svg  = document.getElementById('puppy');
+  sh('tongue');
+  // 1. Shake whole body — "I'm awake! I'm awake!"
+  wrap.classList.add('body-shake');
+  showBubbleLocked('!!!!! 😱🐾',1200);
+  setTimeout(function(){
+    wrap.classList.remove('body-shake');
+    // 2. Bounce at door
+    wrap.classList.add('door-bounce');
+    showBubbleLocked('WALK?? WALK?? LET\'S GO!! 🚪🐾',2500);
+    setTimeout(function(){
+      wrap.classList.remove('door-bounce');
+      if(callback) callback();
+    }, 1700);
+  }, 900);
+}
+
+// ── Post-walk home sequence: water → shake → flop → content ──────
+function playPostWalkSequence(){
+  var wrap = document.getElementById('puppy-wrap');
+  var svg  = document.getElementById('puppy');
+  clearTimeout(_napTwitchT);
+
+  // 1. Go to water bowl
+  setTimeout(function(){
+    showBubbleLocked('Straight to the water bowl!! 💧🐶',3000);
+    wrap.classList.add('drinking');
+    sh('tongue');
+  }, 500);
+
+  // 2. Shake water off mouth
+  setTimeout(function(){
+    wrap.classList.remove('drinking');
+    wrap.style.animation = 'mouthShake 0.5s ease-in-out';
+    showBubble('Ahhhh!! 💧✨', 2000);
+    setTimeout(function(){ wrap.style.animation=''; }, 700);
+  }, 4500);
+
+  // 3. Find spot + flop
+  setTimeout(function(){
+    showBubble('Finding a good spot... 🐾', 2000);
+    wrap.style.animation = 'wander 2s ease-in-out';
+    setTimeout(function(){
+      wrap.style.animation = 'flop 0.8s ease-out forwards';
+      showBubble('Flop!! 💤', 1500);
+    }, 2200);
+  }, 6500);
+
+  // 4. Content quiet joy — slow breathe + gentle tail wag
+  setTimeout(function(){
+    wrap.style.animation = '';
+    hi('tongue');
+    wrap.classList.add('content-rest');
+    showBubbleLocked('...happy tired puppy... 🐾❤️', 4000);
+    // Content state lasts ~30s before transitioning to proper happy
+    setTimeout(function(){
+      wrap.classList.remove('content-rest');
+    }, 30000);
+  }, 10000);
+}
+
+// ── Idle home behaviours ──────────────────────────────────────────
+// Realistic puppy micro-animations that play randomly while at home.
+// Each behaviour has: anim name, duration(ms), tail wag?, bubble msg
+var IDLE_BEHAVIOURS = [
+  // calm, common ones — higher weight (appear multiple times)
+  {name:'wander',    dur:2800, tail:false, msg:'Hmm where did that smell go... 👃',       weight:3},
+  {name:'sniffGround',dur:2200,tail:false, msg:'Sniff sniff sniff... 🐾👃',               weight:3},
+  {name:'sitLook',   dur:2000, tail:true,  msg:'Waiting patiently!! 🐾',                  weight:3},
+  {name:'headTilt',  dur:1800, tail:false, msg:'...huh? 🐶',                              weight:3},
+  {name:'scratchEar',dur:1600, tail:false, msg:'Itchy ear!! 🐾',                          weight:2},
+  {name:'stretch',   dur:2400, tail:false, msg:'Good stretchhh!! 🐾',                     weight:2},
+  {name:'yawn',      dur:2600, tail:false, msg:'Yawwwn... 😴 Maybe walk soon?',           weight:2},
+  // excited — less frequent
+  {name:'spin',      dur:1400, tail:true,  msg:'SPIN SPIN!! 🌀🐾',                        weight:1},
+  {name:'superJump', dur:2000, tail:true,  msg:'ZOOMIES!! 🐕💨',                          weight:1},
+];
+
+// Super-happy burst: zoomies + spin after a fresh walk log
+function playSuperhappyBurst(){
+  if(S.walking||S.currentMode||isSilent())return;
+  var seq=[
+    {name:'superJump',dur:2000,tail:true, msg:'YESSS!! BEST WALK EVER!! 🐕💨'},
+    {name:'spin',     dur:1400,tail:true, msg:'ZOOMIES!! 🌀🌀'},
+    {name:'superJump',dur:1800,tail:true, msg:'SO HAPPY!! 🎉🐾'},
+  ];
+  var delay=0;
+  seq.forEach(function(b){
+    setTimeout(function(){playBehaviour(b,false);},delay);
+    delay+=b.dur+600;
+  });
+}
+
+function playBehaviour(b, scheduleNext){
+  if(S.walking||S.currentMode||isSilent()||S.mood==='bored'||S.mood==='sad')return;
+  var wrap=document.getElementById('puppy-wrap');
+  var svg=document.getElementById('puppy');
+  // Apply animation to the wrap or svg depending on behaviour
+  var target = (b.name==='stretch') ? svg : wrap;
+  target.style.animation = b.name+' '+b.dur+'ms ease-in-out';
+  // Tail wag during behaviour
+  if(b.tail) svg.classList.add('tail-wag-only');
+  // Show bubble
+  if(b.msg) showBubble(b.msg, Math.min(b.dur, 2500));
+  // Clean up after
+  setTimeout(function(){
+    target.style.animation='';
+    svg.classList.remove('tail-wag-only');
+    if(scheduleNext!==false) scheduleIdleBehaviour();
+  }, b.dur+200);
+}
+
+function scheduleIdleBehaviour(){
+  clearTimeout(S.idleBehaviourT);
+  if(isSilent()||S.walking||S.currentMode)return;
+  // Next behaviour in 8–22 seconds (random)
+  var delay = 8000 + Math.random()*14000;
+  S.idleBehaviourT = setTimeout(function(){
+    if(S.walking||S.currentMode||S.mood==='bored'||S.mood==='sad')return;
+    // Weighted random pick
+    var pool=[];
+    IDLE_BEHAVIOURS.forEach(function(b){for(var i=0;i<b.weight;i++)pool.push(b);});
+    var b=pool[Math.floor(Math.random()*pool.length)];
+    playBehaviour(b, true);
+  }, delay);
 }
 
 // ── GPS ───────────────────────────────────────────────────────────
@@ -1477,25 +1776,37 @@ document.getElementById('btn-start').addEventListener('click',function(){
   // Reset all buttons cleanly before starting
   document.getElementById('btn-start').disabled=false;
   document.getElementById('btn-end').disabled=false;
-  document.getElementById('btn-cant').disabled=false;
+  
   document.getElementById('btn-talk-menu').disabled=false;
   document.getElementById('btn-later').disabled=false;
+  var wasNapping = (S.mood==='sleeping'||S.mood==='both-sleep');
   S.walking=true;S.walkStart=Date.now();S.lastMoveTime=Date.now();
   friendDismissOnWalk();
   document.getElementById('btn-start').disabled=true;document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-cant').disabled=true;document.getElementById('btn-talk-menu').disabled=true;document.getElementById('btn-later').disabled=true;
+  document.getElementById('btn-talk-menu').disabled=true;document.getElementById('btn-later').disabled=true;
   var _walkId=S.walkStart;setTimeout(function(){if(S.walking&&S.walkStart===_walkId){document.getElementById('btn-end').disabled=false;}},2000);
   clearTimers();sh('live-bar');
   var lw=S.logs.filter(function(l){return isRealWalk(l);});
   var last=lw.length?lw[lw.length-1].ts:null;
   var mins=last?Math.round((Date.now()-last)/60000):0;
-  if(mins>120){setTimeout(function(){showBubbleLocked(rand(MSG.finally),5000);},500);}
-  else{setTimeout(function(){showBubbleLocked(rand(MSG.walking_start),4000);},500);}
-  setMood('walking');startGPS();scheduleStillCheck();
-  clearInterval(S.bubbleT);
-  S.bubbleT=setInterval(function(){if(!S.walking)return;var msgs=S.currentSpeed>50?MSG.car:S.currentSpeed>15?MSG.fast:MSG.walking;showBubble(rand(msgs),2500);},12000);
-  clearInterval(S.tickT);
-  S.tickT=setInterval(function(){if(!S.walking)return;document.getElementById('live-time').textContent=fmtDur(Date.now()-S.walkStart);document.getElementById('live-dist').textContent=fmtDist(S.distMeters);},1000);
+
+  function beginWalk(){
+    setMood('walking');startGPS();scheduleStillCheck();
+    if(mins>120){setTimeout(function(){showBubbleLocked(rand(MSG.finally),5000);},500);}
+    else if(!wasNapping){setTimeout(function(){showBubbleLocked(rand(MSG.walking_start),4000);},500);}
+    clearInterval(S.bubbleT);
+    S.bubbleT=setInterval(function(){if(!S.walking)return;var msgs=S.currentSpeed>50?MSG.car:S.currentSpeed>15?MSG.fast:MSG.walking;showBubble(rand(msgs),2500);},12000);
+    clearInterval(S.tickT);
+    S.tickT=setInterval(function(){if(!S.walking)return;document.getElementById('live-time').textContent=fmtDur(Date.now()-S.walkStart);document.getElementById('live-dist').textContent=fmtDist(S.distMeters);},1000);
+  }
+
+  if(wasNapping){
+    // Wake up puppy first — shake + bounce at door, then start walk
+    setMood('happy');
+    setTimeout(function(){ playWakeUpSequence(beginWalk); }, 200);
+  } else {
+    beginWalk();
+  }
 });
 
 document.getElementById('btn-end').addEventListener('click',function(){
@@ -1515,25 +1826,26 @@ document.getElementById('btn-end').addEventListener('click',function(){
   saveLogs();renderLog();renderStreak();renderSummary();renderChart();
   var totalWalks=S.logs.filter(function(l){return isRealWalk(l);}).length;
   checkBadges(totalWalks);renderBadges();updateAlreadyBtn();document.getElementById('btn-end').disabled=true;
-  document.getElementById('btn-start').disabled=false;document.getElementById('btn-cant').disabled=false;document.getElementById('btn-talk-menu').disabled=false;document.getElementById('btn-later').disabled=false;
-  showBubbleLocked("Good walk!! Puppy is happy!! 😴❤️",4000);setMood('sleeping');setTimeout(function(){openMoodPopup(S.logs[S.logs.length-1]);},600);
-  setTimeout(function(){if(!S.walking&&S.mood==='sleeping'){setMood('happy');scheduleMood();}},8000);
+  document.getElementById('btn-start').disabled=false;document.getElementById('btn-talk-menu').disabled=false;document.getElementById('btn-later').disabled=false;
+  // Post-walk sequence: water → shake → flop → content joy → then proper nap
+  setMood('sleeping'); // sets zzz and dims, but we override animation below
+  playPostWalkSequence();
+  setTimeout(function(){openMoodPopup(S.logs[S.logs.length-1]);},600);
+  setTimeout(function(){if(!S.walking&&S.mood==='sleeping'){setMood('happy');setTimeout(playSuperhappyBurst,400);scheduleMood();}},40000);
 });
 
-// ── Can't walk ─────────────────────────────────────────────────────
+// ── Can't walk (now part of the merged Tell Puppy sheet) ───────────
 var reasonBtns=document.querySelectorAll('.reason-btn');
 var remindChips=document.querySelectorAll('.remind-chip');
 reasonBtns.forEach(function(b){b.addEventListener('click',function(){reasonBtns.forEach(function(x){x.classList.remove('selected');});b.classList.add('selected');S.selectedReason=b.dataset;});});
 remindChips.forEach(function(c){c.addEventListener('click',function(){remindChips.forEach(function(x){x.classList.remove('selected');});c.classList.add('selected');S.selectedRemindMins=parseInt(c.dataset.mins)||0;});});
-document.getElementById('btn-cant').addEventListener('click',function(){if(S.walking)return;closeTalkMenu();document.getElementById('cant-sheet').style.display='block';document.getElementById('sheet-overlay').style.display='block';reasonBtns.forEach(function(b){b.classList.remove('selected');});S.selectedReason=null;S.selectedRemindMins=0;remindChips.forEach(function(c){c.classList.remove('selected');});document.querySelectorAll('.remind-chip[data-mins="0"]')[0].classList.add('selected');});
-document.getElementById('cant-cancel').addEventListener('click',function(){document.getElementById('cant-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
-document.getElementById('sheet-overlay').addEventListener('click',function(){document.getElementById('cant-sheet').style.display='none';document.getElementById('talk-sheet').style.display='none';document.getElementById('still-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
+document.getElementById('sheet-overlay').addEventListener('click',function(){document.getElementById('talk-sheet').style.display='none';document.getElementById('still-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';});
 document.getElementById('cant-confirm').addEventListener('click',function(){
   if(!S.selectedReason){showBubble("Pick a reason first! 🥺",2000);return;}
   var r=S.selectedReason,now=new Date();
   S.restDays.push({ts:Date.now(),dateStr:todayStr(),reason:r.reason,emoji:r.emoji,label:r.msg.split('!')[0],remindMins:S.selectedRemindMins});
   S.logs.push({ts:Date.now(),date:fmtDate(now),time:fmtTime(now),dur:'Rest day',durMs:0,distM:0,rest:true,restReason:r.reason,restEmoji:r.emoji,isSleep:false,isFocus:false,isTired:false,isMetime:false});
-  saveLogs();saveRestDays();document.getElementById('cant-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';
+  saveLogs();saveRestDays();document.getElementById('talk-sheet').style.display='none';document.getElementById('sheet-overlay').style.display='none';
   showBubbleLocked(r.msg,4000);setMood('resting');renderLog();renderStreak();
   // Friend visit based on reason
   var friend=FRIENDS[r.reason];
@@ -2048,7 +2360,7 @@ document.getElementById('later-confirm').addEventListener('click',function(){
   document.getElementById('later-banner-name').textContent='Walking '+label;
   document.getElementById('later-banner').style.display='flex';
   closeLaterSheet();
-  showBubbleLocked('Okay!! Walking '+label+'!! Puppy will be ready!! 🐾⏰',4000);
+  showBubbleLocked('⏰ Reminder set for '+label+'!! Puppy will be ready!! 🐾',4500);
   // Clear any previous intent timer
   clearTimeout(laterIntentT);
   // Persist target so the reminder survives a closed/reloaded app (esp. for tomorrow+)
@@ -2320,6 +2632,7 @@ function buildSeasonalRow(){
 // ── Post-walk mood & memo ─────────────────────────────────────────
 var _pendingMoodEntry = null;
 var _selectedMood = '';
+var _moodAutoCloseT = null;
 
 function openMoodPopup(entry){
   _pendingMoodEntry = entry;
@@ -2328,15 +2641,44 @@ function openMoodPopup(entry){
   document.getElementById('mood-memo').value = '';
   document.querySelectorAll('.mood-emoji-btn').forEach(function(b){b.classList.remove('selected');});
   buildSeasonalRow();
+  // Always start collapsed — calm confirmation, no forced choice
+  document.getElementById('mood-collapsed').style.display = 'flex';
+  document.getElementById('mood-expanded').style.display = 'none';
   document.getElementById('mood-overlay').style.display = 'block';
   document.getElementById('mood-popup').style.display = 'block';
+  // Auto-dismiss after a while if left untouched — Skip/Done is the
+  // assumed default, not something the person has to actively choose.
+  clearTimeout(_moodAutoCloseT);
+  _moodAutoCloseT = setTimeout(function(){
+    // Only auto-close if still on the calm collapsed screen (not mid-note-writing)
+    if(document.getElementById('mood-collapsed').style.display !== 'none'){
+      closeMoodPopup();
+    }
+  }, 6000);
 }
 
 function closeMoodPopup(){
+  clearTimeout(_moodAutoCloseT);
   document.getElementById('mood-overlay').style.display = 'none';
   document.getElementById('mood-popup').style.display = 'none';
   _pendingMoodEntry = null;
 }
+
+// Tapping the link expands the optional mood/note picker
+document.getElementById('mood-add-link').addEventListener('click', function(){
+  clearTimeout(_moodAutoCloseT);
+  document.getElementById('mood-collapsed').style.display = 'none';
+  document.getElementById('mood-expanded').style.display = 'block';
+});
+
+// "Never mind" — back to the calm collapsed state, not a forced close
+document.getElementById('mood-skip-btn').addEventListener('click', function(){
+  document.getElementById('mood-expanded').style.display = 'none';
+  document.getElementById('mood-collapsed').style.display = 'flex';
+});
+
+// Default action — just confirms the walk is logged, no mood required
+document.getElementById('mood-done-btn').addEventListener('click', closeMoodPopup);
 
 document.querySelectorAll('.mood-emoji-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
@@ -2356,8 +2698,6 @@ document.getElementById('mood-save-btn').addEventListener('click', function(){
   }
   closeMoodPopup();
 });
-
-document.getElementById('mood-skip-btn').addEventListener('click', closeMoodPopup);
 
 
 
@@ -2464,7 +2804,7 @@ function renderAdventure(){
     var hasRealGPS=S.logs.some(function(l){return isRealWalk(l)&&l.distM>0;});
     var kmLabel=km.toFixed(1)+' km walked'+(hasRealGPS||_testKm>0?'':' ~est.');
 
-    // Space — uses same total km
+    // ── Space ──────────────────────────────────────────────────────
     var spIdx=0;
     SPACE_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)spIdx=i;});
     var spCur=SPACE_WAYPOINTS[spIdx], spNext=SPACE_WAYPOINTS[spIdx+1]||null;
@@ -2478,15 +2818,17 @@ function renderAdventure(){
       document.getElementById('adv-space-next').textContent='→ '+spNext.name+' ('+spNext.km+'km)';
     } else {
       document.getElementById('adv-space-fill').style.width='100%';
-      document.getElementById('adv-space-next').textContent='🎉 Complete!';
+      document.getElementById('adv-space-next').textContent='🎉 Complete! Keep walking — beyond the solar system! ⭐';
     }
 
-    // Silk Road — same total km
+    // ── Silk Road (with Round 2 once 1200km complete) ──────────────
+    var silkWps = km >= 1200 ? SILK_WAYPOINTS_R2 : SILK_WAYPOINTS;
+    var slRound = km >= 1200 ? '  (Round 2 — Spice Route)' : '';
     var slIdx=0;
-    SILK_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)slIdx=i;});
-    var slCur=SILK_WAYPOINTS[slIdx], slNext=SILK_WAYPOINTS[slIdx+1]||null;
+    silkWps.forEach(function(wp,i){if(km>=wp.km)slIdx=i;});
+    var slCur=silkWps[slIdx], slNext=silkWps[slIdx+1]||null;
     document.getElementById('adv-silk-dest').textContent=slCur.emoji;
-    document.getElementById('adv-silk-name').textContent=slCur.name;
+    document.getElementById('adv-silk-name').textContent=slCur.name+slRound;
     document.getElementById('adv-silk-fact').textContent=slCur.fact;
     document.getElementById('adv-silk-km').textContent=kmLabel;
     if(slNext){
@@ -2495,7 +2837,24 @@ function renderAdventure(){
       document.getElementById('adv-silk-next').textContent='→ '+slNext.name+' ('+slNext.km+'km)';
     } else {
       document.getElementById('adv-silk-fill').style.width='100%';
-      document.getElementById('adv-silk-next').textContent='🎉 Complete!';
+      document.getElementById('adv-silk-next').textContent='🎉 '+( km>=2300?'Both routes complete!':'Complete!');
+    }
+
+    // ── Sea Route ──────────────────────────────────────────────────
+    var seaIdx=0;
+    SEA_WAYPOINTS.forEach(function(wp,i){if(km>=wp.km)seaIdx=i;});
+    var seaCur=SEA_WAYPOINTS[seaIdx], seaNext=SEA_WAYPOINTS[seaIdx+1]||null;
+    document.getElementById('adv-sea-dest').textContent=seaCur.emoji;
+    document.getElementById('adv-sea-name').textContent=seaCur.name;
+    document.getElementById('adv-sea-fact').textContent=seaCur.fact;
+    document.getElementById('adv-sea-km').textContent=kmLabel;
+    if(seaNext){
+      var pct3=Math.min(100,((km-seaCur.km)/(seaNext.km-seaCur.km))*100);
+      document.getElementById('adv-sea-fill').style.width=pct3+'%';
+      document.getElementById('adv-sea-next').textContent='→ '+seaNext.name+' ('+seaNext.km+'km)';
+    } else {
+      document.getElementById('adv-sea-fill').style.width='100%';
+      document.getElementById('adv-sea-next').textContent='🎉 Sea Route complete! You sailed the ancient world!';
     }
   }catch(e){console.warn('Adventure render error',e);}
 }
@@ -2503,9 +2862,11 @@ function renderAdventure(){
 function showAdventureTab(which){
   document.getElementById('adv-tab-space').classList.toggle('active',which==='space');
   document.getElementById('adv-tab-silk').classList.toggle('active',which==='silk');
+  document.getElementById('adv-tab-sea').classList.toggle('active',which==='sea');
   document.getElementById('adv-tab-rpg').classList.toggle('active',which==='rpg');
   document.getElementById('adv-panel-space').style.display=which==='space'?'block':'none';
   document.getElementById('adv-panel-silk').style.display=which==='silk'?'block':'none';
+  document.getElementById('adv-panel-sea').style.display=which==='sea'?'block':'none';
   document.getElementById('adv-panel-rpg').style.display=which==='rpg'?'block':'none';
   if(which==='rpg') rpgRefreshUI();
 }
@@ -2514,7 +2875,7 @@ function showAdventureTab(which){
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible'&&!S.walking){
     document.getElementById('btn-start').disabled=false;
-    document.getElementById('btn-cant').disabled=false;
+    
     document.getElementById('btn-talk-menu').disabled=false;
     document.getElementById('btn-later').disabled=false;
   }
